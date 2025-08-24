@@ -1,3 +1,3 @@
 export default function Home() {
-  return <h1 className="bg-amber-600 animate__animated animate__bounce">Hello Next.js 👋</h1>;
+  return <h1 className="bg-amber-600 animate__animated animate__bounce animate__repeat-2">Hello Next.js 👋</h1>;
 }
