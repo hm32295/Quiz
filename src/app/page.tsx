@@ -1,3 +1,19 @@
+"use client";
+
+
+// import { useTranslation } from "react-i18next";
+
 export default function Home() {
-  return <h1 className="bg-amber-600 animate__animated animate__bounce animate__repeat-2">Hello Next.js 👋</h1>;
+  // const { t, i18n } = useTranslation();
+  return (
+   
+        <div></div>
+  
+    )
 }
+
+//  <div>
+//   <h1>{t("welcome")}</h1>
+//   <button onClick={() => i18n.changeLanguage("ar")}>العربية</button>
+//   <button onClick={() => i18n.changeLanguage("en")}>English</button>
+// </div>

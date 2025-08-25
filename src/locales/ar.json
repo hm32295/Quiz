@@ -1,0 +1,14 @@
+{
+  "tiltLogin": "واصل رحلة تعلمك مع QuizWiz!",
+  "labelEmailLogin": "البريد الإلكتروني المسجل",
+  "placeholderEmailLogin": "اكتب بريدك الإلكتروني",
+  "messageEmail": "البريد الإلكتروني مطلوب",
+  "messageEmailNoValid": "البريد الإلكتروني غير صالح",
+  "labelPasswordLogin": "كلمة المرور",
+  "placeholderPasswordLogin": "اكتب كلمة المرور",
+  "messagePasswordLogin": "كلمة المرور مطلوبة",
+  "linkForgetLogin": "اضغط هنا",
+  "linkTitleLogin": "هل نسيت كلمة المرور؟",
+  "buttonLogin": "تسجيل الدخول",
+  "loginSuccess" :"تم تسجيل الدخول بنجاح"
+}

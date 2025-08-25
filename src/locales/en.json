@@ -1,0 +1,15 @@
+{
+  "tiltLogin": "Continue your learning journey with QuizWiz!",
+  "labelEmailLogin" : "Registered email address",
+  "placeholderEmailLogin" : "Type your email",
+  "messageEmail" : "email is required",
+  "messageEmailNoValid" : "email is not valid",
+  "labelPasswordLogin" :"Password",
+  "placeholderPasswordLogin" : "Password is required",
+  "messagePasswordLogin" : "Password is required",
+  "linkForgetLogin" : "click here",
+  "linkTitleLogin" : "forget password?",
+  "buttonLogin":"Sing In",
+  "loginSuccess" :"Login Success"
+
+}
