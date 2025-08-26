@@ -10,5 +10,41 @@
   "linkForgetLogin": "اضغط هنا",
   "linkTitleLogin": "هل نسيت كلمة المرور؟",
   "buttonLogin": "تسجيل الدخول",
-  "loginSuccess" :"تم تسجيل الدخول بنجاح"
+  "loginSuccess" :"تم تسجيل الدخول بنجاح",
+  "tiltRegister": "أنشئ حسابك وابدأ في استخدام QuizWiz!",
+  "labelFirstName": "الاسم الأول",
+  "LabelLastName": "اسم العائلة",
+  "placeholderFirstNameRegister": "اكتب اسمك الأول",
+  "placeholderLastNameRegister": "اكتب اسم عائلتك",
+  "placeholderRoleRegister": "اختر دورك",
+  "labelEmailRegister": "بريدك الإلكتروني",
+  "labelRoleRegister": "دورك",
+  "registerSuccess" :"إنشاء الحساب",
+
+  "firstNameRequiredRegister": "الاسم الأول مطلوب",
+  "lastNameRequiredRegister": "اسم العائلة مطلوب",
+  "roleRequiredRegister": "من فضلك اختر الدور",
+  "labelEmailForgetPassword" :"أدخل الإميل",
+
+  "linkTitleForgetPassword" : "لتسجيل دخول",
+  "buttonForgetPassword" :"إرسال الإميل",
+
+  "titleResetPassword": "إعادة تعيين كلمة المرور",
+  "labelOtpResetPassword": "رمز التحقق",
+  "placeholderOtpResetPassword": "أدخل رمز التحقق",
+  "buttonReset": "إعادة تعيين",
+  "messageOtpResetPassword": "رمز التحقق مطلوب",
+  "labelOldPasswordChangePassword": "كلمة المرور القديمة",
+  "labelNewPasswordChangePassword": "كلمة المرور الجديدة",
+  "placeholderOldPasswordChangePassword": "أدخل كلمة المرور القديمة",
+  "placeholderNewPasswordChangePassword": "أدخل كلمة المرور الجديدة",
+  "buttonChange": "تغيير",
+  "messageOldPassword": "كلمة المرور القديمة مطلوبة",
+  "messageNewPassword": "كلمة المرور الجديدة مطلوبة",
+  "titleChangePassword" : "تغيير كلمة السر",
+  "titleForgetPassword" : "نسيت كلمة  المرور ",
+  
+  "selectRoleRegisterInstructor":"مدرب",
+  "selectRoleRegisterStudent":"طالب"
+
 }

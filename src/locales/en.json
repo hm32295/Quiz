@@ -10,6 +10,55 @@
   "linkForgetLogin" : "click here",
   "linkTitleLogin" : "forget password?",
   "buttonLogin":"Sing In",
-  "loginSuccess" :"Login Success"
+  "loginSuccess" :"Login Success",
+
+  "tiltRegister":"Create your account and start using QuizWiz!",
+  "labelFirstName":"Your first name",
+  "LabelLastName": "Your last name",
+  "placeholderFirstNameRegister":"Type your first name",
+  "placeholderLastNameRegister":"Type your last name",
+  "placeholderRoleRegister":"Choose your role",
+  "labelEmailRegister": "Your email address",
+  "labelRoleRegister":"Your role",
+  "registerSuccess" :"sign up",
+
+   "firstNameRequiredRegister": "First name is required",
+  "lastNameRequiredRegister": "Last name is required",
+  "roleRequiredRegister": "Please select a role",
+  "toastSuccessRegister" :"Created Account Success",
+
+  "titleForgetPassword" : "Forget Password",
+  "labelEmailForgetPassword" :"Email address",
+  "linkTitleForgetPassword" : "Login",
+  "buttonForgetPassword" :"Send email",
+   
+  "titleResetPassword" :"reset password",
+  "labelOtpResetPassword" : "Otp",
+  "placeholderOtpResetPassword" :"Choose your otp",
+  "buttonReset" : "Reset",
+  "messageOtpResetPassword" : "Otp is required",
+
+  "selectRoleRegisterInstructor":"Instructor",
+  "selectRoleRegisterStudent":"Student",
+
+  "titleChangePassword" :"Change password",
+  "labelOldPasswordChangePassword" : "Old Password",
+  "labelNewPasswordChangePassword" : "New Password",
+  "placeholderOldPasswordChangePassword" :"Type your old password",
+  "placeholderNewPasswordChangePassword" :"Type your new password",
+  "buttonChange" : "Change",
+  "messageOldPassword" : "Old Password is required",
+  "messageNewPassword" : "New Password is required"
+  
+
+
+
+
+
+
+
+
+  
+
 
 }

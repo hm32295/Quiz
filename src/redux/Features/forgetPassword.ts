@@ -1,0 +1,49 @@
+
+import { RegisterForm } from "@/interfaces/interfaces";
+import { axiosInstance } from "@/services/api";
+import { AUTH_URL } from "@/services/endpoints";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+interface LoginPayload {
+  data: RegisterForm
+  reset: () => void;
+  toast: any;
+  t: (key: string) => string;
+}
+
+export const forgetPasswordUser =createAsyncThunk('forgetPassword/forgetPasswordUser', async (data:LoginPayload ,{rejectWithValue})=>{
+        
+     try {
+        const response= await axiosInstance.post(AUTH_URL.FORGOT_PASSWORD,data.data)
+        const dataResponse = response.data.data
+        data.reset()
+        data.toast.success(data.t('toastSuccessRegister') || 'Register Success');
+        data.router.push('/authentication/reset-password')
+        return dataResponse
+    } catch (error) {
+        data.toast.error(error?.response?.data?.message || 'error');
+        return rejectWithValue(error?.response?.data?.message)
+        
+      }
+})
+
+const forgetPassword = createSlice({
+    name:'forgetPassword',
+    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    reducers:{},
+    extraReducers:(builder)=>{
+        builder.addCase(forgetPasswordUser.pending,(state)=>{
+            state.isLoading = true
+        })
+        builder.addCase(forgetPasswordUser.rejected,(state,action)=>{
+            state.isLoading = false
+            state.error = action.payload
+        })
+        builder.addCase(forgetPasswordUser.fulfilled,(state,action)=>{
+            state.isLoading = false
+            state.data = action.payload
+        })
+    }
+
+})
+export default forgetPassword.reducer

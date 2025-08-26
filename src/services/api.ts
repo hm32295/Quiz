@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cookieServices from './cookieServices';
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://upskilling-egypt.com:3005',
@@ -11,8 +12,8 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     try {
-      const dataUser = JSON.parse(localStorage.getItem('dataUser') || '{}');
-      const token = dataUser?.data?.accessToken;
+      // const dataUser = JSON.parse(localStorage.getItem('dataUser') || '{}');
+      const token = cookieServices.get('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`; 
       }

@@ -30,9 +30,7 @@ export default function Login() {
     }
   return (
     <form onSubmit={handleSubmit(submit)}>
-       {/* <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("ar")}>العربية</button>
-       <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("en")}>English</button> */}
-
+      
       <TitleAuth content={t('tiltLogin')} />
       <IconSAuthentication />
       <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailLogin')} placeholder={t('placeholderEmailLogin')} >
