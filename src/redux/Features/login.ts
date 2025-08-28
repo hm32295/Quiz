@@ -1,25 +1,44 @@
-
+"use client"
 import { axiosInstance } from "@/services/api";
-import cookieServices from "@/services/cookieServices";
+import CookieServices from "@/services/cookies/clientCookie";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { setCookie } from "cookies-next";
 interface LoginPayload {
   data: { email: string; password: string };
   reset: () => void;
   toast: any;
   t: (key: string) => string;
+  rout: any;
 }
+
 
 export const loginUser =createAsyncThunk('login/loginUser', async (data:LoginPayload ,{rejectWithValue})=>{
  
      try {
         const response= await axiosInstance.post(AUTH_URL.LOGIN,data.data)
-        const dataResponse = response.data.data
-        cookieServices.set('accessToken',dataResponse.accessToken)
-        cookieServices.set('refreshToken',dataResponse.refreshToken)
-        cookieServices.set('profile',JSON.stringify(dataResponse.profile))
-        data.reset()
+        const dataResponse = response.data.data;
+        // console.log(dataResponse);
+        
+       
+        setCookie("accessToken", dataResponse.accessToken, {
+            path: "/",
+            maxAge: 60 * 60,
+        });
+        setCookie("refreshToken", dataResponse.refreshToken, {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 30,
+        });
+        CookieServices.set('profile',JSON.stringify(dataResponse.profile))
+        console.log(dataResponse.profile.role === 'Instructor');
+        
+         if(dataResponse.profile.role === 'Learner'){
+             data.rout.push('/learner/dashboard')
+         }else if(dataResponse.profile.role === 'Instructor'){
+             data.rout.push('/instructor/')
+         }
         data.toast.success(data.t('loginSuccess') || 'logged');
+        data.reset();
         
         
         return dataResponse

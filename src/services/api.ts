@@ -1,5 +1,5 @@
 import axios from 'axios';
-import cookieServices from './cookieServices';
+import cookieServices from './cookies/clientCookie';
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://upskilling-egypt.com:3005',

@@ -48,7 +48,13 @@
   "placeholderNewPasswordChangePassword" :"Type your new password",
   "buttonChange" : "Change",
   "messageOldPassword" : "Old Password is required",
-  "messageNewPassword" : "New Password is required"
+  "messageNewPassword" : "New Password is required",
+
+  "chipNotFound": "Page Not Found",
+  "messageNotFound": "Sorry, the page you are looking for does not exist or may have been moved.",
+  "actionsNotFound": "Back to Home Page",
+  "messageParaNotFound": "Make sure the URL is typed correctly. If you believe this is a mistake, please return to the home page."
+
   
 
 

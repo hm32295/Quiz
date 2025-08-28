@@ -45,6 +45,12 @@
   "titleForgetPassword" : "نسيت كلمة  المرور ",
   
   "selectRoleRegisterInstructor":"مدرب",
-  "selectRoleRegisterStudent":"طالب"
+  "selectRoleRegisterStudent":"طالب",
+
+  "chipNotFound" :"الصفحة غير موجودة",
+  "messageNotFound" :"عفوًا، الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها.",
+  "actionsNotFound" : "الرجوع للصفحة الرئيسية",
+  "messageParaNotFound" :"تأكد من كتابة الرابط بشكل صحيح. إذا كنت تعتقد أن هذا خطأ، يُرجى العودة للصفحة الرئيسية "
+
 
 }

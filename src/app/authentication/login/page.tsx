@@ -7,6 +7,7 @@ import TitleAuth from '@/components/titleAuth/titleAuth'
 import { LoginFormInputs } from '@/interfaces/interfaces';
 import { loginUser } from '@/redux/Features/login';
 import { EMAIL_VALIDATION } from '@/services/validation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
@@ -17,14 +18,14 @@ import { toast } from 'react-toastify';
 export default function Login() {
   const dispatch = useDispatch();
   const { isLoading,error,data} = useSelector(state => state.login );
- 
+  const rout = useRouter() 
   const { t } = useTranslation();
 
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<LoginFormInputs>();
     
   const submit = (data:LoginFormInputs)=>{
-    data = {data,toast, reset,t}
+    data = {data,toast, reset,t,rout}
       dispatch(loginUser(data));
       
     }
