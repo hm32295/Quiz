@@ -1,17 +1,28 @@
 // components/Navbar.tsx
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {  CiLogout, CiMenuBurger } from "react-icons/ci";
 import { FaBell } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import NewQuizIcon from '../../../public/new quiz icon.png'
 import Image from "next/image";
+import clientCookie from "@/services/cookies/clientCookie";
+import { ProfileDataType } from "@/interfaces/interfaces";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [profile, setProfile] = useState<ProfileDataType | null>()
+  const dataProfile = ()=>{
+    setProfile(clientCookie.get('profile'));
+    
+    
+  }
+  useEffect(()=>{
+    dataProfile()
+    
+  },[])
   return (
-    <nav className="w-full border-b bg-white shadow-sm fixed top-0 left-0 h-[60px]">
+    <nav className="w-full border-b bg-white shadow-sm z-50 fixed top-0 left-0 h-[60px]">
       <div className="flex items-center justify-between px-4 py-2 md:px-8 h-full">
         {/* Left section */}
         <div className="flex items-center gap-3">
@@ -50,8 +61,8 @@ export default function Navbar() {
 
           {/* User */}
           <div className="hidden md:flex flex-col items-start">
-            <span className="font-semibold text-sm">Nwabuikwu Chizuruoke</span>
-            <span className="text-xs text-green-600">Tutor</span>
+            <span className="font-semibold text-sm">{profile ? `${profile?.first_name} ${profile?.last_name}` : 'unKnown'}</span>
+            <span className="text-xs text-green-600">{profile?.role}</span>
           </div>
            <div className="hidden md:flex items-center gap-2 cursor-pointer">
               <CiLogout size={22} />
@@ -72,8 +83,8 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden absolute z-50 right-0 top-full  py-2 border-t bg-gray-50 space-y-3 rounded-bl-2xl">
            <div className=" px-4">
-            <span className="block font-semibold text-sm">Nwabuikwu Chizuruoke</span>
-            <span className="block text-xs text-green-600">Tutor</span>
+            <span className="block font-semibold text-sm">{profile ? `${profile?.first_name} ${profile?.last_name}` : 'unKnown'}</span>
+            <span className="block text-xs text-green-600">{profile? profile?.role : 'unKnown'}</span>
           </div>
           <button className="w-full text-left px-4 cursor-pointer hover:bg-[#ececec] flex items-center gap-1 py-2 rounded-md">
             <Image src={NewQuizIcon} alt="icon Quiz"/> New quiz

@@ -18,12 +18,11 @@ export const loginUser =createAsyncThunk('login/loginUser', async (data:LoginPay
      try {
         const response= await axiosInstance.post(AUTH_URL.LOGIN,data.data)
         const dataResponse = response.data.data;
-        // console.log(dataResponse);
-        
+       
        
         setCookie("accessToken", dataResponse.accessToken, {
             path: "/",
-            maxAge: 60 * 60,
+            maxAge: 60 * 60 * 24 * 7,
         });
         setCookie("refreshToken", dataResponse.refreshToken, {
             path: "/",

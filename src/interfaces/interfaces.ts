@@ -22,3 +22,20 @@ export interface changePasswordTypes {
   otp:string;
   password:string
 };
+
+export interface ProfileDataType{
+  first_name:string;
+  last_name : string;
+  role : string;
+}
+// Columns Heder Table In Quizzes 
+type ColumnKeyQuizzes = "Title" | "Question" | "level" | "Date";
+type RowKeyQuizzes = 'Question Title' | 'Question Desc' | 'Question difficulty level' | 'Date'
+
+export interface ColumnsHederTableInQuizzes  {
+  key: ColumnKeyQuizzes;
+  label: RowKeyQuizzes;
+};
+
+
+

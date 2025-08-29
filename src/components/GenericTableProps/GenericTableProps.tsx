@@ -16,15 +16,15 @@ interface Action {
 
 interface GenericTableProps {
   columns: Column[];
+  titleItem: string;
   data: Record<string, any>[];
   actions?: (row: Record<string, any>) => Action[];
 }
 
-const GenericTable: React.FC<GenericTableProps> = ({ columns, data, actions }) => {
+const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, actions }) => {
   const [openRow, setOpenRow] = useState<number | null>(null);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // إغلاق الدروب داون عند الضغط خارجها
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -35,80 +35,77 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data, actions }) =
         setOpenRow(null);
       }
     };
-
-    document.addEventListener("click", handleClickOutside); // استخدم click مش mousedown
+    document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [openRow]);
 
   const renderActionIcon = (action: Action, row: Record<string, any>) => {
     const handleClick = () => {
-      action.onClick(row); 
-      setOpenRow(null); // يقفل بعد تنفيذ الأكشن
+      action.onClick(row);
+      setOpenRow(null);
     };
 
-    const btnClasses =
-      "cursor-pointer flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100";
-
-    switch (action.type) {
-      case "edit":
-        return (
-          <button onClick={handleClick} style={{ color: action.color }} className={btnClasses}>
-            <FaEdit size={16} /> Edit
-          </button>
-        );
-      case "delete":
-        return (
-          <button onClick={handleClick} style={{ color: action.color }} className={btnClasses}>
-            <FaTrash size={16} /> Delete
-          </button>
-        );
-      case "view":
-        return (
-          <button onClick={handleClick} style={{ color: action.color }} className={btnClasses}>
-            <FaEye size={16} /> View
-          </button>
-        );
-      default:
-        return null;
-    }
+    return (
+      <button
+        onClick={handleClick}
+        style={{ color: action.color }}
+        className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+      >
+        {action.type === "edit" && <FaEdit size={16} />}
+        {action.type === "delete" && <FaTrash size={16} />}
+        {action.type === "view" && <FaEye size={16} />}
+        <span className="font-medium capitalize">{action.type}</span>
+      </button>
+    );
   };
 
   return (
-    <div className="w-full">
-      {/* Table for large screens */}
+    <div className="w-full rounded-[10px] overflow-hidden pb-20 select-none" >
+      {/* Desktop Table */}
       <div className="hidden md:block">
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse rounded-lg overflow-auto">
           <thead>
-            <tr className="bg-gray-900 text-white">
+            <tr className="bg-gradient-to-r from-gray-800 to-gray-900 text-white uppercase">
               {columns.map((col) => (
-                <th key={col.key} className="px-4 py-2 border border-gray-300 text-left">
+                <th
+                  key={col.key}
+                  className="px-4 py-3 text-left text-sm font-semibold"
+                >
                   {col.label}
                 </th>
               ))}
-              {actions && <th className="px-4 py-2 border border-gray-300">Actions</th>}
+              {actions && <th className="px-4 py-3 text-center">Actions</th>}
             </tr>
           </thead>
           <tbody>
             {data.map((row, idx) => (
-              <tr key={idx} className="hover:bg-gray-100 transition-colors border-t">
+              <tr
+                key={idx}
+                className="border-b hover:bg-gray-50 transition-colors"
+              >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-2 border border-gray-300">
+                  <td
+                    key={col.key}
+                    className="px-4 py-3 text-sm text-gray-800 cursor-pointer transition"
+                  >
                     {row[col.key]}
                   </td>
                 ))}
                 {actions && (
                   <td
                     ref={(el) => (dropdownRefs.current[idx] = el)}
-                    className="px-4 py-2 border border-gray-300 text-center relative overflow-visible"
+                    className="px-4 py-3 text-center relative"
                   >
                     <button
-                      className="p-2 rounded-full hover:bg-gray-200 cursor-pointer"
-                      onClick={() => setOpenRow(openRow === idx ? null : idx)}
+                      className="p-2 rounded-full cursor-pointer hover:bg-gray-200"
+                      onClick={() =>
+                        setOpenRow(openRow === idx ? null : idx)
+                      }
                     >
                       <HiOutlineDotsVertical size={20} />
                     </button>
                     {openRow === idx && (
-                      <div className="absolute right-0 mt-2 w-32 bg-white border overflow-hidden rounded-lg shadow-lg z-50">
+                      <div className="absolute top-4 right-0 mt-2 w-40 bg-white rounded-xl shadow-xl z-50 overflow-hidden">
                         {actions(row).map((action, i) => (
                           <div key={i}>{renderActionIcon(action, row)}</div>
                         ))}
@@ -122,35 +119,58 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data, actions }) =
         </table>
       </div>
 
-      {/* Cards for small screens */}
-      <div className="block md:hidden space-y-4">
+      {/* Mobile Cards */}
+      <div className="block md:hidden space-y-4 pt-1">
         {data.map((row, idx) => (
-          <div key={idx} className="border rounded-lg shadow p-4 bg-white flex justify-between items-start">
-            <div className="flex-1">
-              {columns.map((col) => (
-                <div key={col.key} className="flex justify-between py-1">
-                  <span className="font-semibold">{col.label}:</span>
-                  <span>{row[col.key]}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Actions as dropdown */}
+          <div
+            key={idx}
+            className="relative bg-white border border-gray-100 rounded-3xl shadow-lg p-5 transition hover:shadow-2xl hover:-translate-y-1"
+          >
+            {/* Actions Dropdown */}
             {actions && (
-              <div ref={(el) => (dropdownRefs.current[idx] = el)} className="relative">
+              <div className="absolute top-4 right-4" ref={(el) => (dropdownRefs.current[idx] = el)}>
                 <button
-                  className="p-2 rounded-full hover:bg-gray-200 cursor-pointer"
+                  className="p-2 cursor-pointer rounded-full hover:bg-gray-200"
                   onClick={() => setOpenRow(openRow === idx ? null : idx)}
                 >
                   <HiOutlineDotsVertical size={20} />
                 </button>
                 {openRow === idx && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white overflow-hidden border rounded-lg shadow-lg z-50">
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-xl z-50 overflow-hidden">
                     {actions(row).map((action, i) => (
-                      <div key={i}>{renderActionIcon(action, row)}</div>
+                      <div key={i} >{renderActionIcon(action, row)}</div>
                     ))}
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* Card Header */}
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
+              {row.title || `${titleItem} ${idx + 1}`}
+            </h3>
+
+            {/* Card Body */}
+            <div className="flex flex-col gap-3">
+              {columns.map((col) => (
+                <div
+                  key={col.key}
+                  className="flex flex-col bg-gray-50 p-3 rounded-xl shadow-sm"
+                >
+                  <span className="text-sm font-semibold text-gray-500">
+                    {col.label}
+                  </span>
+                  <span className="text-gray-800 font-medium line-clamp-2">
+                    {row[col.key]}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Extra */}
+            {row.extra && (
+              <div className="mt-3 text-sm text-gray-500 line-clamp-2">
+                {row.extra}
               </div>
             )}
           </div>

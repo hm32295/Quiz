@@ -9,8 +9,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
     return (
-     <html>
-      <body>
+    <>
          {/* <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("ar")}>العربية</button>
                <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("en")}>English</button> */}
         
@@ -28,8 +27,8 @@ export default function RootLayout({
                </div>
               </div>
         
-      </body>
-    </html>
+    </>
+   
    
   )
 }

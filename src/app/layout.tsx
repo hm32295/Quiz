@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     // <html lang={i18n.language}>
     <html >
-      <body style={{height:'500vh'}}>
+      <body>
       <Provider store={store}>
         <div className="flex gap-2">
             {/* <button className="cursor-pointer" onClick={() => i18n.changeLanguage("ar")}>العربية</button>
