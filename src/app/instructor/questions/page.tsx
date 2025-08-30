@@ -1,11 +1,16 @@
 
 "use client";
+import AddAndEditQuestion from "@/components/addAndEditQuestion/addAndEditQuestion";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal/confirmDeleteModal";
 import GenericTable from "@/components/GenericTableProps/GenericTableProps";
 import ViewDataModal from "@/components/viewData/viewData";
+import { addQuestionAsyncThunk } from "@/redux/Features/addQuestion";
 import { DeleteQuestionAsyncThunk } from "@/redux/Features/deleteQuestion";
+import { editQuestionAsyncThunk } from "@/redux/Features/editQuestion";
 import { QuestionAsyncThunk } from "@/redux/Features/questionApi";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
@@ -17,36 +22,132 @@ const columns = [
 
 
 export default function Questions() {
-  const [openViewData, setOpenViewData] = useState(false);
+  
   const [dataSingle,setDataSingle] = useState({})
-
-
   const dispatch = useDispatch();
-    const {data,isLoading} = useSelector(state=>state.Question)
-    useEffect(()=>{
-      dispatch(QuestionAsyncThunk());
-    },[dispatch])
-    
+  const { register, handleSubmit,reset } = useForm();
+
+// Add Question
+    const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState(false);
+    const onSubmit =async (data: any) => {
+      const dataForm = {
+          title: data.title,
+          description: data.description,
+          options :{A: data.A,
+                    B: data.B,
+                    C: data.C,
+                    D: data.D
+                  },
+          answer: data.answer,
+          difficulty: data.difficulty,
+          type: data.type
+      }
+
+      if(!dataSingle?.data?._id){
+        
+        await dispatch(addQuestionAsyncThunk(dataForm)).then(() => {
+          dispatch(QuestionAsyncThunk());
+        });
+      }else if(dataSingle.data._id){
+        console.log(dataSingle.data?._id);
+
+        await dispatch(editQuestionAsyncThunk({dataForm,id:dataSingle.data._id})).then(() => {
+          dispatch(QuestionAsyncThunk());
+        });
+      }
+      reset()
+      setOpenModelEditAndAdd(false); 
+    };
+
+    const addQuestion=()=>{
       
+      setDataSingle({});
+      reset({
+        title: "",
+        description: "",
+        A: "",
+        B: "",
+        C: "",
+        D: "",
+        answer: "",
+        difficulty: "",
+        type: "",
+      });
+      setOpenModelEditAndAdd(true)
+    }
 
-      
-  const [open, setOpen] = useState(false);
 
-const handleDeleteConfirm = async () => {
-  setOpen(false);
+  // Get All Question
 
-  if (dataSingle?._id) {
-    await dispatch(DeleteQuestionAsyncThunk(dataSingle._id));
+  const {data,isLoading} = useSelector(state=>state.Question)
+  useEffect(()=>{
     dispatch(QuestionAsyncThunk());
-  }
+  },[dispatch])
+    
+// View Details
+
+  const [openViewData, setOpenViewData] = useState(false);
+  const handelDataToView =(data)=>{
+    const newData =data?.data;
+    if(newData){
+
+        return[
+        
+          { label: "title", value: newData.title },
+          { label: "description", value: newData.description },
+          { label: "answer", value: newData.answer },
+          { label: "status", value: newData.status },
+          { label: "difficulty", value: newData.difficulty },
+          { label: "points", value: newData.points },
+          { label: "type", value: newData.type },
+        ];
+    }
+  
+}
+// Delete Question
+
+  const [open, setOpen] = useState(false);
+  const handleDeleteConfirm = async () => {
+      setOpen(false);
+      if (dataSingle?.data?._id) {
+        await dispatch(DeleteQuestionAsyncThunk(dataSingle.data._id));
+        dispatch(QuestionAsyncThunk());
+      }
+  };
+
+// Edit Question
+const handleEditQuestion = () => {
+  const newData = dataSingle?.data
+  reset({
+    title: newData?.title || "",
+    description: newData?.description || "",
+    A: newData?.options?.A || "",
+    B: newData?.options?.B || "",
+    C: newData?.options?.C || "",
+    D: newData?.options?.D || "",
+    answer: newData?.answer || "",
+    difficulty: newData?.difficulty || "",
+    type: newData?.type || "",
+  });
+  setOpenModelEditAndAdd(true);
 };
 
+if(isLoading){return 'Loading....'}
   return (
     <>
+    <div className="flex justify-between p-3 ">
+      <h2 className="font-bold capitalize">Bank Of Questions</h2>
+      <button
+      onClick={()=>{addQuestion()}} className="flex items-center gap-1 cursor-pointer">
+        <FaPlusCircle  />
+        Add Question
+      </button>
+    </div>
       <GenericTable
         columns={columns}
         titleItem = 'Question'
         data={data}
+        setDataSingle={setDataSingle}
         actions={(row) => [
           {
             type: "view",
@@ -56,7 +157,7 @@ const handleDeleteConfirm = async () => {
           {
             type: "edit",
             color: "black",
-            onClick: () => alert("Editing " + row.name),
+            onClick: () => { ;setDataSingle(row.data); handleEditQuestion();},
           },
           {
             type: "delete",
@@ -87,25 +188,22 @@ const handleDeleteConfirm = async () => {
         title="Question "
         data={handelDataToView(dataSingle)}
       />
+
+
+       <AddAndEditQuestion
+          isOpen={openModelEditAndAdd}
+          onClose={() => setOpenModelEditAndAdd(false)}
+          register={register}
+          isLoading={isLoading}
+          onSubmit={handleSubmit(onSubmit)}
+        />
     </>
+
+
+
   );
 }
 
 
-const handelDataToView =(data)=>{
 
-  
-  return[
-   
-    { label: "title", value: data.title },
-    { label: "description", value: data.description },
-    { label: "answer", value: data.answer },
-    { label: "answer", value: data.answer },
-    { label: "status", value: data.status },
-    { label: "difficulty", value: data.difficulty },
-    { label: "points", value: data.points },
-    { label: "type", value: data.type },
-  ];
-  
-}
 

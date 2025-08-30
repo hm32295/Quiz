@@ -44,7 +44,7 @@ const Sidebar = ({menuItems}) => {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 bg-black opacity-40 md:hidden"
+          className="fixed inset-0 bg-black opacity-40 z-10 md:hidden"
         ></div>
       )}
     </>

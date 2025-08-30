@@ -17,11 +17,12 @@ interface Action {
 interface GenericTableProps {
   columns: Column[];
   titleItem: string;
+  setDataSingle:any;
   data: Record<string, any>[];
   actions?: (row: Record<string, any>) => Action[];
 }
 
-const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, actions }) => {
+const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, actions,setDataSingle }) => {
   const [openRow, setOpenRow] = useState<number | null>(null);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -66,6 +67,7 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, ac
         <table className="w-full border-collapse rounded-lg overflow-auto">
           <thead>
             <tr className="bg-gradient-to-r from-gray-800 to-gray-900 text-white uppercase">
+              <th className="px-4 py-3 text-left text-sm font-semibold">-</th>
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -82,7 +84,11 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, ac
               <tr
                 key={idx}
                 className="border-b hover:bg-gray-50 transition-colors"
+                onClick={()=>setDataSingle(row)}
               >
+                <td className="px-4 py-3 text-sm text-gray-800 cursor-pointer transition">
+                    {idx+1}
+                </td>
                 {columns.map((col) => (
                   <td
                     key={col.key}
@@ -107,7 +113,7 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, ac
                     {openRow === idx && (
                       <div className="absolute top-4 right-0 mt-2 w-40 bg-white rounded-xl shadow-xl z-50 overflow-hidden">
                         {actions(row).map((action, i) => (
-                          <div key={i}>{renderActionIcon(action, row)}</div>
+                          <div onClick={()=>{action.onClick(row)}} key={i}>{renderActionIcon(action, row)}</div>
                         ))}
                       </div>
                     )}

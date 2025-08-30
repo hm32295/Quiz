@@ -18,12 +18,13 @@ const data = [
 ];
 
 export default function Quiz() {
+  const [dataSingle,setDataSingle] = useState({})
   const dispatch = useDispatch();
-    const {dataQuize} = useSelector(state=>state.value)
+    const {data:dataQuiz} = useSelector(state=>state.Quizzes)
       useEffect(()=>{
         dispatch(QuizzesAsyncThunk());
       },[])
-      console.log(dataQuize);
+      console.log(dataQuiz);
       
 
       
@@ -41,6 +42,8 @@ export default function Quiz() {
     <>
       <GenericTable
         columns={columns}
+        setDataSingle={setDataSingle}
+        titleItem="quiz"
         data={data}
         actions={(row) => [
           {

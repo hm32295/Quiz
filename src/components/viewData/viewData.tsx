@@ -30,16 +30,16 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
         </button>
 
         {/* Header */}
-        <div className="p-6 bg-gradient-to-r from-blue-100 to-blue-50 border-b border-gray-200">
+        <div className="p-3 sm:py-6 bg-gradient-to-r from-blue-100 to-blue-50 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-800">{title + ' Details' }</h2>
         </div>
 
         {/* Body */}
-        <div className="p-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="p-3  grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2">
           {data.map((item, idx) => (
             <div
               key={idx}
-              className="flex flex-row justify-between items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 gap-2 transition"
+              className="flex flex-row justify-between items-center p-2 bg-gray-50 rounded-xl hover:bg-gray-100 gap-2 transition"
             >
               <span className="font-semibold text-gray-600 capitalize">{item.label}</span>
               <span className="text-gray-800 mt-1 sm:mt-0">{item.value}</span>
@@ -48,7 +48,7 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
         </div>
 
         {/* Footer */}
-        <div className="p-6 flex justify-end gap-3 border-t border-gray-200 bg-gray-50">
+        <div className="p-3 sm:py-6 flex justify-end gap-3 border-t border-gray-200 bg-gray-50">
           <button
             onClick={onClose}
             className="px-5 py-2 cursor-pointer bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition"

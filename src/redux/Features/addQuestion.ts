@@ -1,19 +1,19 @@
 
 
 import { axiosInstance } from "@/services/api";
-import { QUIZ_URL } from "@/services/endpoints";
+import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-export const QuizzesAsyncThunk =createAsyncThunk('Quizzes/QuizzesAsyncThunk', async (_,{rejectWithValue})=>{
-        
+interface dataAddQuestionType{
+    Title: string; Description: string; level: string ;Date:string
+}
+export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsyncThunk', async (data,{rejectWithValue})=>{
         
      try {
-        const response= await axiosInstance(QUIZ_URL.GET_ALL)
+        const response= await axiosInstance.post(QUESTION_URL.CREATE,data)
         console.log(response.data);
         
-        const dataResponse = response.data.data
-        return dataResponse
+        return response.data
     } catch (error) {
         console.log(error);
         
@@ -22,23 +22,23 @@ export const QuizzesAsyncThunk =createAsyncThunk('Quizzes/QuizzesAsyncThunk', as
       }
 })
 
-const Quizzes = createSlice({
-    name:'Quizzes',
+const addQuestion = createSlice({
+    name:'addQuestion',
     initialState: {isLoading: false,error: null as string | null,data: [] as any},
     reducers:{},
     extraReducers:(builder)=>{
-        builder.addCase(QuizzesAsyncThunk.pending,(state)=>{
+        builder.addCase(addQuestionAsyncThunk.pending,(state)=>{
             state.isLoading = true
         })
-        builder.addCase(QuizzesAsyncThunk.rejected,(state,action)=>{
+        builder.addCase(addQuestionAsyncThunk.rejected,(state,action)=>{
             state.isLoading = false
             state.error = action.payload
         })
-        builder.addCase(QuizzesAsyncThunk.fulfilled,(state,action)=>{
+        builder.addCase(addQuestionAsyncThunk.fulfilled,(state,action)=>{
             state.isLoading = false
             state.data = action.payload
         })
     }
 
 })
-export default Quizzes.reducer
+export default addQuestion.reducer
