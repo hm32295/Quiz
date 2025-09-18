@@ -19,7 +19,6 @@ export const loginUser =createAsyncThunk('login/loginUser', async (data:LoginPay
         const response= await axiosInstance.post(AUTH_URL.LOGIN,data.data)
         const dataResponse = response.data.data;
        
-       
         setCookie("accessToken", dataResponse.accessToken, {
             path: "/",
             maxAge: 60 * 60 * 24 * 7,
@@ -28,10 +27,15 @@ export const loginUser =createAsyncThunk('login/loginUser', async (data:LoginPay
             path: "/",
             maxAge: 60 * 60 * 24 * 30,
         });
+        setCookie("profile", dataResponse.profile, {
+            path: "/",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 30, 
+            });
         CookieServices.set('profile',JSON.stringify(dataResponse.profile))
-        console.log(dataResponse.profile.role === 'Instructor');
         
-         if(dataResponse.profile.role === 'Learner'){
+         if(dataResponse.profile.role === 'Student'){
              data.rout.push('/learner/dashboard')
          }else if(dataResponse.profile.role === 'Instructor'){
              data.rout.push('/instructor/')

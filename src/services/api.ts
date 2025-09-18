@@ -4,7 +4,7 @@ import cookieServices from "./cookies/clientCookie";
 
 export const axiosInstance = axios.create({
   // baseURL: "http://upskilling-egypt.com:3005"
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://upskilling-egypt.com:3005",
+  baseURL: "https://upskilling-egypt.com:3005",
   headers: {
     "Content-Type": "application/json",
   },

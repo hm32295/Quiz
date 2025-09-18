@@ -12,7 +12,7 @@ export const QuestionAsyncThunk =createAsyncThunk('Question/QuestionAsyncThunk',
         const data =[]
      try {
         const response= await axiosInstance(QUESTION_URL.GET_ALL)
-        // console.log(response.data);
+      
         const dataResponse = response.data
         for (let index = 0; index < dataResponse.length; index++) {
             data.push({Title: dataResponse[index].title,level: dataResponse[index].difficulty,Description: dataResponse[index].description,Points:dataResponse[index].points,data:dataResponse[index] })

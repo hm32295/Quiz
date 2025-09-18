@@ -8,10 +8,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const DeleteQuestionAsyncThunk = createAsyncThunk('DeleteQuestion/DeleteQuestionAsyncThunk', async (id ,{rejectWithValue})=>{
         
      try {
-        const response= await axiosInstance.delete(QUESTION_URL.DELETE(id))
-        console.log(response.data.message);
-        
-        
+        const response= await axiosInstance.delete(QUESTION_URL.DELETE(id)) 
         
         return response.data
     } catch (error) {

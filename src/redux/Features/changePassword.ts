@@ -12,8 +12,7 @@ interface LoginPayload {
 }
 
 export const changePasswordUser =createAsyncThunk('changePassword/changePasswordUser', async (data:LoginPayload ,{rejectWithValue})=>{
-        console.log(data);
-        
+       
      try {
         const response= await axiosInstance.post(AUTH_URL.CHANGE_PASSWORD,data.data)
         const dataResponse = response.data.data

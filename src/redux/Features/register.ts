@@ -12,7 +12,7 @@ interface LoginPayload {
 }
 
 export const registerUser =createAsyncThunk('register/registerUser', async (data:LoginPayload ,{rejectWithValue})=>{
-        console.log(data);
+       
         
      try {
         const response= await axiosInstance.post(AUTH_URL.REGISTER,data.data)

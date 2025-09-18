@@ -7,15 +7,11 @@ interface QuestionModalProps {
   isLoading:any;
   onClose: () => void;
   register: any;
+  edit:boolean
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export default function AddAndEditQuestion({
-  isOpen,
-  onClose,
-  isLoading,
-  register,
-  onSubmit,
+export default function AddAndEditQuestion({isOpen, edit, onClose, isLoading,register, onSubmit,
 }: QuestionModalProps) {
   
 
@@ -49,7 +45,7 @@ export default function AddAndEditQuestion({
         
         <div className="flex justify-between items-center border-b pb-1 mb-3">
           <h2 className="text-lg md:text-xl font-bold capitalize">
-            Set up a new question
+            {edit ? "edit " : "Set up a new "} question
           </h2>
             <button
                 onClick={onClose}
@@ -174,9 +170,9 @@ export default function AddAndEditQuestion({
                     type="submit"
                     disabled ={isLoading}
                     form="questionForm"
-                    className="px-4 cursor-pointer py-1.5 rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] transition font-medium"
+                    className="px-4 capitalize cursor-pointer py-1.5 rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] transition font-medium"
                 >
-                    {isLoading? '... Loading' :" ✔ Save"}                  
+                    {isLoading? '... Loading' :(edit ? 'edit':" ✔ Save")}                  
                     
                 </button>
           </div>

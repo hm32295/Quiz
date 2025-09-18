@@ -35,11 +35,11 @@ export const QUIZ_URL = {
   CREATE: '/api/quiz',
   UPDATE: (id: string) => `/api/quiz/${id}`,
   DELETE: (id: string) => `/api/quiz/${id}`,
-  JOIN: '/api/quiz/join',
+  JOIN: '/api/quiz/join',// /api/quiz/join
   SUBMIT: (id: string) => `/api/quiz/submit/${id}`,
   WITHOUT_ANSWERS: (id: string) => `/api/quiz/without-answers/${id}`,
   RESULT: '/api/quiz/result',
-  INCOMMING: '/api/quiz/incomming',
+  INCOMING: '/api/quiz/incomming',
   COMPLETED: '/api/quiz/completed',
   REASSIGN: (id: string) => `/api/quiz/reassign/${id}`,
 };

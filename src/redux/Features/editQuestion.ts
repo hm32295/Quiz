@@ -9,7 +9,7 @@ export const editQuestionAsyncThunk =createAsyncThunk('editQuestion/editQuestion
         
      try {
         const response= await axiosInstance.put(QUESTION_URL.UPDATE(data.id) ,data.dataForm)
-        console.log(response.data);
+       
         return response.data
     } catch (error) {
         console.log(error);

@@ -1,18 +1,20 @@
 
 
 import { axiosInstance } from "@/services/api";
-import {  STUDENT_URL } from "@/services/endpoints";
+import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
-export const StudentAsyncThunk = createAsyncThunk('Student/StudentAsyncThunk', async (_,{rejectWithValue})=>{
+export const SetGroupAsyncThunk = createAsyncThunk('setGroup/SetGroupAsyncThunk', async (data,{rejectWithValue})=>{
         
-        console.log(STUDENT_URL.GET_ALL);
+    
+    
      try {
-        const response= await axiosInstance.get(STUDENT_URL.GET_ALL)
-        console.log(response);
+        const response= await axiosInstance.post(GROUP_URL.CREATE,data)
         
-        const dataResponse = response.data.data
+    
+        const dataResponse = response.data
+        
         return dataResponse
     } catch (error) {
         console.log(error);
@@ -22,23 +24,23 @@ export const StudentAsyncThunk = createAsyncThunk('Student/StudentAsyncThunk', a
       }
 })
 
-const Student = createSlice({
-    name:'Student',
+const setGroup = createSlice({
+    name:'setGroup',
     initialState: {isLoading: false,error: null as string | null,data: [] as any},
     reducers:{},
     extraReducers:(builder)=>{
-        builder.addCase(StudentAsyncThunk.pending,(state)=>{
+        builder.addCase(SetGroupAsyncThunk.pending,(state)=>{
             state.isLoading = true
         })
-        builder.addCase(StudentAsyncThunk.rejected,(state,action)=>{
+        builder.addCase(SetGroupAsyncThunk.rejected,(state,action)=>{
             state.isLoading = false
             state.error = action.payload
         })
-        builder.addCase(StudentAsyncThunk.fulfilled,(state,action)=>{
+        builder.addCase(SetGroupAsyncThunk.fulfilled,(state,action)=>{
             state.isLoading = false
             state.data = action.payload
         })
     }
 
 })
-export default Student.reducer
+export default setGroup.reducer

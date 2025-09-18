@@ -23,7 +23,8 @@ const columns = [
 
 export default function Questions() {
   
-  const [dataSingle,setDataSingle] = useState({})
+  const [dataSingle,setDataSingle] = useState({});
+  const [isEdit, setIsEdit] = useState(false)
   const dispatch = useDispatch();
   const { register, handleSubmit,reset } = useForm();
 
@@ -49,8 +50,6 @@ export default function Questions() {
           dispatch(QuestionAsyncThunk());
         });
       }else if(dataSingle.data._id){
-        console.log(dataSingle.data?._id);
-
         await dispatch(editQuestionAsyncThunk({dataForm,id:dataSingle.data._id})).then(() => {
           dispatch(QuestionAsyncThunk());
         });
@@ -60,7 +59,7 @@ export default function Questions() {
     };
 
     const addQuestion=()=>{
-      
+      setIsEdit(false)
       setDataSingle({});
       reset({
         title: "",
@@ -76,7 +75,6 @@ export default function Questions() {
       setOpenModelEditAndAdd(true)
     }
 
-
   // Get All Question
 
   const {data,isLoading} = useSelector(state=>state.Question)
@@ -87,19 +85,18 @@ export default function Questions() {
 // View Details
 
   const [openViewData, setOpenViewData] = useState(false);
-  const handelDataToView =(data)=>{
-    const newData =data?.data;
-    if(newData){
+  const handelDataToView =(data:any)=>{
+   if (!data.data) return
+    if(data){
 
         return[
-        
-          { label: "title", value: newData.title },
-          { label: "description", value: newData.description },
-          { label: "answer", value: newData.answer },
-          { label: "status", value: newData.status },
-          { label: "difficulty", value: newData.difficulty },
-          { label: "points", value: newData.points },
-          { label: "type", value: newData.type },
+          { label: "title", value: data.data.title },
+          { label: "description", value: data.data.description },
+          { label: "answer", value: data.data.answer },
+          { label: "status", value: data.data.status },
+          { label: "difficulty", value: data.data.difficulty },
+          { label: "points", value: data.data.points },
+          { label: "type", value: data.data.type },
         ];
     }
   
@@ -118,6 +115,7 @@ export default function Questions() {
 // Edit Question
 const handleEditQuestion = () => {
   const newData = dataSingle?.data
+  setIsEdit(true)
   reset({
     title: newData?.title || "",
     description: newData?.description || "",
@@ -133,6 +131,7 @@ const handleEditQuestion = () => {
 };
 
 if(isLoading){return 'Loading....'}
+
   return (
     <>
     <div className="flex justify-between p-3 ">
@@ -157,7 +156,7 @@ if(isLoading){return 'Loading....'}
           {
             type: "edit",
             color: "black",
-            onClick: () => { ;setDataSingle(row.data); handleEditQuestion();},
+            onClick: () => {setDataSingle(row.data); handleEditQuestion();},
           },
           {
             type: "delete",
@@ -183,15 +182,16 @@ if(isLoading){return 'Loading....'}
       />
 
        <ViewDataModal
-        isOpen={openViewData}
-        onClose={() => setOpenViewData(false)}
-        title="Question "
-        data={handelDataToView(dataSingle)}
-      />
+          isOpen={openViewData}
+          onClose={() => setOpenViewData(false)}
+          title="Question "
+          data={handelDataToView(dataSingle)}
+        />
 
 
        <AddAndEditQuestion
           isOpen={openModelEditAndAdd}
+          edit ={isEdit}
           onClose={() => setOpenModelEditAndAdd(false)}
           register={register}
           isLoading={isLoading}

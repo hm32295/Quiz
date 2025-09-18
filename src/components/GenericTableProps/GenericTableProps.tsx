@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import NoData from "../no-data/noData";
 
 interface Column {
   key: string;
@@ -17,7 +18,7 @@ interface Action {
 interface GenericTableProps {
   columns: Column[];
   titleItem: string;
-  setDataSingle:any;
+  setDataSingle?:any;
   data: Record<string, any>[];
   actions?: (row: Record<string, any>) => Action[];
 }
@@ -59,7 +60,7 @@ const GenericTable: React.FC<GenericTableProps> = ({ columns, data,titleItem, ac
       </button>
     );
   };
-
+if(!data.length) return <NoData />
   return (
     <div className="w-full rounded-[10px] overflow-hidden pb-20 select-none" >
       {/* Desktop Table */}

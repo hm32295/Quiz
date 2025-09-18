@@ -21,7 +21,7 @@ const Sidebar = ({menuItems}) => {
         transform ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform`}
     ></div>
       <div
-        className={`fixed h-[calc(100vh-60px)] md:fixed top-[60px] left-0 w-64 bg-white shadow-md p-4 z-50 
+        className={`fixed h-[calc(100vh-60px)] md:fixed top-[60px] left-0 w-64 bg-white shadow-md p-4 z-20 
         transform ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 transition-transform`}
       >
         

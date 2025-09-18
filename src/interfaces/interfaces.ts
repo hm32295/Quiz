@@ -30,7 +30,7 @@ export interface ProfileDataType{
 }
 // Columns Heder Table In Quizzes 
 type ColumnKeyQuizzes = "Title" | "Question" | "level" | "Date";
-type RowKeyQuizzes = 'Question Title' | 'Question Desc' | 'Question difficulty level' | 'Date'
+type RowKeyQuizzes = 'Question Title' | 'Question Desc' | 'Question difficulty level' | 'Date' | 'Quiz Title'
 
 export interface ColumnsHederTableInQuizzes  {
   key: ColumnKeyQuizzes;

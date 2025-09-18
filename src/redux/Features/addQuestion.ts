@@ -11,8 +11,7 @@ export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsy
         
      try {
         const response= await axiosInstance.post(QUESTION_URL.CREATE,data)
-        console.log(response.data);
-        
+       
         return response.data
     } catch (error) {
         console.log(error);

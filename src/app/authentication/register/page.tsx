@@ -2,7 +2,7 @@
 import Button from '@/components/button/button'
 import IconSAuthentication from '@/components/iconSAuthentication/IconSAuthentication';
 import Input from '@/components/input/input'
-import SelectBox from '@/components/selectBox/selectBox';
+import SelectBox from '@/components/selectBoxRegester/selectBoxRegester';
 import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import { RegisterForm } from '@/interfaces/interfaces';

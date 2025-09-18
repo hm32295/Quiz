@@ -1,24 +1,23 @@
 "use client";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { IoClose } from "react-icons/io5";
 
 interface ViewDataModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data: { label: string; value: string | number }[];
+  data: { label: string; value: string | number | ReactNode }[];
 }
 
 const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data }) => {
   if (!isOpen) return null;
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#00000066] bg-opacity-60 p-4 transition-opacity duration-300"
+      className="fixed select-none inset-0 z-50 flex items-center justify-center bg-[#00000066] bg-opacity-60 p-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div
-        className="bg-white h-auto overflow-auto rounded-3xl shadow-2xl w-full  relative transform transition-transform duration-300 hover:scale-[1.02]"
+        className="bg-white max-h-screen overflow-auto rounded-3xl shadow-2xl w-full sm:w-[600px] relative transform transition-transform duration-300 hover:scale-[1.02]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -31,12 +30,12 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
 
         {/* Header */}
         <div className="p-3 sm:py-6 bg-gradient-to-r from-blue-100 to-blue-50 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">{title + ' Details' }</h2>
+          <h2 className="text-2xl font-bold text-gray-800">{`${title} Details`}</h2>
         </div>
 
         {/* Body */}
-        <div className="p-3  grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2">
-          {data.map((item, idx) => (
+        <div className="p-3 grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2">
+          {data?.map((item, idx) => (
             <div
               key={idx}
               className="flex flex-row justify-between items-center p-2 bg-gray-50 rounded-xl hover:bg-gray-100 gap-2 transition"
