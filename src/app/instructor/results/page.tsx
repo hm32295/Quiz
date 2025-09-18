@@ -61,10 +61,7 @@ export default function Results() {
 
 
   const handelDataToView = () => {
-    // console.log(group);
-    const find = group.find(e=> e._id === '68bea1ed5358146037d4bb1b').name
-    console.log(find);
-    
+  
     if (!data) return [];
     return data.map((item: ResultItem) => {
       return {
@@ -73,7 +70,7 @@ export default function Results() {
         Date: new Date(item.quiz.schadule).toLocaleString(),
         Participants: item.participants.length,
         status: item.quiz.status,
-        groupName: group.find(e=> e._id === item.quiz.group).name,
+        groupName: group.find(e=> e._id === item.quiz.group).name || 'UnKnown',
         persons: item.participants.map((p) => p.participant.first_name).join(", ") || "No One",
       };
     });
