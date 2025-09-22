@@ -13,7 +13,6 @@ export const resetPasswordUser =createAsyncThunk('resetPassword/resetPasswordUse
        
         return response.data
     } catch (error) {
-        data.toast.error(error?.response?.data?.message || 'error');
         return rejectWithValue(error?.response?.data?.message)
         
       }

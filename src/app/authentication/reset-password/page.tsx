@@ -27,7 +27,7 @@ export default function ResetPassword() {
   const { register, handleSubmit, formState:{errors},reset } = useForm<resetPasswordTypes>();
     
   const submit =async (data:resetPasswordTypes)=>{
-    data = {data,toast, reset,t,router}
+    
     setLoading(true)
     try {
         
