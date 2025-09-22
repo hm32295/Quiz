@@ -2,13 +2,15 @@ import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IncomingQuiz {
-  _id: string;
+type IncomingQuiz = {
   title: string;
-  startDate: string;
-  duration: number;
-  group?: string;
-}
+  schadule: string;
+  participants: number;
+  image: string;
+  status?: string;
+  _id?: string;
+};
+
 
 interface FirstFiveIncomingState {
   isLoading: boolean;

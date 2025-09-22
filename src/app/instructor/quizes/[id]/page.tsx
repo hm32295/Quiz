@@ -10,6 +10,17 @@ import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 
+
+interface typeQuiz{
+  schadule : string;
+  title : string;
+  duration : string;
+  code : string;
+  questions_number : string;
+  score_per_question : string;
+  description : string;
+  type : string;
+}
 export default function QuizCard() {
   const { t } = useTranslation();
   const params = useParams();
@@ -18,7 +29,7 @@ export default function QuizCard() {
   const dispatch = useDispatch<AppDispatch>();
   const { data: quizzes, isLoading } = useSelector((state: RootState) => state.getQuiz);
 
-  const quiz = quizzes?.find((q: {_id:string}) => q._id === id);
+  const quiz:typeQuiz = quizzes?.find((q: {_id:string}) => q._id === id);
 
   useEffect(() => {
     if (!quizzes || quizzes.length === 0) {

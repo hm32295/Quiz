@@ -2,12 +2,13 @@ import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+
 interface Group {
   _id: string;
   name: string;
-  description?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  students: string[];
+  max_students: number;
+  status: string;
 }
 
 interface GroupState {

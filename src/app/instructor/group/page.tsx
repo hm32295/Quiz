@@ -30,12 +30,16 @@ interface typeView {
 export default function GroupsList() {
   const { t } = useTranslation();
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState<boolean>(false);
-  const { data, isLoading } = useSelector((state:RootState) => state.Group);
   const [openViewData, setOpenViewData] = useState(false);
   const [dataUpdate, setDataUpdate] = useState<Group | null>(null);
   const [viewData, setViewData] = useState<typeView[]>([]);
   const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState<boolean>(false);
+
   const dispatch = useDispatch<AppDispatch>();
+
+  const { data: groupsData, isLoading } = useSelector(
+    (state: RootState) => state.Group
+  ) as { data: Group[]; isLoading: boolean };
 
   useEffect(() => {
     dispatch(groupAsyncThunk());
@@ -48,15 +52,19 @@ export default function GroupsList() {
 
   const deleteGroup = async () => {
     setOpenDeleteConfirm(false);
-    
+
     if (dataUpdate?._id) {
       try {
         const response = await dispatch(deleteGroupAsyncThunk(dataUpdate._id));
         if (response.payload.message) {
-          toast.success(response.payload.message || t("groupsListPage.messages.deleteSuccess"));
+          toast.success(
+            response.payload.message || t("groupsListPage.messages.deleteSuccess")
+          );
         }
-        if (response?.payload) {
-          toast.error(response?.payload || t("groupsListPage.messages.deleteError"));
+        if (response?.payload && !response.payload.message) {
+          toast.error(
+            response?.payload || t("groupsListPage.messages.deleteError")
+          );
         }
       } catch (error) {
         console.log(error);
@@ -99,10 +107,10 @@ export default function GroupsList() {
 
       {/* grid layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {data.length === 0 ? (
+        {groupsData.length === 0 ? (
           <NoData />
         ) : (
-          data?.map((group: Group) => (
+          groupsData.map((group) => (
             <div
               key={group._id}
               className="animate__animated animate__fadeInUp flex justify-between items-center border rounded-xl shadow-sm p-4 bg-white hover:shadow-md transition duration-300"
@@ -121,25 +129,19 @@ export default function GroupsList() {
                 className="flex gap-3 text-gray-600"
               >
                 <button
-                  onClick={(e) => {
-                    update(e);
-                  }}
+                  onClick={(e) => update(e)}
                   className="hover:text-blue-500 cursor-pointer transition duration-200"
                 >
                   <FaEdit size={18} />
                 </button>
                 <button
-                  onClick={() => {
-                    setOpenDeleteConfirm(true);
-                  }}
+                  onClick={() => setOpenDeleteConfirm(true)}
                   className="hover:text-red-500 cursor-pointer transition duration-200"
                 >
                   <FaTrash size={18} />
                 </button>
                 <button
-                  onClick={() => {
-                    handelDataToView(group);
-                  }}
+                  onClick={() => handelDataToView(group)}
                   className="hover:text-green-500 cursor-pointer transition duration-200"
                 >
                   <BiSolidShow size={20} />
