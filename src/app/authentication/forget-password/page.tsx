@@ -26,11 +26,11 @@ export default function ForgetPassword() {
   const { register, handleSubmit, formState:{errors},reset } = useForm<ForgetPasswordTypes>();
     
   const submit = async (data:ForgetPasswordTypes)=>{
+    
       setLoading(true)
     try {
      const response = await dispatch(forgetPasswordUser(data));
-     console.log(response);
-     
+    
       if (forgetPasswordUser.fulfilled.match(response)) {
         reset()
         toast.success(t('toastSuccessRegister') || 'Register Success');
@@ -50,9 +50,17 @@ export default function ForgetPassword() {
     <form onSubmit={handleSubmit(submit)}>
       
       <TitleAuth content={t('titleForgetPassword')} />
-      <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailForgetPassword')} placeholder={t('placeholderEmailLogin')} >
+      <Input 
+        type='email'
+        {...register('email',EMAIL_VALIDATION)}
+        error={errors.email?.message}
+        label={t('labelEmailForgetPassword')} placeholder={t('placeholderEmailLogin')}
+        startWithIcon={<MdEmail color='#fff' size={'30px'}/>}
+      />
+      {/* <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' 
+      label={t('labelEmailForgetPassword')} placeholder={t('placeholderEmailLogin')} >
         <MdEmail color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
       <Button link={'/authentication/login'} title={t('linkTitleForgetPassword')} content={t('buttonForgetPassword')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

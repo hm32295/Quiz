@@ -52,14 +52,30 @@ export default function ChangePassword() {
       <TitleAuth content={t('titleChangePassword')} />
       
      
-      <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
+      <Input 
+          startWithIcon={<RiLockPasswordLine color='#fff' size={'30px'}/>} 
+          error={errors.password?.message} 
+          label={t('labelOldPasswordChangePassword')} 
+          type='password' 
+          placeholder={t('placeholderOldPasswordChangePassword')}
+          {...register('password',{required:'the failed is required'})}
+         />
+      <Input 
+          startWithIcon={<RiLockPasswordLine color='#fff' size={'30px'}/>} 
+          error={errors.password?.message} 
+          label={t('labelNewPasswordChangePassword')} 
+          placeholder={t('placeholderNewPasswordChangePassword')}
+          type='password' 
+          {...register('password_new',{required:'the failed is required'})}
+         />
+      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
           name='password' type={'password'}  label={t('labelOldPasswordChangePassword')} placeholder={t('placeholderOldPasswordChangePassword')} >
         <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input>
-      <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
+      </Input> */}
+      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
           name='password_new' type={'password'}  label={t('labelNewPasswordChangePassword')} placeholder={t('placeholderNewPasswordChangePassword')} >
         <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
      
       <Button  content={t('buttonChange')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

@@ -52,7 +52,6 @@ const submit = async (formData: LoginFormInputs) => {
     }
   } catch (error) {
     console.log(error);
-    // toast.error('Something went wrong');
   }
   setLoading(false);
 };
@@ -62,15 +61,39 @@ const submit = async (formData: LoginFormInputs) => {
       
       <TitleAuth content={t('tiltLogin')} />
       <IconSAuthentication />
-      <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailLogin')} placeholder={t('placeholderEmailLogin')} >
+
+
+
+
+      <Input startWithIcon={<MdEmail color='#fff' 
+              size={'30px'}/>} 
+              type='text' 
+              {...register("email" ,EMAIL_VALIDATION)} 
+              error={errors.email?.message}  
+              label={t('labelEmailLogin')} 
+              placeholder={t('placeholderEmailLogin')} 
+        />
+
+
+      <Input startWithIcon={<MdEmail color='#fff'  size={'30px'}/>} 
+              type='password' 
+              {...register("password" ,{required:'the field is required'})} 
+              error={errors.password?.message}  
+              label={t('labelPasswordLogin')} 
+              placeholder={t('placeholderPasswordLogin')} 
+        />
+
+
+
+      {/* <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailLogin')} placeholder={t('placeholderEmailLogin')} >
         <MdEmail color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
-
+{/* 
       <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
           name='password' type={'password'}  label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')} >
         <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
      
       <Button link={'/authentication/forget-password'} title={t('linkTitleLogin')} content={t('buttonLogin')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

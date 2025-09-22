@@ -49,19 +49,44 @@ export default function ResetPassword() {
     <form onSubmit={handleSubmit(submit)}>
       
       <TitleAuth content={t('titleResetPassword')} />
-      <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} >
+      <Input
+          type='email'
+          label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')}
+          error={errors.email?.message}
+          {...register('email',EMAIL_VALIDATION)}
+          startWithIcon={<MdEmail color='#fff' size={'30px'}/>}
+      />
+      <Input
+          type='text'
+          label={t('labelOtpResetPassword')} placeholder={t('placeholderOtpResetPassword')}
+          error={errors.otp?.message}
+          {...register('otp',{ required: t('messageOtpResetPassword') })}
+          startWithIcon={<MdEmail color='#fff' size={'30px'}/>}
+      />
+
+      <Input
+          type='password'
+          label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')}
+          error={errors.password?.message}
+          {...register('password',{ required: t('messagePasswordLogin') })}
+          startWithIcon={<RiLockPasswordLine color='#fff' size={'30px'}/>}
+      />
+
+
+      {/* <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} >
         <MdEmail color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
-      <Input type={'text'} register={register} error={errors}  validation={{ required: t('messageOtpResetPassword') }} name='otp' label={t('labelOtpResetPassword')} placeholder={t('placeholderOtpResetPassword')} >
+      {/* <Input type={'text'} register={register} error={errors}  
+      validation={{ required: t('messageOtpResetPassword') }} name='otp' label={t('labelOtpResetPassword')} placeholder={t('placeholderOtpResetPassword')} >
         <MdEmail color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
 
-      <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
+      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
           name='password' type={'password'}  label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')} >
         <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
      
       <Button content={t('buttonReset')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

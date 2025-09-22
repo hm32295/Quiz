@@ -55,17 +55,46 @@ export default function Register() {
       <TitleAuth content={t('tiltRegister')} />
       
       <IconSAuthentication />
-      <Input type={'email'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} >
+      <Input 
+        label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} 
+        type='email'
+        {...register('email',EMAIL_VALIDATION)}
+        error={errors.email?.message}
+        startWithIcon={<MdEmail color='#fff' size={'30px'}/>}
+      />
+
+
+      <Input 
+        label={t('labelFirstName')} placeholder={t('placeholderFirstNameRegister')}
+        type='text'
+        {...register('first_name',{required: t('firstNameRequiredRegister')})}
+        error={errors.first_name?.message}
+        startWithIcon={<FaRegIdCard  color='#fff' size={'30px'}/>}
+      />
+
+      <Input 
+        label={t('LabelLastName')} placeholder={t('placeholderLastNameRegister')}
+        type='text'
+        {...register('last_name',{required: t('lastNameRequiredRegister')})}
+        error={errors.last_name?.message}
+        startWithIcon={<FaRegIdCard  color='#fff' size={'30px'}/>}
+      />
+
+
+
+      {/* <Input type={'email'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} >
         <MdEmail color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
 
-      <Input type={'text'} register={register} error={errors} validation={{ required: t('firstNameRequiredRegister') }} name='first_name' label={t('labelFirstName')} placeholder={t('placeholderFirstNameRegister')} >
+      {/* <Input type={'text'} register={register} error={errors} validation={{ required: t('firstNameRequiredRegister') }} name='first_name' 
+      label={t('labelFirstName')} placeholder={t('placeholderFirstNameRegister')} >
         <FaRegIdCard  color='#fff' size={'30px'}/>
-      </Input>
-      <Input type={'text'} register={register} error={errors} validation={{ required: t('lastNameRequiredRegister') }} name='last_name' label={t('LabelLastName')} placeholder={t('placeholderLastNameRegister')} >
+      </Input> */}
+      {/* <Input type={'text'} register={register} error={errors} validation={{ required: t('lastNameRequiredRegister') }} name='last_name' 
+      label={t('LabelLastName')} placeholder={t('placeholderLastNameRegister')} >
         <FaRegIdCard  color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
 
       <SelectBox
             label={t('labelRoleRegister')}
@@ -85,10 +114,18 @@ export default function Register() {
 
 
 
-      <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
+    <Input 
+        label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')}
+        type='password'
+        {...register('password',{required: t('messagePasswordLogin')})}
+        error={errors.password?.message}
+        startWithIcon={<RiLockPasswordLine  color='#fff' size={'30px'}/>}
+      />
+
+      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
           name='password' type={'password'}  label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')} >
         <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input>
+      </Input> */}
      
       <Button  content={t('registerSuccess')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

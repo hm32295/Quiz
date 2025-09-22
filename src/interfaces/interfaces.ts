@@ -18,8 +18,8 @@ export interface resetPasswordTypes {
   password:string
 };
 export interface changePasswordTypes {
-  email: string;
-  otp:string;
+
+  password_new:string;
   password:string
 };
 
