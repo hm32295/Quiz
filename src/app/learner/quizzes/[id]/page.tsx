@@ -11,15 +11,15 @@ import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
 import { AppDispatch } from "@/redux/store";
 
-type QuizPageProps = {
-  params: Promise<{ id: string }>;
-  questions?: any[] | null;
-};
+interface QuizPageProps {
+  params: { id: string };
+}
 
-export default function QuizPage({ params, questions = null }: QuizPageProps) {
+export default function QuizPage({ params }: QuizPageProps) {
   const { t } = useTranslation();
-  const { id } = use(params);
+  const { id } = params;
 
+  const questions: any[] | null = null; 
   const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector((state: any) => state.singleQuiz);
 
