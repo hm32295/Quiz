@@ -4,10 +4,28 @@ import { axiosInstance } from "@/services/api";
 import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface dataAddQuestionType{
-    Title: string; Description: string; level: string ;Date:string
+interface OptionType {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
 }
-export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsyncThunk', async (data,{rejectWithValue})=>{
+
+interface DataSingleType {
+  _id?: string;
+  title?: string;
+  description?: string;
+  options?: OptionType;
+  A?: string;
+  B?: string;
+  C?: string;
+  D?: string;
+  answer?: string;
+  difficulty?: string;
+  type?: string;
+}
+
+export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsyncThunk', async (data:DataSingleType,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.post(QUESTION_URL.CREATE,data)
@@ -23,7 +41,7 @@ export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsy
 
 const addQuestion = createSlice({
     name:'addQuestion',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(addQuestionAsyncThunk.pending,(state)=>{

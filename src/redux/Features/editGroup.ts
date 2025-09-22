@@ -4,11 +4,16 @@ import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-export const editGroupAsyncThunk = createAsyncThunk('editGroup/editGroupAsyncThunk', async (data,{rejectWithValue})=>{
+interface GroupForm {
+  name: string;
+  students: string[];
+}
+interface typeAll{
+    data:GroupForm;
+    id:string
+}
+export const editGroupAsyncThunk = createAsyncThunk('editGroup/editGroupAsyncThunk', async (data:typeAll,{rejectWithValue})=>{
         
-    
-    
      try {
         const response= await axiosInstance.put(GROUP_URL.UPDATE(data.id),data.data)
         const dataResponse = response.data

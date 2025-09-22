@@ -5,7 +5,7 @@ import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
-export const DeleteQuestionAsyncThunk = createAsyncThunk('DeleteQuestion/DeleteQuestionAsyncThunk', async (id ,{rejectWithValue})=>{
+export const DeleteQuestionAsyncThunk = createAsyncThunk('DeleteQuestion/DeleteQuestionAsyncThunk', async (id:string ,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.delete(QUESTION_URL.DELETE(id)) 

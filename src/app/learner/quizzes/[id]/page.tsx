@@ -1,7 +1,7 @@
 "use client";
 
 import { singleQuizAsyncThunk } from "@/redux/Features/singleQuiz";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "animate.css";
 import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
@@ -9,27 +9,61 @@ import { submitQuizAsyncThunk } from "@/redux/Features/submitQuiz";
 import QuizResults from "@/components/quizResults/quizResults";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useParams } from "next/navigation";
 
 
 
+interface QuizOption {
+  [key: string]: string; 
+}
+
+interface QuizQuestion {
+  _id: string;
+  title: string;
+  options: QuizOption;
+}
+
+interface QuizData {
+  _id: string;
+  title: string;
+  difficulty: string;
+  schadule: string;
+  questions: QuizQuestion[];
+}
+
+interface SingleQuizState {
+  data: { data: QuizData } | null;
+  isLoading: boolean;
+}
+
+interface Answer {
+  question: string;
+  answer: string;
+}
+
+interface SubmitResult {
+  score: number;
+  correctAnswers: Record<string, string>;
+}
+
 export default function QuizPage() {
   const { t } = useTranslation();
-  const params = useParams();        
+  const params = useParams();
   const id = params?.id as string;
 
-  const questions: any[] | null = null; 
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isLoading } = useSelector((state: any) => state.singleQuiz);
+  const { data, isLoading } = useSelector(
+    (state: RootState) => state.singleQuiz
+  );
 
-  const [answers, setAnswers] = useState<{ question: string; answer: string }[]>([]);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  const [resultData, setResultData] = useState<any>(null);
+  const [resultData, setResultData] = useState<SubmitResult | null>(null);
 
-  const qs = questions || data?.data?.questions;
+  const qs: QuizQuestion[] | undefined = data?.data?.questions;
   const total = qs?.length || 0;
   const progress = total ? Math.round(((currentIndex + 1) / total) * 100) : 0;
 
@@ -60,7 +94,7 @@ export default function QuizPage() {
     if (answers.length) {
       const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
       if (res.payload) {
-        setResultData(res.payload);
+        setResultData(res.payload as SubmitResult);
         setShowResult(true);
       }
     }

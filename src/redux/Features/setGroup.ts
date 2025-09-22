@@ -3,9 +3,14 @@
 import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+interface GroupForm {
+  name: string;
+  students: string[];
+  _id?: string;
+}
 
 
-export const SetGroupAsyncThunk = createAsyncThunk('setGroup/SetGroupAsyncThunk', async (data,{rejectWithValue})=>{
+export const SetGroupAsyncThunk = createAsyncThunk('setGroup/SetGroupAsyncThunk', async (data:GroupForm,{rejectWithValue})=>{
         
     
     

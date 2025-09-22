@@ -4,8 +4,31 @@ import { axiosInstance } from "@/services/api";
 import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+interface OptionType {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
+}
 
-export const editQuestionAsyncThunk =createAsyncThunk('editQuestion/editQuestionAsyncThunk', async (data,{rejectWithValue})=>{
+interface DataSingleType {
+  _id?: string;
+  title?: string;
+  description?: string;
+  options?: OptionType;
+  A?: string;
+  B?: string;
+  C?: string;
+  D?: string;
+  answer?: string;
+  difficulty?: string;
+  type?: string;
+}
+interface typeAll {
+    dataForm: DataSingleType;
+    id:string
+}
+export const editQuestionAsyncThunk =createAsyncThunk('editQuestion/editQuestionAsyncThunk', async (data:typeAll,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.put(QUESTION_URL.UPDATE(data.id) ,data.dataForm)

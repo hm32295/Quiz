@@ -4,8 +4,10 @@ import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
-export const deleteGroupAsyncThunk = createAsyncThunk('deleteGroup/deleteGroupAsyncThunk', async (id,{rejectWithValue})=>{
+// interface typeProps {
+//     id: string
+// }
+export const deleteGroupAsyncThunk = createAsyncThunk('deleteGroup/deleteGroupAsyncThunk', async (id:string,{rejectWithValue})=>{
         
     
     

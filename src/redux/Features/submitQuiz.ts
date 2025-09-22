@@ -2,21 +2,11 @@ import { axiosInstance } from "@/services/api";
 import {  QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface submitQuizState {
-  isLoading: boolean;
-  error: string | null;
-  data: any[];
-}
-
-const initialState: submitQuizState = {
-  isLoading: false,
-  error: null,
-  data: [],
-};
+interface submitQuizState { id: string; data: { question: string; answer: string; }[]; }
 
 export const submitQuizAsyncThunk = createAsyncThunk(
   "submitQuiz/submitQuizAsyncThunk",
-  async (data, { rejectWithValue }) => {
+  async (data:submitQuizState, { rejectWithValue }) => {
  
    
     try {
@@ -24,7 +14,7 @@ export const submitQuizAsyncThunk = createAsyncThunk(
        
       return response.data;
       
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       return rejectWithValue(error?.response?.data?.message || "Something went wrong");
     }

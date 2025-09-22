@@ -3,7 +3,7 @@ import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
-export const deleteQuizAsyncThunk = createAsyncThunk('deleteQuiz/deleteQuizAsyncThunk', async (id ,{rejectWithValue})=>{
+export const deleteQuizAsyncThunk = createAsyncThunk('deleteQuiz/deleteQuizAsyncThunk', async (id:string ,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.delete(QUIZ_URL.DELETE(id))

@@ -1,12 +1,12 @@
 
-import { RegisterForm } from "@/interfaces/interfaces";
+import { changePasswordTypes } from "@/interfaces/interfaces";
 import { axiosInstance } from "@/services/api";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
 
-export const changePasswordUser =createAsyncThunk('changePassword/changePasswordUser', async (data:RegisterForm ,{rejectWithValue})=>{
+export const changePasswordUser =createAsyncThunk('changePassword/changePasswordUser', async (data:changePasswordTypes ,{rejectWithValue})=>{
        
      try {
         const response= await axiosInstance.post(AUTH_URL.CHANGE_PASSWORD,data)

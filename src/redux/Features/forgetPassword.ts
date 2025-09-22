@@ -1,12 +1,12 @@
 
-import { RegisterForm } from "@/interfaces/interfaces";
+import { ForgetPasswordTypes } from "@/interfaces/interfaces";
 import { axiosInstance } from "@/services/api";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
 
-export const forgetPasswordUser =createAsyncThunk('forgetPassword/forgetPasswordUser', async (data:RegisterForm ,{rejectWithValue})=>{
+export const forgetPasswordUser =createAsyncThunk('forgetPassword/forgetPasswordUser', async (data:ForgetPasswordTypes ,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.post(AUTH_URL.FORGOT_PASSWORD,data)

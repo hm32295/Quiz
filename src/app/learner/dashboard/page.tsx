@@ -10,7 +10,7 @@ import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveComple
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   const dispatch = useDispatch<AppDispatch>();
   const { data: dataQuizCompleted, isLoading } = useSelector(
-    (state) => state.lastFiveCompletedQuizSlice
+    (state:RootState) => state.lastFiveCompletedQuizSlice
   );
 
   useEffect(() => {

@@ -29,12 +29,12 @@ interface typeView {
 
 export default function GroupsList() {
   const { t } = useTranslation();
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState<boolean>(false);
   const { data, isLoading } = useSelector((state:RootState) => state.Group);
   const [openViewData, setOpenViewData] = useState(false);
   const [dataUpdate, setDataUpdate] = useState<Group | null>(null);
   const [viewData, setViewData] = useState<typeView[]>([]);
-  const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState(false);
+  const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {

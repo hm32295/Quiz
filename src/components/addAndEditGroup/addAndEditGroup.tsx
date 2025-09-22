@@ -1,18 +1,18 @@
 "use client";
 
 import { StudentAsyncThunk } from "@/redux/Features/getStudent";
-import { SetStateAction, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import SelectBoxGroup from "../selectBoxGroup/selectBoxGroup";
 import { SetGroupAsyncThunk } from "@/redux/Features/setGroup";
-import { Dispatch } from "@reduxjs/toolkit";
 import { editGroupAsyncThunk } from "@/redux/Features/editGroup";
 import { groupAsyncThunk } from "@/redux/Features/getGroup";
 import { toast } from "react-toastify";
 import Spinner from "../loading/spinnerComponent";
 import TableSkeleton from "../loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
+import { AppDispatch, RootState } from "@/redux/store";
 
 interface GroupForm {
   name: string;
@@ -24,7 +24,7 @@ interface GroupModalProps {
   isOpen: boolean;
   dataUpdate?: GroupForm | null;
   isLoading?: boolean;
-  setOpenModelEditAndAdd: Dispatch<SetStateAction<boolean>>;
+  setOpenModelEditAndAdd: () => void;
   onClose: () => void;
 }
 
@@ -38,10 +38,10 @@ export default function AddAndEditGroup({
   const [isAdd, setIsAdd] = useState(true);
   const [loading, setLoading] = useState(false);
   const { data: dataStudents, isLoading } = useSelector(
-    (state: any) => state.Student
+    (state: RootState) => state.Student
   );
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -59,7 +59,7 @@ export default function AddAndEditGroup({
     try {
       let response;
       if (isAdd) {
-        response = await dispatch(SetGroupAsyncThunk(data) as any);
+        response = await dispatch(SetGroupAsyncThunk(data));
         if (response.payload?.message) {
           toast.success(
             response.payload.message ||
@@ -68,7 +68,7 @@ export default function AddAndEditGroup({
         }
       } else {
         response = await dispatch(
-          editGroupAsyncThunk({ data, id: dataUpdate?._id || "" }) as any
+          editGroupAsyncThunk({ data, id: dataUpdate?._id || "" })
         );
         if (response.payload?.message) {
           toast.success(
@@ -84,7 +84,7 @@ export default function AddAndEditGroup({
         );
       }
 
-      dispatch(groupAsyncThunk() as any);
+      dispatch(groupAsyncThunk());
       reset({ name: "", students: [] });
       setOpenModelEditAndAdd(false);
     } catch (err) {
@@ -109,7 +109,7 @@ export default function AddAndEditGroup({
 
   useEffect(() => {
     if (isOpen) {
-      dispatch(StudentAsyncThunk() as any);
+      dispatch(StudentAsyncThunk());
     }
   }, [isOpen, dispatch]);
 
