@@ -22,7 +22,7 @@ export const deleteQuizAsyncThunk = createAsyncThunk('deleteQuiz/deleteQuizAsync
 
 const deleteQuiz = createSlice({
     name:'deleteQuiz',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(deleteQuizAsyncThunk.pending,(state)=>{

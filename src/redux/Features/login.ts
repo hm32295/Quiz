@@ -21,7 +21,7 @@ export const loginUser =createAsyncThunk('login/loginUser', async (data:LoginPay
 
 const login = createSlice({
     name:'login',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any,value:'login' as string},
+    initialState: {isLoading: false,error: null as string | null,data: [],value:'login' as string},
     reducers:{
         setLogin:(state)=>{
             state.value = 'login'

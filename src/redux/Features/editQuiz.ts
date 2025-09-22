@@ -2,29 +2,45 @@ import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface editQuizState {
+interface EditQuizState {
   isLoading: boolean;
   error: string | null;
-  data: any[];
+  data: QuizResponse | null;
 }
 
-const initialState: editQuizState = {
+interface QuizResponse {
+  _id: string;
+  title: string;
+  difficulty?: string;
+  schedule?: string;
+}
+
+const initialState: EditQuizState = {
   isLoading: false,
   error: null,
-  data: [],
+  data: null,
 };
 
-export const editQuizAsyncThunk = createAsyncThunk( "editQuiz/editQuizAsyncThunk",async (data, { rejectWithValue }) => {
- 
+interface EditQuizPayload {
+  id: string;
+  data: { title: string };
+}
+
+export const editQuizAsyncThunk = createAsyncThunk<
+  QuizResponse, 
+  EditQuizPayload,
+  { rejectValue: string } 
+>(
+  "editQuiz/editQuizAsyncThunk",
+  async ({ id, data }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(QUIZ_URL.UPDATE(data.id),data.data);
-    console.log(response.data);
-    
-      return response.data;
-      
-    } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
+      const response = await axiosInstance.put(QUIZ_URL.UPDATE(id), data);
+      return response.data as QuizResponse;
+    } catch (error) {
+      console.error(error);
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -41,9 +57,9 @@ const editQuizSlice = createSlice({
       })
       .addCase(editQuizAsyncThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || "Something went wrong";
       })
-      .addCase(editQuizAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
+      .addCase(editQuizAsyncThunk.fulfilled, (state, action: PayloadAction<QuizResponse>) => {
         state.isLoading = false;
         state.data = action.payload;
       });

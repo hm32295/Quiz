@@ -9,7 +9,7 @@ interface typeData {
 }
 
 interface typeProps {
-  setValue: (field: string, value: any) => void;
+  setValue: (field: string, value: string | number | string[]) => void;
   data: typeData[];
   setOpenDropdown: (val: boolean) => void;
   openDropdown: boolean;

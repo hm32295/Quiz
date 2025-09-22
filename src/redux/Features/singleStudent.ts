@@ -1,27 +1,37 @@
 import { axiosInstance } from "@/services/api";
-import { singleStudent_URL, STUDENT_URL } from "@/services/endpoints";
+import { STUDENT_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface singleStudentState {
-  isLoading: boolean;
-  error: string | null;
-  data: any[];
+export interface Student {
+  _id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  
 }
 
-const initialState: singleStudentState = {
+interface SingleStudentState {
+  isLoading: boolean;
+  error: string | null;
+  data: Student | null;
+}
+
+const initialState: SingleStudentState = {
   isLoading: false,
   error: null,
-  data: [],
+  data: null,
 };
 
-export const singleStudentAsyncThunk = createAsyncThunk(
+export const singleStudentAsyncThunk = createAsyncThunk<
+  Student,
+  string,
+  { rejectValue: string }
+>(
   "singleStudent/singleStudentAsyncThunk",
   async (id, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(STUDENT_URL.GET_BY_ID(id));
-      
-      return response.data;
-      
+      return response.data as Student;
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error?.response?.data?.message || "Something went wrong");
@@ -41,9 +51,9 @@ const singleStudentSlice = createSlice({
       })
       .addCase(singleStudentAsyncThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? "Something went wrong";
       })
-      .addCase(singleStudentAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
+      .addCase(singleStudentAsyncThunk.fulfilled, (state, action: PayloadAction<Student>) => {
         state.isLoading = false;
         state.data = action.payload;
       });

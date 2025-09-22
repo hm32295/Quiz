@@ -13,34 +13,34 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import NoData from "../no-data/noData";
 import { useTranslation } from "react-i18next";
 
-interface Column {
-  key: string;
+interface Column<T> {
+  key: keyof T;
   label: string;
 }
 
-interface Action {
+interface Action<T> {
   type: "edit" | "delete" | "view";
   color: string;
-  onClick: (row: Record<string, any>) => void;
+  onClick: (row: T) => void;
 }
 
-interface GenericTableProps {
-  columns: Column[];
+interface GenericTableProps<T extends { _id?: string }> {
+  columns: Column<T>[];
   titleItem: string;
-  data: Record<string, any>[];
-  setDataSingle?: (row: Record<string, any>) => void;
-  actions?: (row: Record<string, any>) => Action[];
+  data: T[];
+  setDataSingle?: (row: T) => void;
+  actions?: (row: T) => Action<T>[];
   itemsPerPage?: number;
 }
 
-const GenericTable: React.FC<GenericTableProps> = ({
+const GenericTable = <T extends { _id?: string }>({
   columns,
   data,
   titleItem,
   actions,
   setDataSingle,
   itemsPerPage = 5,
-}) => {
+}: GenericTableProps<T>) => {
   const [openRow, setOpenRow] = useState<number | null>(null);
   const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [viewMode, setViewMode] = useState<"table" | "card" | "list">("table");
@@ -89,7 +89,7 @@ const GenericTable: React.FC<GenericTableProps> = ({
     };
   }, [openRow]);
 
-  const renderActionIcon = (action: Action, row: Record<string, any>) => (
+  const renderActionIcon = (action: Action<T>, row: T) => (
     <button
       onClick={(e) => {
         e.stopPropagation();
@@ -166,7 +166,7 @@ const GenericTable: React.FC<GenericTableProps> = ({
                   <tr className="bg-gray-100 text-gray-700 uppercase">
                     <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                     {columns.map((col) => (
-                      <th key={col.key} className="px-4 py-3 text-left text-sm font-semibold">
+                      <th key={String(col.key)} className="px-4 py-3 text-left text-sm font-semibold">
                         {col.label}
                       </th>
                     ))}
@@ -178,7 +178,7 @@ const GenericTable: React.FC<GenericTableProps> = ({
                 <tbody>
                   {paginatedData.map((row, idx) => (
                     <tr
-                      key={row._id || idx}
+                      key={row._id ?? idx}
                       className="border-b hover:bg-gray-50 transition-colors cursor-pointer"
                       onClick={() => setDataSingle?.(row)}
                     >
@@ -186,8 +186,8 @@ const GenericTable: React.FC<GenericTableProps> = ({
                         {startIdx + idx + 1}
                       </td>
                       {columns.map((col) => (
-                        <td key={col.key} className="px-4 py-3 text-sm text-gray-800">
-                          {row[col.key]}
+                        <td key={String(col.key)} className="px-4 py-3 text-sm text-gray-800">
+                          {String(row[col.key])}
                         </td>
                       ))}
                       {actions && (
@@ -229,13 +229,13 @@ const GenericTable: React.FC<GenericTableProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {paginatedData.map((row, idx) => (
                 <div
-                  key={row._id || idx}
+                  key={row._id ?? idx}
                   onClick={() => setDataSingle?.(row)}
                   className="relative bg-white border border-gray-200 rounded-2xl shadow p-5 transition hover:shadow-md hover:-translate-y-1 cursor-pointer"
                 >
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg font-bold text-gray-800">
-                      {row.title || `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row ? String((row as any).title) : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     {actions && (
                       <div className="relative" ref={(el) => (dropdownRefs.current[idx] = el)}>
@@ -264,12 +264,12 @@ const GenericTable: React.FC<GenericTableProps> = ({
                   </div>
                   <div className="flex flex-col gap-3">
                     {columns.map((col) => (
-                      <div key={col.key} className="flex flex-col bg-gray-50 p-3 rounded-lg">
+                      <div key={String(col.key)} className="flex flex-col bg-gray-50 p-3 rounded-lg">
                         <span className="text-sm font-semibold text-gray-500">
                           {col.label}
                         </span>
                         <span className="text-gray-800 font-medium line-clamp-2">
-                          {row[col.key]}
+                          {String(row[col.key])}
                         </span>
                       </div>
                     ))}
@@ -284,16 +284,16 @@ const GenericTable: React.FC<GenericTableProps> = ({
             <div className="flex flex-col gap-3">
               {paginatedData.map((row, idx) => (
                 <div
-                  key={row._id || idx}
+                  key={row._id ?? idx}
                   onClick={() => setDataSingle?.(row)}
                   className="flex items-center justify-between bg-white border rounded-xl shadow p-4 hover:shadow-md transition cursor-pointer"
                 >
                   <div>
                     <h3 className="text-lg font-bold text-gray-800">
-                      {row.title || `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row ? String((row as any).title) : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {columns.map((col) => `${row[col.key]} `).join(" | ")}
+                      {columns.map((col) => `${String(row[col.key])} `).join(" | ")}
                     </p>
                   </div>
                   {actions && (

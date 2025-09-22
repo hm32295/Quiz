@@ -44,7 +44,7 @@ export const editQuestionAsyncThunk =createAsyncThunk('editQuestion/editQuestion
 
 const editQuestion = createSlice({
     name:'editQuestion',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: []},
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(editQuestionAsyncThunk.pending,(state)=>{

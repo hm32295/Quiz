@@ -1,15 +1,21 @@
-type SelectBoxProps = {
+import React from "react";
+import { UseFormRegister, FieldErrors } from "react-hook-form";
+
+interface SelectBoxProps<T extends Record<string, any>> {
   label: string;
   placeholder?: string;
-  name: string;
-  register?: any;
-  validation?: object;
-  error?: any;
+  name: keyof T;
+  register: UseFormRegister<T>;
+  validation?: {
+    required?: string;
+    pattern?: { value: RegExp; message: string };
+  };
+  error: FieldErrors<T>;
   options: { value: string; label: string }[];
   children?: React.ReactNode;
-};
+}
 
-export default function SelectBox({
+export default function SelectBox<T extends Record<string, any>>({
   label,
   placeholder,
   name,
@@ -18,19 +24,20 @@ export default function SelectBox({
   error,
   options,
   children,
-}: SelectBoxProps) {
+}: SelectBoxProps<T>) {
   return (
     <div className="w-full mb-[25px]">
       <label
         className="text-white w-full block mb-[5px] ml-[10px] capitalize"
-        htmlFor={name}
+        htmlFor={String(name)}
       >
         {label}
       </label>
+
       <div className="w-full rounded-[10px] border-2 flex-row-reverse justify-center items-center border-white bg-[#0D1321] flex gap-0.5 py-[10px] px-[16px]">
         <select
-          {...(register ? register(name, validation) : {})}
-          id={name}
+          {...register(name, validation)}
+          id={String(name)}
           className="bg-transparent text-white w-full text-[14px] ml-[8px] outline-0"
           defaultValue=""
         >
@@ -45,12 +52,11 @@ export default function SelectBox({
         </select>
         {children}
       </div>
-      {error ? (
-        error[name] && (
-          <div className="text-amber-600 capitalize">{error[name].message}</div>
-        )
-      ) : (
-        ""
+
+      {error[name] && (
+        <div className="text-amber-600 capitalize">
+          {String(error[name]?.message)}
+        </div>
       )}
     </div>
   );

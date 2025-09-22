@@ -5,9 +5,10 @@ import { setLogin, setRegister } from '@/redux/Features/login';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RootState } from '@/redux/store';
 
 export default function IconSAuthentication() {
-   const { value } = useSelector((state: any) => state.login);
+   const { value } = useSelector((state: RootState) => state.login);
   const{t} = useTranslation()
   const dispatch = useDispatch();
    const router = useRouter()
@@ -19,7 +20,7 @@ export default function IconSAuthentication() {
       dispatch(setRegister())
     }
     
-  },[])
+  },[dispatch,pathname])
   return (
     <div className='flex gap-3 mb-3 '>
        

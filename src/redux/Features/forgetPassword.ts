@@ -20,7 +20,7 @@ export const forgetPasswordUser =createAsyncThunk('forgetPassword/forgetPassword
 
 const forgetPassword = createSlice({
     name:'forgetPassword',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(forgetPasswordUser.pending,(state)=>{

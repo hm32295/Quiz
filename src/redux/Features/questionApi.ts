@@ -4,9 +4,7 @@ import { axiosInstance } from "@/services/api";
 import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface dataQuestionType{
-    Title: string; Description: string; level: string ;Date:string
-}
+
 export const QuestionAsyncThunk =createAsyncThunk('Question/QuestionAsyncThunk', async (_,{rejectWithValue})=>{
         
         const data =[]
@@ -30,7 +28,7 @@ export const QuestionAsyncThunk =createAsyncThunk('Question/QuestionAsyncThunk',
 
 const Question = createSlice({
     name:'Question',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: []},
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(QuestionAsyncThunk.pending,(state)=>{

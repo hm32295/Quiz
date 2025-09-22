@@ -24,18 +24,6 @@ interface QuizQuestion {
   options: QuizOption;
 }
 
-interface QuizData {
-  _id: string;
-  title: string;
-  difficulty: string;
-  schadule: string;
-  questions: QuizQuestion[];
-}
-
-interface SingleQuizState {
-  data: { data: QuizData } | null;
-  isLoading: boolean;
-}
 
 interface Answer {
   question: string;

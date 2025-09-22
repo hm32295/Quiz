@@ -1,30 +1,42 @@
 import { axiosInstance } from "@/services/api";
-import {  QUIZ_URL } from "@/services/endpoints";
+import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface firstFiveInComingState {
-  isLoading: boolean;
-  error: string | null;
-  data: any[];
+interface IncomingQuiz {
+  _id: string;
+  title: string;
+  startDate: string;
+  duration: number;
+  group?: string;
 }
 
-const initialState: firstFiveInComingState = {
+interface FirstFiveIncomingState {
+  isLoading: boolean;
+  error: string | null;
+  data: IncomingQuiz[];
+}
+
+const initialState: FirstFiveIncomingState = {
   isLoading: false,
   error: null,
   data: [],
 };
 
-export const firstFiveInCommingAsyncThunk = createAsyncThunk(
+export const firstFiveInCommingAsyncThunk = createAsyncThunk<
+  IncomingQuiz[], 
+  void,         
+  { rejectValue: string } 
+>(
   "firstFiveInComing/firstFiveInComingAsyncThunk",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(QUIZ_URL.INCOMING);
-    
-      return response.data;
-      
+      return response.data as IncomingQuiz[];
     } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
+      console.error(error);
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -41,12 +53,15 @@ const firstFiveInComingSlice = createSlice({
       })
       .addCase(firstFiveInCommingAsyncThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload || "Something went wrong";
       })
-      .addCase(firstFiveInCommingAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
-        state.isLoading = false;
-        state.data = action.payload;
-      });
+      .addCase(
+        firstFiveInCommingAsyncThunk.fulfilled,
+        (state, action: PayloadAction<IncomingQuiz[]>) => {
+          state.isLoading = false;
+          state.data = action.payload;
+        }
+      );
   },
 });
 

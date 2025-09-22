@@ -1,11 +1,11 @@
 import React from "react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 
-interface InputProps<T extends Record<string, any>> {
+interface InputProps<T extends Record<string, unknown>> {
   label: string;
   placeholder: string;
   type: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   name: keyof T;
   validation: {
     required: string;
@@ -18,7 +18,7 @@ interface InputProps<T extends Record<string, any>> {
   error: FieldErrors<T>;
 }
 
-export default function Input<T extends Record<string, any>>({
+export default function Input<T extends Record<string, unknown>>({
   label,
   placeholder,
   type,
@@ -48,9 +48,9 @@ export default function Input<T extends Record<string, any>>({
         {children}
       </div>
 
-      {error[name] && (
+      {error[name]?.message && (
         <div className="text-amber-600 capitalize">
-          {String(error[name]?.message)}
+          {error[name]?.message as string}
         </div>
       )}
     </div>

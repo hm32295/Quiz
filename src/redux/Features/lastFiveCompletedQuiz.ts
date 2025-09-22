@@ -31,7 +31,7 @@ export const lastFiveCompletedQuizAsyncThunk = createAsyncThunk<
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(QUIZ_URL.COMPLETED);
-      return response.data as Quiz[];
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(
         error?.response?.data?.message || "Something went wrong"

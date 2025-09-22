@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import Spinner from "../loading/spinnerComponent";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 type JoinQuizModalProps = {
   isOpen: boolean;
@@ -21,7 +22,7 @@ interface typeSubmit {
 export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
   const { register, handleSubmit, reset } = useForm<typeSubmit>();
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { t } = useTranslation();
 

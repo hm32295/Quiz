@@ -2,32 +2,45 @@ import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface SubmitQuizState {
+export interface Answer {
+  question: string;
+  answer: string;
+}
+
+export interface SubmitQuizState {
   id: string;
-  data: { question: string; answer: string }[];
+  data: Answer[];
+}
+
+export interface SubmitQuizResponse {
+  message: string;
+  score?: number; // أضف أي حقول إضافية تأتي من الـ API
 }
 
 interface SubmitQuizSliceState {
   isLoading: boolean;
   error: string | null;
-  data: any[];
+  data: SubmitQuizResponse | null;
 }
 
 const initialState: SubmitQuizSliceState = {
   isLoading: false,
   error: null,
-  data: [],
+  data: null,
 };
 
-export const submitQuizAsyncThunk = createAsyncThunk(
+export const submitQuizAsyncThunk = createAsyncThunk<
+  SubmitQuizResponse,
+  SubmitQuizState,
+  { rejectValue: string }
+>(
   "submitQuiz/submitQuizAsyncThunk",
-  async (data: SubmitQuizState, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(QUIZ_URL.SUBMIT(data.id), {
         answers: data.data,
       });
-
-      return response.data;
+      return response.data as SubmitQuizResponse;
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(
@@ -49,11 +62,11 @@ const submitQuizSlice = createSlice({
       })
       .addCase(submitQuizAsyncThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? "Something went wrong";
       })
       .addCase(
         submitQuizAsyncThunk.fulfilled,
-        (state, action: PayloadAction<any[]>) => {
+        (state, action: PayloadAction<SubmitQuizResponse>) => {
           state.isLoading = false;
           state.data = action.payload;
         }

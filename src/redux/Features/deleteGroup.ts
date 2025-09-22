@@ -27,7 +27,7 @@ export const deleteGroupAsyncThunk = createAsyncThunk('deleteGroup/deleteGroupAs
 
 const deleteGroup = createSlice({
     name:'deleteGroup',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(deleteGroupAsyncThunk.pending,(state)=>{

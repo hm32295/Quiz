@@ -25,7 +25,7 @@ export const resultsAsyncThunk = createAsyncThunk('results/resultsAsyncThunk', a
 
 const results = createSlice({
     name:'results',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: []},
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(resultsAsyncThunk.pending,(state)=>{

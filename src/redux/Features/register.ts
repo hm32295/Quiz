@@ -20,7 +20,7 @@ export const registerUser =createAsyncThunk('register/registerUser', async (data
 
 const register = createSlice({
     name:'register',
-    initialState: {isLoading: false,error: null as string | null,data: [] as any},
+    initialState: {isLoading: false,error: null as string | null,data: []},
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(registerUser.pending,(state)=>{

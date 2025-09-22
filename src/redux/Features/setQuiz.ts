@@ -1,28 +1,39 @@
 import { axiosInstance } from "@/services/api";
-import { QUIZ_URL, setQuiz_URL } from "@/services/endpoints";
+import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface setQuizState {
-  isLoading: boolean;
-  error: string | null;
-  data: any[];
+export interface Quiz {
+  _id?: string;
+  title: string;
+  description: string;
+  group: string;
+  questions_number: number;
+  difficulty: "easy" | "medium" | "hard" | "";
+  type: "FE" | "BE" | "DO" | "";
+  duration: string;
+  schadule: string;
+  score_per_question: string;
+  code?: string; // لو السيرفر بيرجع كود بعد الإنشاء
 }
 
-const initialState: setQuizState = {
+interface SetQuizState {
+  isLoading: boolean;
+  error: string | null;
+  data: Quiz[];
+}
+
+const initialState: SetQuizState = {
   isLoading: false,
   error: null,
   data: [],
 };
 
-export const setQuizAsyncThunk = createAsyncThunk(
+export const setQuizAsyncThunk = createAsyncThunk<Quiz, Quiz, { rejectValue: string }>(
   "setQuiz/setQuizAsyncThunk",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(QUIZ_URL.CREATE,data);
-      // console.log(response.data);
-      
-     return response.data;
-      
+      const response = await axiosInstance.post(QUIZ_URL.CREATE, data);
+      return response.data as Quiz;
     } catch (error: any) {
       console.log(error);
       return rejectWithValue(error?.response?.data?.message || "Something went wrong");
@@ -42,11 +53,11 @@ const setQuizSlice = createSlice({
       })
       .addCase(setQuizAsyncThunk.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.payload ?? "Something went wrong";
       })
-      .addCase(setQuizAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
+      .addCase(setQuizAsyncThunk.fulfilled, (state, action: PayloadAction<Quiz>) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.data.push(action.payload);
       });
   },
 });
