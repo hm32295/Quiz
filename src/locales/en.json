@@ -431,7 +431,8 @@
       "groups": "Groups",
       "quizzes": "Quizzes",
       "questions": "Questions",
-      "results": "Results"
+      "results": "Results",
+      "change" :"Change Password"
     }
   },
 

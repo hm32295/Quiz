@@ -10,6 +10,7 @@ import {
   FaUserGraduate,
   FaUsers,
 } from "react-icons/fa";
+import { GrUpdate } from "react-icons/gr";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
@@ -29,6 +30,7 @@ export default function RootLayout({
     { name: "quizzes", icon: <FaClipboardList />, link: "/instructor/quizes" },
     { name: "questions", icon: <FaChartBar />, link: "/instructor/questions" },
     { name: "results", icon: <FaChartBar />, link: "/instructor/results" },
+    { name: "change", icon: <GrUpdate />, link: "/authentication/change-password" },
   ];
 
   const translatedMenuItems = menuItems.map((item) => ({

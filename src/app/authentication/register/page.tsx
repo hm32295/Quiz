@@ -7,36 +7,45 @@ import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import { RegisterForm } from '@/interfaces/interfaces';
 import { registerUser } from '@/redux/Features/register';
+import { AppDispatch } from '@/redux/store';
 import { EMAIL_VALIDATION } from '@/services/validation';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { FaRegIdCard } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 export default function Register() {
-  const dispatch = useDispatch();
-  const { isLoading,error,data} = useSelector(state => state.login );
- 
+  const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(false)
   const { t } = useTranslation();
-
+  const router = useRouter()
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<RegisterForm>();
     
   const submit = async (data:RegisterForm)=>{
-   
-    data = {data,toast, reset,t}
+   setLoading(true)
     try {
-      await dispatch(registerUser(data as any) as any);
-      
+      const response =  await dispatch(registerUser(data));
+       console.log(response);
+    
+       if (registerUser.fulfilled.match(response)) {
+            reset()
+            toast.success(response.payload.message || t('toastSuccessRegister') || 'Register Success');
+            router.push('/authentication/login')
+       }else {
+          toast.error(response.error?.message || 'Email or password invalid');
+        }
     } catch (error) {
       console.log(error);
       
     }
-      
+      setLoading(false)
     }
   
   
@@ -82,7 +91,7 @@ export default function Register() {
       </Input>
      
       <Button  content={t('registerSuccess')} >
-          {isLoading ? <MoonLoaderToButton/> : <IoMdSend/>}
+          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>

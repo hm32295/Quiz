@@ -5,6 +5,7 @@ import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import {  resetPasswordTypes } from '@/interfaces/interfaces';
 import { resetPasswordUser } from '@/redux/Features/resetPassword';
+import { AppDispatch } from '@/redux/store';
 import { EMAIL_VALIDATION } from '@/services/validation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -13,11 +14,11 @@ import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 export default function ResetPassword() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { t } = useTranslation();
@@ -30,7 +31,14 @@ export default function ResetPassword() {
     setLoading(true)
     try {
         
-     await dispatch(resetPasswordUser(data as any) as any);
+    const response = await dispatch(resetPasswordUser(data));
+     if (resetPasswordUser.fulfilled.match(response)) {
+            reset()
+            toast.success(response.payload.message || t('toastSuccessRegister') || 'Register Success');
+            router.push('/authentication/login')
+      }else {
+          toast.error(response.error?.message || 'Email or password invalid');
+        }
     } catch (error) {
       console.log(error);
       

@@ -5,26 +5,36 @@ import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import { changePasswordTypes } from '@/interfaces/interfaces';
 import { changePasswordUser } from '@/redux/Features/changePassword';
+import { AppDispatch } from '@/redux/store';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 export default function ChangePassword() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
  const[ loading ,setLoading] = useState(false)
   const { t } = useTranslation();
 
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<changePasswordTypes>();
-    
+  const router = useRouter()
   const submit = async (data:changePasswordTypes)=>{
-    data = {data,toast, reset,t}
+    
     setLoading(true)
     try {
-      await dispatch(changePasswordUser(data) as any);
+     const response = await dispatch(changePasswordUser(data));
+     if (changePasswordUser.fulfilled.match(response)) {
+          reset()
+          toast.success(t('toastSuccessRegister') || 'Register Success');
+          router.push('../')
+
+      }else {
+          toast.error(response.payload?.message || 'Email or password invalid');
+        }
       
     } catch (error) {
       console.log(error);

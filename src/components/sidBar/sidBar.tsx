@@ -25,7 +25,6 @@ const Sidebar = ({ menuItems }: { menuItems: MenuItemsType[] }) => {
   const isRTL = dir === "rtl";
 
   const handleLinkClick = () => {
-    // لو الشاشة أصغر من md نخفي السايدبار
     if (window.innerWidth < 768) {
       setOpen(false);
     }

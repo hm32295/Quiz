@@ -4,22 +4,14 @@ import { axiosInstance } from "@/services/api";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface LoginPayload {
-  data: RegisterForm
-  reset: () => void;
-  toast: any;
-  t: (key: string) => string;
-}
 
-export const resetPasswordUser =createAsyncThunk('resetPassword/resetPasswordUser', async (data:LoginPayload ,{rejectWithValue})=>{
+
+export const resetPasswordUser =createAsyncThunk('resetPassword/resetPasswordUser', async (data:RegisterForm ,{rejectWithValue})=>{
         
      try {
-        const response= await axiosInstance.post(AUTH_URL.RESET_PASSWORD,data.data)
-        const dataResponse = response.data.data
-        data.reset()
-        data.toast.success(data.t('toastSuccessRegister') || 'Register Success');
-        data.router.push('/authentication/login')
-        return dataResponse
+        const response= await axiosInstance.post(AUTH_URL.RESET_PASSWORD,data)
+       
+        return response.data
     } catch (error) {
         data.toast.error(error?.response?.data?.message || 'error');
         return rejectWithValue(error?.response?.data?.message)

@@ -28,37 +28,39 @@ import singleStudentReducer from './Features/singleStudent'
 import studentWithOutGroupReducerReducer from './Features/getStudentWithOutGroup'
 
 
-const store =  configureStore({
-    reducer: {
-      login:loginReducer,
-      createQuiz:createQuizReducer,
-      register: registerReducer,
-      forgetPassword: forgetPasswordReducer,
-      resetPassword: resetPasswordReducer,
-      Question: QuestionReducer,
-      DeleteQuestion: DeleteQuestionReducer,
-      editQuestion: editQuestionReducer,
-      questionReducer: addQuestionReducer,
-      Student: StudentReducer,
-      setGroup:setGroupReducer,
-      Group:getGroupReducer,
-      editGroup:editGroupReducer,
-      deleteGroup:deleteGroupReducer,
-      getQuiz:getQuizReducer,
-      setQuizSlice:setQuizReducer,
-      deleteQuiz:deleteQuizReducer,
-      editQuiz:editQuizReducer,
-      firstFiveInCommingSlice:firstFiveInCommingReducer,
-      lastFiveCompletedQuizSlice:lastFiveCompletedQuizReducer,
-      results:resultsReducer,
-      joinQuiz : joinQuizReducer,
-      singleQuiz : singleQuizReducer,
-      submitQuiz : submitQuizReducer,
-      topStudent : topStudentReducer,
-      singleStudent : singleStudentReducer,
-      studentWithOutGroupReducer : studentWithOutGroupReducerReducer,
-      
-    },
-  })
+const store = configureStore({
+  reducer: {
+    login: loginReducer,
+    createQuiz: createQuizReducer,
+    register: registerReducer,
+    forgetPassword: forgetPasswordReducer,
+    resetPassword: resetPasswordReducer,
+    Question: QuestionReducer,
+    DeleteQuestion: DeleteQuestionReducer,
+    editQuestion: editQuestionReducer,
+    questionReducer: addQuestionReducer,
+    Student: StudentReducer,
+    setGroup: setGroupReducer,
+    Group: getGroupReducer,
+    editGroup: editGroupReducer,
+    deleteGroup: deleteGroupReducer,
+    getQuiz: getQuizReducer,
+    setQuizSlice: setQuizReducer,
+    deleteQuiz: deleteQuizReducer,
+    editQuiz: editQuizReducer,
+    firstFiveInCommingSlice: firstFiveInCommingReducer,
+    lastFiveCompletedQuizSlice: lastFiveCompletedQuizReducer,
+    results: resultsReducer,
+    joinQuiz: joinQuizReducer,
+    singleQuiz: singleQuizReducer,
+    submitQuiz: submitQuizReducer,
+    topStudent: topStudentReducer,
+    singleStudent: singleStudentReducer,
+    studentWithOutGroupReducer: studentWithOutGroupReducerReducer,
+  },
+})
 
-export default store;
+export type RootState = ReturnType<typeof store.getState> 
+export type AppDispatch = typeof store.dispatch     
+
+export default store

@@ -5,6 +5,7 @@ import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import { ForgetPasswordTypes } from '@/interfaces/interfaces';
 import {  forgetPasswordUser } from '@/redux/Features/forgetPassword';
+import { AppDispatch } from '@/redux/store';
 import { EMAIL_VALIDATION } from '@/services/validation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -12,10 +13,10 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 export default function ForgetPassword() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [loading , setLoading] = useState(false)
   const router = useRouter()
  
@@ -25,10 +26,20 @@ export default function ForgetPassword() {
   const { register, handleSubmit, formState:{errors},reset } = useForm<ForgetPasswordTypes>();
     
   const submit = async (data:ForgetPasswordTypes)=>{
-    data = {data,toast, reset,t,router}
       setLoading(true)
     try {
-      await dispatch(forgetPasswordUser(data as any) as any);
+     const response = await dispatch(forgetPasswordUser(data));
+     console.log(response);
+     
+      if (forgetPasswordUser.fulfilled.match(response)) {
+        reset()
+        toast.success(t('toastSuccessRegister') || 'Register Success');
+        router.push('/authentication/reset-password')
+      }else {
+        toast.error(response.error?.message || 'Email or password invalid');
+      }
+     
+
     } catch (error) {
       console.log(error);
       

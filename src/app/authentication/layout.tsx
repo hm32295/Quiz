@@ -3,6 +3,7 @@ import React from 'react'
 
 import auth from '../../../public/auth.png'
 import logo from '../../../public/authLogo.png'
+import { ToastContainer } from 'react-toastify';
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +23,18 @@ export default function RootLayout({
                   <div className="bg-[#FFEDDF]  hidden lg:flex pl-[48px] pr-[48px] rounded-[20px] w-[50%]">
                     <Image alt="auth" src={auth} className="w-full"/>
                   </div>
+
+                   <ToastContainer 
+                        position="top-right"
+                        autoClose={3000}
+                        hideProgressBar={false}
+                        newestOnTop
+                        closeOnClick
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                      />
                </div>
               </div>
         
