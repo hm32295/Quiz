@@ -26,15 +26,18 @@ export default function ChangePassword() {
     
     setLoading(true)
     try {
-     const response = await dispatch(changePasswordUser(data));
-     if (changePasswordUser.fulfilled.match(response)) {
-          reset()
-          toast.success(t('toastSuccessRegister') || 'Register Success');
-          router.push('../')
 
-      }else {
-          toast.error(response.payload?.message || 'Email or password invalid');
-        }
+
+      const response = await dispatch(changePasswordUser(data));
+
+      if (changePasswordUser.fulfilled.match(response)) {
+        reset();
+        toast.success(t("toastSuccessRegister") || "Register Success");
+        router.push("../");
+      } else {
+        const errorPayload = response.payload as { message?: string };
+        toast.error(errorPayload?.message || "Email or password invalid");
+      }
       
     } catch (error) {
       console.log(error);
