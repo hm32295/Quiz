@@ -26,14 +26,20 @@ export default function Register() {
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<RegisterForm>();
     
-  const submit = (data:RegisterForm)=>{
-    // data.role = [data.role]
-    console.log(data);
-    
+  const submit = async (data:RegisterForm)=>{
+   
     data = {data,toast, reset,t}
-      dispatch(registerUser(data));
+    try {
+      await dispatch(registerUser(data as any) as any);
+      
+    } catch (error) {
+      console.log(error);
       
     }
+      
+    }
+  
+  
   return (
     <form onSubmit={handleSubmit(submit)}>
       

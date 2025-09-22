@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FaPlusCircle, FaQuestionCircle } from "react-icons/fa";
 import "animate.css";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 type ActionCardProps = {
   title: string;
@@ -48,23 +49,34 @@ const ActionCard = ({ title, icon, image, onClick }: ActionCardProps) => {
   );
 };
 
-export default function ActionsPanel({ onClick ,type}: { onClick: () => void, type?: 'student' }) {
+export default function ActionsPanel({
+  onClick,
+  type,
+}: {
+  onClick: () => void;
+  type?: "student";
+}) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
     <div className="mb-3 flex flex-wrap justify-start gap-4">
       <ActionCard
-        title={`${type ? 'join' : 'Set up a new'} quiz`}
+        title={
+          type
+            ? t("actionsPanel_joinQuiz")
+            : t("actionsPanel_setupQuiz")
+        }
         icon={<FaPlusCircle />}
         onClick={() => onClick()}
       />
-        {type ? "" :
-              <ActionCard
-                title="Question Bank"
-                icon={<FaQuestionCircle />}
-                onClick={() => router.push("/instructor/questions")}
-              />
-        }
+      {!type && (
+        <ActionCard
+          title={t("actionsPanel_questionBank")}
+          icon={<FaQuestionCircle />}
+          onClick={() => router.push("/instructor/questions")}
+        />
+      )}
     </div>
   );
 }

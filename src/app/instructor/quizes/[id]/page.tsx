@@ -5,35 +5,41 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuizAsyncThunk } from "@/redux/Features/getQuizzes";
-import AddAndEditQuiz from "@/components/addAndEditQuiz/addAndEditQuiz";
-import { show } from "@/redux/Features/createQuiz";
+import { setData, showEdit } from "@/redux/Features/createQuiz";
+import TableSkeleton from "@/components/loading/tableSkeletonLoader";
+import { useTranslation } from "react-i18next";
 
 export default function QuizCard() {
-   const params = useParams();
+  const { t } = useTranslation();
+  const params = useParams();
   const id = params?.id as string;
 
   const dispatch = useDispatch();
-  const { data: quizzes } = useSelector((state: any) => state.getQuiz);
+  const { data: quizzes, isLoading } = useSelector((state: any) => state.getQuiz);
 
   const quiz = quizzes?.find((q: any) => q._id === id);
 
   useEffect(() => {
-    
     if (!quizzes || quizzes.length === 0) {
       dispatch(getQuizAsyncThunk() as any);
     }
   }, [dispatch, quizzes]);
 
-  if (!quiz) return <p>Loading...</p>;
+  if (!quiz || isLoading)
+    return (
+      <div className="flex justify-center">
+        <div className="w-72 max-w-72 mt-10">
+          <TableSkeleton cols={1} rows={5} />
+        </div>
+      </div>
+    );
 
   const dateString = quiz.schadule;
   const dateObj = new Date(dateString);
 
   const datePart = dateObj.toISOString().split("T")[0];
+  const timePart = dateObj.toISOString().split("T")[1].slice(0, 5);
 
-  const timePart = dateObj.toISOString().split("T")[1].slice(0,5);
-
-  
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="w-full max-w-sm bg-white shadow-lg rounded-2xl p-5 animate__animated animate__fadeInUp">
@@ -56,60 +62,63 @@ export default function QuizCard() {
 
         {/* Duration */}
         <div className="flex justify-between items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium">Duration</span>
+          <span className="text-gray-700 font-medium">
+            {t("quizCard_duration")}
+          </span>
           <span className="text-gray-800">{quiz.duration} minutes</span>
         </div>
+
         {/* Code */}
         <div className="flex justify-between items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium">Code</span>
+          <span className="text-gray-700 font-medium">
+            {t("quizCard_code")}
+          </span>
           <span className="text-gray-800">{quiz.code} </span>
         </div>
 
         {/* Number of questions */}
         <div className="flex justify-between items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium">Number of questions</span>
+          <span className="text-gray-700 font-medium">
+            {t("quizCard_questionsNumber")}
+          </span>
           <span className="text-gray-800">{quiz.questions_number}</span>
         </div>
 
         {/* Score */}
         <div className="flex justify-between items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium">Score per question</span>
+          <span className="text-gray-700 font-medium">
+            {t("quizCard_scorePerQuestion")}
+          </span>
           <span className="text-gray-800">{quiz.score_per_question}</span>
         </div>
 
         {/* Description */}
-      
         <div className="flex flex-wrap justify-between items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium w-full">Description</span>
+          <span className="text-gray-700 font-medium w-full">
+            {t("quizCard_description")}
+          </span>
           <span className="text-gray-800">{quiz.description}</span>
         </div>
+
         {/* Question bank */}
         <div className="flex justify-between flex-wrap items-center mb-3 bg-orange-50 p-2 rounded-lg">
-          <span className="text-gray-700 font-medium">Question bank used</span>
+          <span className="text-gray-700 font-medium">
+            {t("quizCard_questionBank")}
+          </span>
           <span className="text-gray-800">{quiz.type}</span>
         </div>
 
-        {/* Randomize */}
-        <div className="flex items-center gap-2 mb-4 select-none cursor-pointer">
-          <input type="checkbox"  id="randomize" className="w-4 h-4 cursor-pointer" defaultChecked />
-          <label htmlFor="randomize" className="text-gray-700 cursor-pointer">Randomize questions</label>
-        </div>
-
         {/* Edit Button */}
-        <button 
-        onClick={()=> dispatch(show())}
-        className="cursor-pointer flex items-center gap-2 w-full justify-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
-          <FaEdit /> Edit
+        <button
+          onClick={() => {
+            dispatch(setData(quiz));
+            dispatch(showEdit());
+          }}
+          className="cursor-pointer flex items-center gap-2 w-full justify-center bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+        >
+          <FaEdit /> {t("quizCard_edit")}
         </button>
       </div>
-
-
-
-
-       <AddAndEditQuiz
-          dataUpdate={quiz}
-          isEdit = {true}
-        />
     </div>
   );
 }

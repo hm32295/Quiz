@@ -19,6 +19,8 @@ export const setQuizAsyncThunk = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(QUIZ_URL.CREATE,data);
+      // console.log(response.data);
+      
      return response.data;
       
     } catch (error: any) {

@@ -19,8 +19,6 @@ export const singleQuizAsyncThunk = createAsyncThunk(
   async (id:string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(QUIZ_URL.WITHOUT_ANSWERS(id));
-    
-      
       return response.data;
       
     } catch (error: any) {

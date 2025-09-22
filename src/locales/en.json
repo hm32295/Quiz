@@ -53,10 +53,460 @@
   "chipNotFound": "Page Not Found",
   "messageNotFound": "Sorry, the page you are looking for does not exist or may have been moved.",
   "actionsNotFound": "Back to Home Page",
-  "messageParaNotFound": "Make sure the URL is typed correctly. If you believe this is a mistake, please return to the home page."
+  "messageParaNotFound": "Make sure the URL is typed correctly. If you believe this is a mistake, please return to the home page.",
+
+   "dashboardQuizzes": {
+      "completedQuizzes": "Completed Quizzes",
+      "columns": {
+        "title": "Quiz Title",
+        "question": "Question Description",
+        "level": "Question Difficulty Level",
+        "date": "Date"
+      },
+      "actions": {
+        "joinQuiz": "Join Quiz"
+        }
+    },
+    "quizPage": {
+    "loading": "Loading quiz...",
+    "progress": "Question {{current}} of {{total}}",
+    "submittedTitle": "🎉 Quiz Submitted!",
+    "submittedText": "You answered {{answered}} out of {{total}} questions.",
+    "yourAnswer": "Your Answer:",
+    "noAnswer": "No answer selected",
+    "retake": "Retake Quiz",
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "submitQuiz": "Submit Quiz"
+  },
+  "resultsPage": {
+    "title": "Quiz Results",
+    "columns": {
+      "title": "Quiz Title",
+      "question": "Question Description",
+      "level": "Question Difficulty Level",
+      "date": "Date"
+    }
+  },
+   "genericTable_titleItem": "Item",
+  "genericTable_searchPlaceholder": "Search {{item}}s...",
+  "genericTable_actions": "Actions",
+  "genericTable_edit": "Edit",
+  "genericTable_delete": "Delete",
+  "genericTable_view": "View",
+  "genericTable_prev": "Prev",
+  "genericTable_next": "Next",
+  "genericTable_page": "Page {{current}} of {{total}}",
+
+
+  "joinQuizModal_title": "Join Quiz",
+  "joinQuizModal_description": "Input the code received for the quiz below to join",
+  "joinQuizModal_codeLabel": "Code",
+  "joinQuizModal_codePlaceholder": "Enter quiz code",
+  "joinQuizModal_required": "The field is required",
+  "joinQuizModal_submit": "✓",
+  "joinQuizModal_cancel": "✕",
+
+   "actionsPanel_joinQuiz": "Join quiz",
+  "actionsPanel_setupQuiz": "Set up a new quiz",
+  "actionsPanel_questionBank": "Question Bank",
+
+   "upcomingQuizzes_title": "Upcoming quizzes",
+  "upcomingQuizzes_studentsEnrolled": "No. of students enrolled:",
+
+   "noData_title": "No Data Available",
+  "noData_subtitle": "There is currently no content to display.",
+  "noData_actionLabel": "Add New",
+
+   "quizTakingPage": {
+    "submittedTitle": "Quiz Submitted",
+    "submittedText": "You answered {{answered}} out of {{total}} questions.",
+    "yourAnswer": "Your answer:",
+    "noAnswer": "No answer provided",
+    "retake": "Retake Quiz",
+    "submit": "Submit",
+    "progress": "Question {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "submitQuiz": "Submit Quiz"
+  },
+
+    "quizResultsPage": {
+    "title": "Quiz Results",
+    "participant": "Participant",
+    "started": "Started",
+    "finished": "Finished",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "yourScore": "Your Score",
+    "finalScore": "Final Score",
+    "correctAnswer": "Correct",
+    "yourAnswer": "Your",
+    "notAnswered": "Not Answered"
+  },
+
+  "logoutModal": {
+    "openButton": "Logout",
+    "title": "Confirm Logout",
+    "message": "Are you sure you want to log out? You’ll need to log in again to access your account.",
+    "cancel": "Cancel",
+    "confirm": "Logout"
+  },
+
+  "topStudents": {
+    "title": "Top 5 Students",
+    "allStudents": "All Students",
+    "avgScore": "Average score"
+  },
+
+  "studentModal": {
+    "title": "Student Details",
+    "labels": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "group": "Group",
+      "avgScore": "Average Score"
+    },
+    "groupNA": "N/A",
+    "close": "Close"
+  },
+
+
+   "studentsPage": {
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "status": "Status",
+      "role": "Role"
+    },
+    "tableTitle": "Student",
+    "actions": {
+      "view": "View"
+    }
+  },
+
+
+    "studentsListPage": {
+    "title": "Students list",
+    "buttons": {
+      "selectGroup": "Please select a group."
+    },
+    "messages": {
+      "noStudents": "No students found in this group."
+    },
+    "labels": {
+      "email": "Email",
+      "status": "Status"
+    }
+  },
+
+
+   "groupsListPage": {
+    "title": "Groups list",
+    "buttons": {
+      "addGroup": "Add Group"
+    },
+    "labels": {
+      "groupName": "Group name",
+      "groupId": "Group id",
+      "maxStudents": "Max students",
+      "groupStatus": "Group status",
+      "group": "Group",
+      "studentsCount": "No. of students"
+    },
+    "messages": {
+      "deleteSuccess": "Group deleted successfully",
+      "deleteError": "Sorry, process failed"
+    }
+  },
+
+
+   "viewDataModal_unique": {
+    "headerTitle": "{{title}} Details",
+    "closeButton": "Close"
+  },
+
+
+   "confirmDeleteModal_unique": {
+    "title": "Confirm Delete",
+    "message": "Are you sure you want to delete this item? This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "deleting": "Deleting…"
+  },
+
+
+  "addAndEditGroup_unique": {
+    "titleAdd": "Set up a new Group",
+    "titleEdit": "Edit Group",
+    "groupNameLabel": "Group Name",
+    "groupNameRequired": "Group name is required",
+    "buttonSave": "✔ Save",
+    "buttonEdit": "✔ Edit",
+    "toastAddSuccess": "Group added successfully",
+    "toastEditSuccess": "Group updated successfully",
+    "toastProcessFailed": "Sorry, process failed",
+    "toastError": "Something went wrong!"
+  },
+
+   "selectBoxGroup": {
+    "label": "Select students",
+    "placeholder": "Select students...",
+    "remove": "Remove"
+  },
+
+
+   "questionsPage": {
+    "header": {
+      "title": "Bank Of Questions",
+      "addButton": "Add Question"
+    },
+    "table": {
+      "columns": {
+        "title": "Title",
+        "description": "Description",
+        "level": "Level",
+        "points": "Points"
+      },
+      "titleItem": "Question",
+      "loadingFallback": "Loading questions..."
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "modals": {
+      "delete": {
+        "title": "Delete this question?",
+        "message": "This will permanently remove the question and all related data. You can’t undo this action.",
+        "confirmLabel": "Yes, delete",
+        "cancelLabel": "Keep it"
+      },
+      "view": {
+        "title": "Question details",
+        "fields": {
+          "title": "Title",
+          "description": "Description",
+          "answer": "Answer",
+          "status": "Status",
+          "difficulty": "Difficulty",
+          "points": "Points",
+          "type": "Type"
+        }
+      },
+      "addEdit": {
+        "addTitle": "Add Question",
+        "editTitle": "Edit Question",
+        "saveBtn": "Save",
+        "cancelBtn": "Cancel",
+        "successAdd": "Question added successfully",
+        "successEdit": "Question updated successfully",
+        "error": "Sorry, something went wrong"
+      }
+    },
+    "toast": {
+      "deleteSuccess": "Deleted question successfully",
+      "deleteError": "Could not delete the question"
+    },
+    "placeholders": {
+      "search": "Search..."
+    }
+  },
 
   
+  "questionsPageAddEdit": {
+    "modal": {
+      "addTitle": "Set up a new question",
+      "editTitle": "Edit question",
+      "closeBtnAria": "Close modal"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "optionLabel": "{{option}}",
+      "rightAnswer": "Right Answer",
+      "selectRightAnswer": "Select Right Answer",
+      "difficulty": "Difficulty level",
+      "selectDifficulty": "Select Difficulty",
+      "category": "Category",
+      "selectCategory": "Select Category",
+      "save": "✔ Save",
+      "edit": "Edit",
+      "selectPlaceholder": "Select..."
+    },
+    "options": {
+      "answers": ["A", "B", "C", "D"],
+      "difficulties": ["easy", "medium", "hard"],
+      "categories": ["FE", "BE", "DO"]
+    },
+    "validation": {
+      "required": "This field is required"
+    },
+    "toast": {
+      "successAdd": "Question added successfully",
+      "successEdit": "Question updated successfully",
+      "error": "Something went wrong"
+    },
+    "loading": {
+      "saving": "Saving..."
+    }
+  },
 
+   "quizPage_completedQuizzes": "Completed Quizzes",
+  "quizPage_tableTitle": "Quiz Title",
+  "quizPage_tableQuestion": "Question Desc",
+  "quizPage_tableLevel": "Question difficulty level",
+  "quizPage_tableDate": "Date",
+  "quizPage_actionEdit": "Edit",
+  "quizPage_modalTitle": "Delete this course?",
+  "quizPage_modalMessage": "This will permanently remove the course and all related data. You can’t undo this action.",
+  "quizPage_modalConfirm": "Yes, delete",
+  "quizPage_modalCancel": "Keep it",
+  "quizPage_deleteSuccess": "Deleted successfully",
+  "quizPage_deleteError": "No record found",
+
+
+   "quizCard_title": "Title",
+  "quizCard_date": "Date",
+  "quizCard_time": "Time",
+  "quizCard_duration": "Duration",
+  "quizCard_code": "Code",
+  "quizCard_questionsNumber": "Number of questions",
+  "quizCard_scorePerQuestion": "Score per question",
+  "quizCard_description": "Description",
+  "quizCard_questionBank": "Question bank used",
+  "quizCard_edit": "Edit",
+
+    "results_title": "Results",
+  "results_table_title": "Question",
+  "results_column_title": "Title",
+  "results_column_groupName": "Group name",
+  "results_column_participants": "Participants",
+  "results_column_date": "Date",
+  "results_column_persons": "Persons",
+  "results_unknown": "Unknown",
+  "results_noOne": "No One",
+  "results_edit": "Edit",
+
+    "resultsDetails_table_title": "Result",
+  "resultsDetails_column_studentName": "Student name",
+  "resultsDetails_column_score": "Score",
+  "resultsDetails_column_average": "Average",
+  "resultsDetails_column_timeSubmitted": "Time submitted",
+  "resultsDetails_loading": "Loading...",
+  "resultsDetails_unknown": "Unknown",
+
+
+  "navbar_dashboard": "Dashboard",
+  "navbar_students": "Students",
+  "navbar_groups": "Groups",
+  "navbar_quizzes": "Quizzes",
+  "navbar_questions": "Questions",
+  "navbar_results": "Results",
+  "navbar_newQuiz": "New quiz",
+  "navbar_unknown": "Unknown",
+  "navbar_role_not_available": "N/A",
+
+  "sidebar_unique": {
+      "overlayAlt": "Overlay for mobile",
+      "toggleMenu": "Toggle Sidebar",
+      "menuItems": {
+        "dashboard": "Dashboard",
+        "students": "Students",
+        "groups": "Groups",
+        "quizzes": "Quizzes",
+        "questions": "Questions",
+        "results": "Results",
+        "settings": "Settings"
+      }
+    },
+
+      "rootLayout_unique": {
+    "menuItems": {
+      "dashboard": "Dashboard",
+      "students": "Students",
+      "groups": "Groups",
+      "quizzes": "Quizzes",
+      "questions": "Questions",
+      "results": "Results"
+    }
+  },
+
+   "learnerLayout": {
+    "menu": {
+      "dashboard": "Dashboard",
+      "results": "Results"
+    }
+  },
+
+
+   "addAndEditQuiz": {
+    "header": {
+      "edit": "Edit Quiz",
+      "create": "Set up a new Quiz"
+    },
+    "form": {
+      "title": "Quiz Title",
+      "titlePlaceholder": "Enter quiz title",
+      "titleRequired": "Quiz title is required",
+
+      "duration": "Duration (in minutes)",
+      "difficulty": "Difficulty",
+      "group": "Group Name",
+      "type": "Quiz Type",
+      "questionsNumber": "Number of Questions",
+      "schedule": "Schedule Date",
+      "scorePerQuestion": "Score per Question",
+      "description": "Description",
+      "descriptionRequired": "Description is required"
+    },
+    "options": {
+      "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
+      "type": {
+        "fe": "Frontend",
+        "be": "Backend",
+        "do": "DevOps"
+      }
+    },
+    "footer": {
+      "save": "✔ Save",
+      "edit": "✔ Edit"
+    },
+    "toast": {
+      "added": "Quiz added successfully ✅",
+      "updated": "Quiz updated successfully ✅"
+    }
+  },
+
+    "quizCreatedModal": {
+    "title": "Quiz was successfully created",
+    "subtitle": "CODE:",
+    "copied": "Copied!",
+    "close": "Close"
+  },
+
+   "selectBoxComponent": {
+    "placeholder": "Select",
+    "errorRequired": "This field is required"
+  },
+
+  "inputAdvancedComponent": {
+    "placeholder": "Enter value",
+    "errorRequired": "This field is required"
+  },
+
+  "navbar": {
+    "language": "Language",
+    "english": "English",
+    "arabic": "Arabic"
+  }
 
 
 

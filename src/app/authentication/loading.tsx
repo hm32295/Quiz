@@ -1,8 +1,8 @@
-import React from 'react'
+import TableSkeleton from '@/components/loading/tableSkeletonLoader'
 
 export default function Loading() {
   return (
-    <div>loading</div>
+    <TableSkeleton cols={1} rows={2} />
   )
 }
 

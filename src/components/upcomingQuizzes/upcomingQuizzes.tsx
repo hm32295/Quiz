@@ -4,24 +4,25 @@ import ImageError from "/public/upcommingQuiz.png";
 import { useDispatch, useSelector } from "react-redux";
 import { firstFiveInCommingAsyncThunk } from "@/redux/Features/firstFiveIncommingQuiz";
 import { useEffect } from "react";
-// import Link from "next/link";
+import TableSkeleton from "../loading/tableSkeletonLoader";
+import { useTranslation } from "react-i18next";
 
 type QuizCardProps = {
   title: string;
   schadule: string;
-  participants: number
+  participants: number;
   image: string;
-  status?:string;
-  _id?:string
+  status?: string;
+  _id?: string;
 };
 
-const QuizCard = ({ title, schadule, image ,participants,status,_id}: QuizCardProps) => {
-    const dateString = schadule;
-    const dateObj = new Date(dateString);
+const QuizCard = ({ title, schadule, image, participants }: QuizCardProps) => {
+  const { t } = useTranslation();
+  const dateString = schadule;
+  const dateObj = new Date(dateString);
 
-    const datePart = dateObj.toISOString().split("T")[0];
-
-    const timePart = dateObj.toISOString().split("T")[1].slice(0,5);
+  const datePart = dateObj.toISOString().split("T")[0];
+  const timePart = dateObj.toISOString().split("T")[1].slice(0, 5);
 
   return (
     <div
@@ -33,7 +34,6 @@ const QuizCard = ({ title, schadule, image ,participants,status,_id}: QuizCardPr
     >
       {/* Image */}
       <div className="w-16 h-16 relative flex-shrink-0">
-        {image}
         <Image
           src={image || ImageError}
           alt={title}
@@ -49,36 +49,34 @@ const QuizCard = ({ title, schadule, image ,participants,status,_id}: QuizCardPr
           {datePart} | {timePart}
         </p>
         <p className="text-xs text-gray-600 mt-1">
-          No. of students enrolled:{" "}
+          {t("upcomingQuizzes_studentsEnrolled")}{" "}
           <span className="font-medium">{participants}</span>
         </p>
       </div>
-
-      {/* Open button */}
-      {/* <Link href={`/learner/quizzes/${_id}`}  className="flex items-center text-green-600 font-medium ">
-       {status}
-      </Link> */}
     </div>
   );
 };
 
 export default function UpcomingQuizzes() {
-  const dispatch = useDispatch()
-  const {data , isLoading } = useSelector(state=> state.firstFiveInCommingSlice)
- useEffect(()=>{
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { data, isLoading } = useSelector(
+    (state: any) => state.firstFiveInCommingSlice
+  );
 
-   dispatch(firstFiveInCommingAsyncThunk())
- },[dispatch])
-        
-  if(isLoading) return <div>Loading ....</div>
+  useEffect(() => {
+    dispatch(firstFiveInCommingAsyncThunk() as any);
+  }, [dispatch]);
+
+  if (isLoading) return <TableSkeleton cols={1} rows={4} />;
 
   return (
     <section className="max-w-3xl mx-auto px-4 mt-4 mb-4">
       <h2 className="capitalize text-lg font-bold mb-4 text-gray-800">
-        Upcoming quizzes
+        {t("upcomingQuizzes_title")}
       </h2>
       <div className="space-y-4">
-        {data.map((quiz, index) => (
+        {data.map((quiz: QuizCardProps, index: number) => (
           <QuizCard key={index} {...quiz} />
         ))}
       </div>

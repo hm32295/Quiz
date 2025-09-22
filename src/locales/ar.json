@@ -51,6 +51,471 @@
   "messageNotFound" :"عفوًا، الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها.",
   "actionsNotFound" : "الرجوع للصفحة الرئيسية",
   "messageParaNotFound" :"تأكد من كتابة الرابط بشكل صحيح. إذا كنت تعتقد أن هذا خطأ، يُرجى العودة للصفحة الرئيسية "
+   ,"dashboardQuizzes": {
+    "completedQuizzes": "الاختبارات المكتملة",
+    "columns": {
+      "title": "عنوان الاختبار",
+      "question": "وصف السؤال",
+      "level": "مستوى صعوبة السؤال",
+      "date": "التاريخ"
+    },
+    "actions": {
+      "joinQuiz": "الانضمام إلى اختبار"
+    }
+  },
+   "quizPage": {
+    "loading": "جاري تحميل الاختبار...",
+    "progress": "السؤال {{current}} من {{total}}",
+    "submittedTitle": "🎉 تم تسليم الاختبار!",
+    "submittedText": "أجبت على {{answered}} من أصل {{total}} سؤال.",
+    "yourAnswer": "إجابتك:",
+    "noAnswer": "لم يتم اختيار إجابة",
+    "retake": "إعادة المحاولة",
+    "submit": "تسليم",
+    "next": "التالي",
+    "previous": "السابق",
+    "submitQuiz": "تسليم الاختبار"
+  },
+  "resultsPage": {
+    "title": "نتائج الاختبارات",
+    "columns": {
+      "title": "عنوان الاختبار",
+      "question": "وصف الأسئلة",
+      "level": "مستوى صعوبة الأسئلة",
+      "date": "التاريخ"
+    }
+  },
+
+    "genericTable_titleItem": "عنصر",
+  "genericTable_searchPlaceholder": "ابحث عن {{item}}...",
+  "genericTable_actions": "الإجراءات",
+  "genericTable_edit": "تعديل",
+  "genericTable_delete": "حذف",
+  "genericTable_view": "عرض",
+  "genericTable_prev": "السابق",
+  "genericTable_next": "التالي",
+  "genericTable_page": "الصفحة {{current}} من {{total}}",
+
+   "joinQuizModal_title": "انضم للاختبار",
+  "joinQuizModal_description": "أدخل الكود الذي استلمته للاختبار للانضمام",
+  "joinQuizModal_codeLabel": "الكود",
+  "joinQuizModal_codePlaceholder": "أدخل كود الاختبار",
+  "joinQuizModal_required": "هذا الحقل مطلوب",
+  "joinQuizModal_submit": "✓",
+  "joinQuizModal_cancel": "✕",
+
+    "actionsPanel_joinQuiz": "انضم إلى اختبار",
+  "actionsPanel_setupQuiz": "إعداد اختبار جديد",
+  "actionsPanel_questionBank": "بنك الأسئلة",
+
+   "upcomingQuizzes_title": "الاختبارات القادمة",
+  "upcomingQuizzes_studentsEnrolled": "عدد الطلاب المسجلين:",
+
+
+   "noData_title": "لا توجد بيانات متاحة",
+  "noData_subtitle": "لا يوجد محتوى لعرضه حالياً.",
+  "noData_actionLabel": "إضافة جديد",
+
+  "quizTakingPage": {
+    "submittedTitle": "تم إرسال الاختبار",
+    "submittedText": "أجبت على {{answered}} من أصل {{total}} سؤال.",
+    "yourAnswer": "إجابتك:",
+    "noAnswer": "لم يتم اختيار إجابة",
+    "retake": "إعادة المحاولة",
+    "submit": "إرسال",
+    "progress": "السؤال {{current}} من {{total}}",
+    "previous": "السابق",
+    "next": "التالي",
+    "submitQuiz": "إرسال الاختبار"
+  },
+
+
+   "quizResultsPage": {
+    "title": "نتائج الاختبار",
+    "participant": "المشارك",
+    "started": "وقت البدء",
+    "finished": "وقت الانتهاء",
+    "correct": "الإجابات الصحيحة",
+    "wrong": "الإجابات الخاطئة",
+    "yourScore": "درجتك",
+    "finalScore": "النتيجة النهائية",
+    "correctAnswer": "الإجابة الصحيحة",
+    "yourAnswer": "إجابتك",
+    "notAnswered": "لم يتم الإجابة"
+  },
+
+  "logoutModal": {
+    "openButton": "تسجيل الخروج",
+    "title": "تأكيد تسجيل الخروج",
+    "message": "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج إلى تسجيل الدخول مرة أخرى للوصول إلى حسابك.",
+    "cancel": "إلغاء",
+    "confirm": "تسجيل الخروج"
+  },
+
+   "topStudents": {
+    "title": "أفضل 5 طلاب",
+    "allStudents": "كل الطلاب",
+    "avgScore": "المعدل"
+  },
+
+
+   "studentModal": {
+    "title": "تفاصيل الطالب",
+    "labels": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "group": "المجموعة",
+      "avgScore": "المعدل"
+    },
+    "groupNA": "غير متاح",
+    "close": "إغلاق"
+  },
+
+
+   "studentsPage": {
+    "columns": {
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "status": "الحالة",
+      "role": "الدور"
+    },
+    "tableTitle": "طالب",
+    "actions": {
+      "view": "عرض"
+    }
+  },
+
+
+
+    "studentsListPage": {
+    "title": "قائمة الطلاب",
+    "buttons": {
+      "selectGroup": "من فضلك اختر مجموعة."
+    },
+    "messages": {
+      "noStudents": "لا يوجد طلاب في هذه المجموعة."
+    },
+    "labels": {
+      "email": "البريد الإلكتروني",
+      "status": "الحالة"
+    }
+  },
+
+
+
+   "groupsListPage": {
+    "title": "قائمة المجموعات",
+    "buttons": {
+      "addGroup": "إضافة مجموعة"
+    },
+    "labels": {
+      "groupName": "اسم المجموعة",
+      "groupId": "معرّف المجموعة",
+      "maxStudents": "الحد الأقصى للطلاب",
+      "groupStatus": "حالة المجموعة",
+      "group": "المجموعة",
+      "studentsCount": "عدد الطلاب"
+    },
+    "messages": {
+      "deleteSuccess": "تم حذف المجموعة بنجاح",
+      "deleteError": "عذرًا، العملية فشلت"
+    }
+  },
+
+
+   "viewDataModal_unique": {
+    "headerTitle": "تفاصيل {{title}}",
+    "closeButton": "إغلاق"
+  },
+
+
+   "confirmDeleteModal_unique": {
+    "title": "تأكيد الحذف",
+    "message": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ هذا الإجراء لا يمكن التراجع عنه.",
+    "cancel": "إلغاء",
+    "confirm": "حذف",
+    "deleting": "جارٍ الحذف…"
+  },
+
+
+  
+  "addAndEditGroup_unique": {
+    "titleAdd": "إضافة مجموعة جديدة",
+    "titleEdit": "تعديل المجموعة",
+    "groupNameLabel": "اسم المجموعة",
+    "groupNameRequired": "اسم المجموعة مطلوب",
+    "buttonSave": "✔ حفظ",
+    "buttonEdit": "✔ تعديل",
+    "toastAddSuccess": "تمت إضافة المجموعة بنجاح",
+    "toastEditSuccess": "تم تعديل المجموعة بنجاح",
+    "toastProcessFailed": "عذرًا، فشلت العملية",
+    "toastError": "حدث خطأ ما!"
+  },
+
+
+    "selectBoxGroup": {
+    "label": "اختر الطلاب",
+    "placeholder": "اختر الطلاب...",
+    "remove": "إزالة"
+  },
+
+
+
+   "questionsPage": {
+    "header": {
+      "title": "بنك الأسئلة",
+      "addButton": "إضافة سؤال"
+    },
+    "table": {
+      "columns": {
+        "title": "العنوان",
+        "description": "الوصف",
+        "level": "المستوى",
+        "points": "النقاط"
+      },
+      "titleItem": "سؤال",
+      "loadingFallback": "جارٍ تحميل الأسئلة..."
+    },
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "modals": {
+      "delete": {
+        "title": "حذف هذا السؤال؟",
+        "message": "سيتم إزالة السؤال وكل البيانات المرتبطة به نهائياً. لا يمكن التراجع عن هذا الإجراء.",
+        "confirmLabel": "نعم، احذف",
+        "cancelLabel": "ابقه"
+      },
+      "view": {
+        "title": "تفاصيل السؤال",
+        "fields": {
+          "title": "العنوان",
+          "description": "الوصف",
+          "answer": "الإجابة",
+          "status": "الحالة",
+          "difficulty": "الصعوبة",
+          "points": "النقاط",
+          "type": "النوع"
+        }
+      },
+      "addEdit": {
+        "addTitle": "إضافة سؤال",
+        "editTitle": "تعديل السؤال",
+        "saveBtn": "حفظ",
+        "cancelBtn": "إلغاء",
+        "successAdd": "تمت إضافة السؤال بنجاح",
+        "successEdit": "تم تحديث السؤال بنجاح",
+        "error": "عذراً، حدث خطأ"
+      }
+    },
+    "toast": {
+      "deleteSuccess": "تم حذف السؤال بنجاح",
+      "deleteError": "تعذّر حذف السؤال"
+    },
+    "placeholders": {
+      "search": "بحث..."
+    }
+  },
+
+    "questionsPageAddEdit": {
+    "modal": {
+      "addTitle": "إضافة سؤال جديد",
+      "editTitle": "تعديل السؤال",
+      "closeBtnAria": "إغلاق النافذة"
+    },
+    "fields": {
+      "title": "العنوان",
+      "description": "الوصف",
+      "optionLabel": "{{option}}",
+      "rightAnswer": "الإجابة الصحيحة",
+      "selectRightAnswer": "اختر الإجابة الصحيحة",
+      "difficulty": "مستوى الصعوبة",
+      "selectDifficulty": "اختر مستوى الصعوبة",
+      "category": "التصنيف",
+      "selectCategory": "اختر التصنيف",
+      "save": "✔ حفظ",
+      "edit": "تعديل",
+      "selectPlaceholder": "اختر..."
+    },
+    "options": {
+      "answers": ["A", "B", "C", "D"],
+      "difficulties": ["سهل", "متوسط", "صعب"],
+      "categories": ["واجهة", "خلفية", "DevOps"]
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب"
+    },
+    "toast": {
+      "successAdd": "تمت إضافة السؤال بنجاح",
+      "successEdit": "تم تعديل السؤال بنجاح",
+      "error": "حدث خطأ ما"
+    },
+    "loading": {
+      "saving": "جاري الحفظ..."
+    }
+  },
+
+
+    "quizPage_completedQuizzes": "الاختبارات المكتملة",
+  "quizPage_tableTitle": "عنوان الاختبار",
+  "quizPage_tableQuestion": "عدد الأسئلة",
+  "quizPage_tableLevel": "مستوى الصعوبة",
+  "quizPage_tableDate": "التاريخ",
+  "quizPage_actionEdit": "تعديل",
+  "quizPage_modalTitle": "هل تريد حذف هذا الاختبار؟",
+  "quizPage_modalMessage": "سيؤدي هذا إلى إزالة الاختبار وجميع البيانات المتعلقة به بشكل دائم. لا يمكنك التراجع عن هذا الإجراء.",
+  "quizPage_modalConfirm": "نعم، احذف",
+  "quizPage_modalCancel": "الاحتفاظ به",
+  "quizPage_deleteSuccess": "تم الحذف بنجاح",
+  "quizPage_deleteError": "لم يتم العثور على سجل",
+
+
+   "quizCard_title": "العنوان",
+  "quizCard_date": "التاريخ",
+  "quizCard_time": "الوقت",
+  "quizCard_duration": "المدة",
+  "quizCard_code": "الكود",
+  "quizCard_questionsNumber": "عدد الأسئلة",
+  "quizCard_scorePerQuestion": "الدرجة لكل سؤال",
+  "quizCard_description": "الوصف",
+  "quizCard_questionBank": "بنك الأسئلة المستخدم",
+  "quizCard_edit": "تعديل",
+
+
+    "results_title": "النتائج",
+  "results_table_title": "السؤال",
+  "results_column_title": "العنوان",
+  "results_column_groupName": "اسم المجموعة",
+  "results_column_participants": "المشاركون",
+  "results_column_date": "التاريخ",
+  "results_column_persons": "الأشخاص",
+  "results_unknown": "غير معروف",
+  "results_noOne": "لا أحد",
+  "results_edit": "تعديل",
+
+   "resultsDetails_table_title": "النتيجة",
+  "resultsDetails_column_studentName": "اسم الطالب",
+  "resultsDetails_column_score": "الدرجة",
+  "resultsDetails_column_average": "المعدل",
+  "resultsDetails_column_timeSubmitted": "وقت التسليم",
+  "resultsDetails_loading": "جار التحميل...",
+  "resultsDetails_unknown": "غير معروف",
+
+    "navbar_dashboard": "لوحة التحكم",
+  "navbar_students": "الطلاب",
+  "navbar_groups": "المجموعات",
+  "navbar_quizzes": "الاختبارات",
+  "navbar_questions": "الأسئلة",
+  "navbar_results": "النتائج",
+  "navbar_newQuiz": "اختبار جديد",
+  "navbar_unknown": "غير معروف",
+  "navbar_role_not_available": "غير متاح",
+
+
+    "sidebar_unique": {
+    "overlayAlt": "خلفية للجوال",
+    "toggleMenu": "فتح/إغلاق القائمة",
+    "menuItems": {
+      "dashboard": "لوحة التحكم",
+      "students": "الطلاب",
+      "groups": "المجموعات",
+      "quizzes": "الاختبارات",
+      "questions": "الأسئلة",
+      "results": "النتائج",
+      "settings": "الإعدادات"
+    }
+  },
+
+  "rootLayout_unique": {
+    "menuItems": {
+      "dashboard": "لوحة التحكم",
+      "students": "الطلاب",
+      "groups": "المجموعات",
+      "quizzes": "الاختبارات",
+      "questions": "الأسئلة",
+      "results": "النتائج"
+    }
+  },
+
+
+   "learnerLayout": {
+    "menu": {
+      "dashboard": "لوحة التحكم",
+      "results": "النتائج"
+    }
+  },
+
+
+  
+  "addAndEditQuiz": {
+    "header": {
+      "edit": "تعديل الاختبار",
+      "create": "إعداد اختبار جديد"
+    },
+    "form": {
+      "title": "عنوان الاختبار",
+      "titlePlaceholder": "أدخل عنوان الاختبار",
+      "titleRequired": "عنوان الاختبار مطلوب",
+
+      "duration": "المدة (بالدقائق)",
+      "difficulty": "مستوى الصعوبة",
+      "group": "اسم المجموعة",
+      "type": "نوع الاختبار",
+      "questionsNumber": "عدد الأسئلة",
+      "schedule": "تاريخ ووقت الاختبار",
+      "scorePerQuestion": "الدرجة لكل سؤال",
+      "description": "الوصف",
+      "descriptionRequired": "الوصف مطلوب"
+    },
+    "options": {
+      "difficulty": {
+        "easy": "سهل",
+        "medium": "متوسط",
+        "hard": "صعب"
+      },
+      "type": {
+        "fe": "الواجهة الأمامية",
+        "be": "الواجهة الخلفية",
+        "do": "ديف أوبس"
+      }
+    },
+    "footer": {
+      "save": "✔ حفظ",
+      "edit": "✔ تعديل"
+    },
+    "toast": {
+      "added": "تم إضافة الاختبار بنجاح ✅",
+      "updated": "تم تعديل الاختبار بنجاح ✅"
+    }
+  }
+,  "quizCreatedModal": {
+    "title": "تم إنشاء الاختبار بنجاح",
+    "subtitle": "الكود:",
+    "copied": "تم النسخ!",
+    "close": "إغلاق"
+  },
+
+  "selectBoxComponent": {
+    "placeholder": "اختر",
+    "errorRequired": "هذا الحقل مطلوب"
+  },
+  "inputAdvancedComponent": {
+    "placeholder": "ادخل القيمة",
+    "errorRequired": "هذا الحقل مطلوب"
+  },
+
+    "navbar": {
+    "language": "اللغة",
+    "english": "الإنجليزية",
+    "arabic": "العربية"
+  }
+
+
+
+
 
 
 }

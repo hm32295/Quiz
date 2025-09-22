@@ -7,6 +7,7 @@ import {  resetPasswordTypes } from '@/interfaces/interfaces';
 import { resetPasswordUser } from '@/redux/Features/resetPassword';
 import { EMAIL_VALIDATION } from '@/services/validation';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
@@ -17,17 +18,24 @@ import { toast } from 'react-toastify';
 
 export default function ResetPassword() {
   const dispatch = useDispatch();
-  const { isLoading,error,data} = useSelector(state => state.login );
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { t } = useTranslation();
 
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<resetPasswordTypes>();
     
-  const submit = (data:resetPasswordTypes)=>{
+  const submit =async (data:resetPasswordTypes)=>{
     data = {data,toast, reset,t,router}
-      dispatch(resetPasswordUser(data));
+    setLoading(true)
+    try {
+        
+     await dispatch(resetPasswordUser(data as any) as any);
+    } catch (error) {
+      console.log(error);
       
+    }
+      setLoading(false)
     }
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -48,7 +56,7 @@ export default function ResetPassword() {
       </Input>
      
       <Button content={t('buttonReset')} >
-          {isLoading ? <MoonLoaderToButton/> : <IoMdSend/>}
+          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>

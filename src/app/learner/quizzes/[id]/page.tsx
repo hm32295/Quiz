@@ -7,6 +7,8 @@ import "animate.css";
 import { FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import { submitQuizAsyncThunk } from "@/redux/Features/submitQuiz";
 import QuizResults from "@/components/quizResults/quizResults";
+import TableSkeleton from "@/components/loading/tableSkeletonLoader";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 export default function Quiz({ params, questions = null }: Props) {
+  const { t } = useTranslation();
   const { id } = use(params);
   const dispatch = useDispatch();
   const { data, isLoading } = useSelector((state: any) => state.singleQuiz);
@@ -30,7 +33,7 @@ export default function Quiz({ params, questions = null }: Props) {
 
   useEffect(() => {
     if (id) {
-      dispatch(singleQuizAsyncThunk(id));
+      dispatch(singleQuizAsyncThunk(id) as any);
     }
   }, [id, dispatch]);
 
@@ -52,16 +55,15 @@ export default function Quiz({ params, questions = null }: Props) {
 
   const showAnswers = () => {
     setSubmitted(true);
-    console.log("Submitted answers:", answers);
   };
 
   const handelSubmit = async () => {
     if (answers.length) {
       const res: any = await dispatch(
-        submitQuizAsyncThunk({ id: id, data: answers })
+        submitQuizAsyncThunk({ id: id, data: answers } as any) as any
       );
       if (res.payload) {
-        setResultData(res.payload); // 👈 خزن الـ attempt اللي رجع من السيرفر
+        setResultData(res.payload);
         setShowResult(true);
       }
     }
@@ -69,20 +71,22 @@ export default function Quiz({ params, questions = null }: Props) {
   };
 
   if (isLoading || !qs || qs.length === 0) {
-    return <div className="text-center p-10">Loading ...</div>;
+    return <TableSkeleton rows={3} cols={2} />;
   }
 
   if (submitted) {
     return (
       <div className="animate__animated animate__fadeIn bg-white p-6 rounded-xl shadow-md text-center max-w-2xl mx-auto mt-10">
         <h2 className="text-3xl font-bold text-emerald-600 mb-6">
-          🎉 Quiz Submitted!
+          {t("quizTakingPage.submittedTitle")}
         </h2>
         <p className="text-slate-600 mb-6">
-          You answered <b>{answers.length}</b> out of <b>{qs.length}</b> questions.
+          {t("quizTakingPage.submittedText", {
+            answered: answers.length,
+            total: qs.length,
+          })}
         </p>
 
-        {/* List of answers */}
         <div className="space-y-4 text-left">
           {qs.map((q, i) => {
             const ans = answers.find((a) => a.question === q._id);
@@ -98,7 +102,7 @@ export default function Quiz({ params, questions = null }: Props) {
                 {ans ? (
                   <p className="flex items-center gap-2 text-emerald-600 font-medium">
                     <FaCheckCircle className="text-emerald-500" />
-                    Your Answer:{" "}
+                    {t("quizTakingPage.yourAnswer")}{" "}
                     <span className="text-slate-800">
                       {q.options[ans.answer]}
                     </span>
@@ -106,7 +110,7 @@ export default function Quiz({ params, questions = null }: Props) {
                 ) : (
                   <p className="flex items-center gap-2 text-slate-500 italic">
                     <FaRegCircle className="text-slate-400" />
-                    No answer selected
+                    {t("quizTakingPage.noAnswer")}
                   </p>
                 )}
               </div>
@@ -122,14 +126,14 @@ export default function Quiz({ params, questions = null }: Props) {
           }}
           className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
         >
-          Retake Quiz
+          {t("quizTakingPage.retake")}
         </button>
 
         <button
           onClick={handelSubmit}
           className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
         >
-          Submit
+          {t("quizTakingPage.submit")}
         </button>
       </div>
     );
@@ -143,7 +147,6 @@ export default function Quiz({ params, questions = null }: Props) {
 
   return (
     <div className="max-w-2xl mx-auto p-6 relative">
-      {/* Progress Bar */}
       <div className="w-full bg-slate-200 rounded-full h-3 mb-6">
         <div
           className="bg-emerald-500 h-3 rounded-full transition-all"
@@ -151,10 +154,12 @@ export default function Quiz({ params, questions = null }: Props) {
         />
       </div>
       <p className="text-sm text-slate-600 mb-4 text-right">
-        Question {currentIndex + 1} of {total}
+        {t("quizTakingPage.progress", {
+          current: currentIndex + 1,
+          total: total,
+        })}
       </p>
 
-      {/* Question */}
       <div className="animate__animated animate__fadeInUp bg-white shadow-md rounded-xl p-5 border">
         <h3 className="text-lg font-semibold text-slate-800 mb-4">
           {currentIndex + 1}. {current.title}
@@ -191,7 +196,6 @@ export default function Quiz({ params, questions = null }: Props) {
         </div>
       </div>
 
-      {/* Navigation Buttons */}
       <div className="flex justify-between mt-6">
         <button
           onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
@@ -202,7 +206,7 @@ export default function Quiz({ params, questions = null }: Props) {
               : "bg-slate-600 hover:bg-slate-700 text-white"
           } capitalize cursor-pointer`}
         >
-          Previous
+          {t("quizTakingPage.previous")}
         </button>
 
         {currentIndex < total - 1 ? (
@@ -212,14 +216,14 @@ export default function Quiz({ params, questions = null }: Props) {
             }
             className="px-4 py-2 capitalize cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow"
           >
-            Next
+            {t("quizTakingPage.next")}
           </button>
         ) : (
           <button
             onClick={() => showAnswers()}
             className="px-4 py-2 capitalize cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow animate__animated animate__pulse animate__infinite"
           >
-            Submit Quiz
+            {t("quizTakingPage.submitQuiz")}
           </button>
         )}
       </div>

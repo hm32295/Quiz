@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FaFolderOpen } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   title?: string;
@@ -12,12 +13,14 @@ type Props = {
 };
 
 export default function NoData({
-  title = "No Data Available",
-  subtitle = "There is currently no content to display.",
-  actionLabel = "Add New",
+  title,
+  subtitle,
+  actionLabel,
   onActionClick,
   className = "",
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div
       className={`animate__animated animate__fadeIn flex w-full justify-center items-center px-4 py-10 sm:px-6 sm:py-14 lg:py-20 ${className}`}
@@ -39,12 +42,12 @@ export default function NoData({
 
         {/* Title */}
         <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-black dark:text-white mb-3 tracking-tight animate__animated animate__fadeInUp">
-          {title}
+          {title || t("noData_title")}
         </h3>
 
         {/* Subtitle */}
         <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base lg:text-lg max-w-sm sm:max-w-md leading-relaxed mb-6 animate__animated animate__fadeInUp animate__delay-1s">
-          {subtitle}
+          {subtitle || t("noData_subtitle")}
         </p>
 
         {/* Action Button */}
@@ -53,7 +56,7 @@ export default function NoData({
             onClick={onActionClick}
             className="w-full sm:w-auto px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#C5D86D] to-[#FFEDDF] font-semibold text-black shadow-md hover:shadow-lg transition-all duration-300 animate__animated animate__fadeInUp animate__delay-2s"
           >
-            {actionLabel}
+            {actionLabel || t("noData_actionLabel")}
           </button>
         )}
       </div>

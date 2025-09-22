@@ -8,26 +8,34 @@ import { LoginFormInputs } from '@/interfaces/interfaces';
 import { loginUser } from '@/redux/Features/login';
 import { EMAIL_VALIDATION } from '@/services/validation';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 export default function Login() {
   const dispatch = useDispatch();
-  const { isLoading,error,data} = useSelector(state => state.login );
+  const [loading ,setLoading] = useState(false)
   const rout = useRouter() 
   const { t } = useTranslation();
 
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<LoginFormInputs>();
     
-  const submit = (data:LoginFormInputs)=>{
+  const submit =async (data:LoginFormInputs)=>{
     data = {data,toast, reset,t,rout}
-      dispatch(loginUser(data));
+    setLoading(true)
+    try {
+     await dispatch(loginUser(data as any) as any);
       
+    } catch (error) {
+      console.log(error);
+      
+    }
+      setLoading(false)
     }
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -45,7 +53,7 @@ export default function Login() {
       </Input>
      
       <Button link={'/authentication/forget-password'} title={t('linkTitleLogin')} content={t('buttonLogin')} >
-          {isLoading ? <MoonLoaderToButton/> : <IoMdSend/>}
+          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>

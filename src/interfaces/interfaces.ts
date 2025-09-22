@@ -29,8 +29,8 @@ export interface ProfileDataType{
   role : string;
 }
 // Columns Heder Table In Quizzes 
-type ColumnKeyQuizzes = "Title" | "Question" | "level" | "Date";
-type RowKeyQuizzes = 'Question Title' | 'Question Desc' | 'Question difficulty level' | 'Date' | 'Quiz Title'
+type ColumnKeyQuizzes = string;
+type RowKeyQuizzes = string
 
 export interface ColumnsHederTableInQuizzes  {
   key: ColumnKeyQuizzes;

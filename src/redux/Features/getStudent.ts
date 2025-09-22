@@ -12,6 +12,7 @@ export const StudentAsyncThunk = createAsyncThunk('Student/StudentAsyncThunk', a
         const response= await axiosInstance.get(STUDENT_URL.GET_ALL)
         
         const dataResponse = response.data
+
       
         return dataResponse
     } catch (error) {

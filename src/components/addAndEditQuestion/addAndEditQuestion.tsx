@@ -1,19 +1,63 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { addQuestionAsyncThunk } from "@/redux/Features/addQuestion";
+import { QuestionAsyncThunk } from "@/redux/Features/questionApi";
+import { editQuestionAsyncThunk } from "@/redux/Features/editQuestion";
+import Spinner from "../loading/spinnerComponent";
+import { useTranslation } from "react-i18next";
+
+interface OptionType {
+  A: string;
+  B: string;
+  C: string;
+  D: string;
+}
+
+interface DataSingleType {
+  _id?: string;
+  title?: string;
+  description?: string;
+  options?: OptionType;
+  A?: string;
+  B?: string;
+  C?: string;
+  D?: string;
+  answer?: string;
+  difficulty?: string;
+  type?: string;
+}
+
+interface DataType {
+  Title: string;
+  data: DataSingleType;
+}
 
 interface QuestionModalProps {
   isOpen: boolean;
-  isLoading:any;
+  dataSingle?: DataType;
   onClose: () => void;
-  register: any;
-  edit:boolean
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  edit: boolean;
 }
 
-export default function AddAndEditQuestion({isOpen, edit, onClose, isLoading,register, onSubmit,
+export default function AddAndEditQuestion({
+  isOpen,
+  edit,
+  onClose,
+  dataSingle,
 }: QuestionModalProps) {
-  
+  const { t } = useTranslation();
+  const { register, handleSubmit, reset } = useForm<DataSingleType>();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
+  const fieldRequired = {
+    required:
+      t("questionsPageAddEdit.validation.required") || "This field is required",
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -23,158 +67,255 @@ export default function AddAndEditQuestion({isOpen, edit, onClose, isLoading,reg
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
+  const onSubmit = async (data: DataSingleType) => {
+    setLoading(true);
+    const dataForm: DataSingleType = {
+      title: data.title,
+      description: data.description,
+      options: {
+        A: data.options?.A || data.A || "",
+        B: data.options?.B || data.B || "",
+        C: data.options?.C || data.C || "",
+        D: data.options?.D || data.D || "",
+      },
+      answer: data.answer,
+      difficulty: data.difficulty,
+      type: data.type,
+    };
+
+    try {
+      let response;
+      if (!edit) {
+        response = await dispatch(addQuestionAsyncThunk(dataForm) as any);
+      } else if (edit && dataSingle?.data?._id) {
+        response = await dispatch(
+          editQuestionAsyncThunk({
+            dataForm,
+            id: dataSingle.data._id,
+          } as any) as any
+        );
+      }
+
+      if (response?.payload?.message) {
+        toast.success(
+          response.payload.message ||
+            t("questionsPageAddEdit.toast.successAdd")
+        );
+        reset();
+        onClose();
+      } else if (response?.payload) {
+        toast.error(response.payload || t("questionsPageAddEdit.toast.error"));
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        t("questionsPageAddEdit.toast.error") || "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
+      dispatch(QuestionAsyncThunk() as any);
+    }
+  };
+
+  useEffect(() => {
+    const defaults: DataSingleType = edit
+      ? dataSingle?.data || {}
+      : {
+          title: "",
+          description: "",
+          options: { A: "", B: "", C: "", D: "" },
+          answer: "",
+          difficulty: "",
+          type: "",
+        };
+
+    reset({
+      title: defaults.title,
+      description: defaults.description,
+      A: defaults.options?.A,
+      B: defaults.options?.B,
+      C: defaults.options?.C,
+      D: defaults.options?.D,
+      answer: defaults.answer,
+      difficulty: defaults.difficulty,
+      type: defaults.type,
+    } as any);
+  }, [edit, reset, dataSingle]);
+
   if (!isOpen) return null;
+
+  const answerOptions =
+    (t("questionsPageAddEdit.options.answers", { returnObjects: true }) as
+      | string[]
+      | undefined) || ["A", "B", "C", "D"];
+  const difficultyOptions =
+    (t("questionsPageAddEdit.options.difficulties", {
+      returnObjects: true,
+    }) as string[] | undefined) || ["easy", "medium", "hard"];
+  const categoryOptions =
+    (t("questionsPageAddEdit.options.categories", {
+      returnObjects: true,
+    }) as string[] | undefined) || ["FE", "BE", "DO"];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
-      
+      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 animate-fadeIn"
         onClick={onClose}
+        aria-hidden
       />
 
-
+      {/* Modal */}
       <div
-        className="
-          relative w-full h-auto sm:w-[90%] md:w-[700px] 
-          bg-white shadow-2xl rounded-none sm:rounded-2xl 
-          p-4 sm:p-6 overflow-y-auto animate-slideUp
-        "
+        role="dialog"
+        aria-modal="true"
+        className="relative w-full max-h-screen sm:w-[90%] md:w-[700px] bg-white shadow-2xl rounded-xl p-4 sm:p-6 overflow-y-auto animate-slideUp"
       >
-        
-        
+        {/* Header */}
         <div className="flex justify-between items-center border-b pb-1 mb-3">
           <h2 className="text-lg md:text-xl font-bold capitalize">
-            {edit ? "edit " : "Set up a new "} question
+            {edit
+              ? t("questionsPageAddEdit.modal.editTitle")
+              : t("questionsPageAddEdit.modal.addTitle")}
           </h2>
-            <button
-                onClick={onClose}
-                className="cursor-pointer text-gray-600 hover:text-red-500 text-[18px]"
-                >
-                ✖
-            </button>
+          <button
+            onClick={onClose}
+            aria-label={t("questionsPageAddEdit.modal.closeBtnAria")}
+            className="cursor-pointer text-gray-600 hover:text-red-500 text-[18px]"
+          >
+            ✖
+          </button>
         </div>
 
-
+        {/* Form */}
         <form
           id="questionForm"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-2"
         >
-          <div className="flex bg-transparent  items-center border rounded-lg overflow-hidden">
-            <label className="block p-2 bg-[#FFEDDF] h-full font-semibold text-sm sm:text-base">
-              Title
+          {/* Title */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <label className="p-2 bg-[#FFEDDF] font-semibold">
+              {t("questionsPageAddEdit.fields.title")}
             </label>
             <input
-              {...register("title")}
-              
-              className="w-full  p-1 focus:outline-none focus:ring-2 focus:ring-[#FFF]"
-              />
+              {...register("title", fieldRequired)}
+              disabled={loading}
+              className="w-full p-1 focus:outline-none"
+            />
           </div>
 
-            <div className="flex bg-transparent  items-center border rounded-lg overflow-hidden">
-                <label className="block p-6 h-full bg-[#FFEDDF] font-semibold text-sm sm:text-base">
-                    Description
-                </label>
-                <textarea
-                
-                  {...register("description")}
-                  rows={3}
-                  className="w-full focus:outline-none focus:ring-2 focus:ring-[#FFF] "
-                />
+          {/* Description */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <label className="p-2 bg-[#FFEDDF] font-semibold">
+              {t("questionsPageAddEdit.fields.description")}
+            </label>
+            <textarea
+              {...register("description", fieldRequired)}
+              disabled={loading}
+              rows={3}
+              className="w-full p-2 focus:outline-none"
+            />
           </div>
 
           {/* Options */}
           <div className="grid grid-cols-2 gap-2">
-            {["A", "B", "C", "D"].map((option) => (
-              <div key={option} className="bg-white flex items-center border rounded-lg overflow-hidden">
-                <label className="p-2 bg-[#FFEDDF] h-full block font-semibold mb-1 text-sm sm:text-base">
-                  {option}
+            {answerOptions.map((opt) => (
+              <div
+                key={opt}
+                className="flex items-center border rounded-lg overflow-hidden"
+              >
+                <label className="p-2 bg-[#FFEDDF] font-semibold">
+                  {t("questionsPageAddEdit.fields.optionLabel", { option: opt })}
                 </label>
                 <input
-                  {...register(`${option}`)}
-                
-                  className="w-full  p-1 focus:outline-none focus:ring-2 focus:ring-[#FFF]"
+                  {...register(opt as keyof DataSingleType, fieldRequired)}
+                  disabled={loading}
+                  className="w-full p-1 focus:outline-none"
                 />
               </div>
             ))}
           </div>
 
-          <div className="flex bg-transparent items-center border rounded-lg overflow-hidden">
-            <label className="block capitalize p-2 text-center bg-[#FFEDDF] h-full font-semibold text-sm sm:text-base">
-              Right Answer
+          {/* Answer */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <label className="p-2 bg-[#FFEDDF] font-semibold">
+              {t("questionsPageAddEdit.fields.rightAnswer")}
             </label>
             <select
-              {...register("answer")}
-              className="w-full p-2 capitalize text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#fff] bg-white h-full"
+              {...register("answer", fieldRequired)}
+              disabled={loading}
+              className="w-full p-2 capitalize"
             >
-              <option value="" className="text-gray-400 capitalize bg-gray-100">
-                { 'Select Right Answer'}
+              <option value="">
+                {t("questionsPageAddEdit.fields.selectRightAnswer")}
               </option>
-              {['A', 'B', 'C','D' ].map(ele=>{
-                 return  <option key={ele} value={ele} className="text-gray-700 capitalize bg-[#FFEDDF]">{ele}</option>
-            
-              })}
-             
-             
+              {answerOptions.map((ele) => (
+                <option key={ele} value={ele}>
+                  {ele}
+                </option>
+              ))}
             </select>
           </div>
 
-
-          <div className="flex bg-transparent items-center border rounded-lg overflow-hidden">
-            <label className="block capitalize p-2 text-center bg-[#FFEDDF] h-full font-semibold text-sm sm:text-base">
-              Difficulty level
+          {/* Difficulty */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <label className="p-2 bg-[#FFEDDF] font-semibold">
+              {t("questionsPageAddEdit.fields.difficulty")}
             </label>
             <select
-              {...register("difficulty")}
-              className="w-full p-2 capitalize text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#fff] bg-white h-full"
+              {...register("difficulty", fieldRequired)}
+              disabled={loading}
+              className="w-full p-2 capitalize"
             >
-              <option value="" className="text-gray-400 capitalize mb-2 border-2 bg-gray-100">
-                 {'Select Difficulty level'}
+              <option value="">
+                {t("questionsPageAddEdit.fields.selectDifficulty")}
               </option>
-              {['easy', 'medium', 'hard'].map(ele=>{
-                return  <option key={ele} value={ele} className="text-gray-700 capitalize bg-[#FFEDDF]">{ele}</option>
-                
-                  
-              })}
-             
-             
+              {difficultyOptions.map((ele) => (
+                <option key={ele} value={ele}>
+                  {ele}
+                </option>
+              ))}
             </select>
           </div>
 
-
-          <div className="flex bg-transparent items-center border rounded-lg overflow-hidden">
-            <label className="block capitalize p-2 text-center bg-[#FFEDDF] h-full font-semibold text-sm sm:text-base">
-              category type
+          {/* Category */}
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <label className="p-2 bg-[#FFEDDF] font-semibold">
+              {t("questionsPageAddEdit.fields.category")}
             </label>
             <select
-              {...register("type")}
-              className="w-full p-2 capitalize text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#fff] bg-white h-full"
+              {...register("type", fieldRequired)}
+              disabled={loading}
+              className="w-full p-2 capitalize"
             >
-              <option value="" className="text-gray-400 capitalize bg-gray-100">
-               {'Select category'} 
+              <option value="">
+                {t("questionsPageAddEdit.fields.selectCategory")}
               </option>
-              {['FE', 'BE', 'DO'].map(ele=>{
-                 return  <option key={ele} value={ele} className="text-gray-700 capitalize bg-[#FFEDDF]">{ele}</option>
-               
-                
-              })}
-             
-             
+              {categoryOptions.map((ele) => (
+                <option key={ele} value={ele}>
+                  {ele}
+                </option>
+              ))}
             </select>
           </div>
-          
 
+          {/* Submit */}
           <div className="flex flex-row-reverse">
-             <button
-                    type="submit"
-                    disabled ={isLoading}
-                    form="questionForm"
-                    className="px-4 capitalize cursor-pointer py-1.5 rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] transition font-medium"
-                >
-                    {isLoading? '... Loading' :(edit ? 'edit':" ✔ Save")}                  
-                    
-                </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-1.5 cursor-pointer rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] transition"
+            >
+              {loading ? (
+                <Spinner />
+              ) : edit ? (
+                t("questionsPageAddEdit.fields.edit")
+              ) : (
+                t("questionsPageAddEdit.fields.save")
+              )}
+            </button>
           </div>
         </form>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useRef } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 type ConfirmDeleteModalProps = {
   isOpen: boolean;
@@ -11,36 +12,35 @@ type ConfirmDeleteModalProps = {
   loading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  
   icon?: React.ReactNode;
 };
 
 const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   isOpen,
-  title = 'Confirm Delete',
-  message = 'Are you sure you want to delete this item? This action cannot be undone.',
-  confirmLabel = 'Delete',
-  cancelLabel = 'Cancel',
+  title,
+  message,
+  confirmLabel,
+  cancelLabel,
   loading = false,
   onConfirm,
   onCancel,
   icon,
 }) => {
+  const { t } = useTranslation();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
 
-  // Close on ESC + focus first actionable element
+  // Close on ESC + focus cancel
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onCancel();
     };
     document.addEventListener('keydown', onKeyDown);
-    // ركّز على زر الإلغاء أول ما يفتح
-    const t = setTimeout(() => cancelBtnRef.current?.focus(), 0);
+    const tTimeout = setTimeout(() => cancelBtnRef.current?.focus(), 0);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
-      clearTimeout(t);
+      clearTimeout(tTimeout);
     };
   }, [isOpen, onCancel]);
 
@@ -68,61 +68,52 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       {/* Dialog */}
       <div
         ref={dialogRef}
-        className="relative w-full max-w-md rounded-2xl shadow-xl overflow-hidden"
-        
-        style={{ border: '2px solid #C5D86D', background: 'white' }}
+        className="relative w-full max-w-md rounded-2xl bg-white shadow-xl overflow-hidden animate__animated animate__zoomIn"
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          className="flex items-center justify-between px-4 py-3"
-          style={{ background: '#FFEDDF', color: '#000' }}
-        >
+        <div className="flex items-center justify-between px-4 py-3 bg-orange-50 border-b">
           <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-                  style={{ background: '#FB7C19', color: 'white' }}>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-600">
               {icon ?? <FaExclamationTriangle aria-hidden />}
             </span>
-            <h2 id="confirm-delete-title" className="text-base font-semibold">
-              {title}
+            <h2 id="confirm-delete-title" className="text-base font-semibold text-gray-900">
+              {title ?? t('confirmDeleteModal_unique.title')}
             </h2>
           </div>
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full cursor-pointer p-2 hover:bg-black/5 active:scale-95 transition"
+            className="rounded-full cursor-pointer p-2 text-gray-400 hover:text-gray-600 active:scale-95 transition"
             aria-label="Close"
-            title="Close"
           >
             <FaTimes />
           </button>
         </div>
 
         {/* Body */}
-        <div className="px-5 py-4 text-sm text-black" id="confirm-delete-desc">
-          {message}
+        <div className="px-5 py-4 text-sm text-gray-700" id="confirm-delete-desc">
+          {message ?? t('confirmDeleteModal_unique.message')}
         </div>
 
-        {/* Footer / Actions */}
+        {/* Footer */}
         <div className="px-5 pb-5 flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end">
           <button
             ref={cancelBtnRef}
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="w-full cursor-pointer sm:w-auto rounded-xl px-4 py-2 font-medium border transition hover:opacity-90 active:scale-[0.98]"
-            style={{ background: '#C5D86D', color: '#000', borderColor: '#C5D86D' }}
+            className="w-full cursor-pointer sm:w-auto rounded-xl px-4 py-2 font-medium border border-gray-300 bg-gray-100 text-gray-800 hover:bg-gray-200 transition active:scale-[0.98] disabled:opacity-60"
           >
-            {cancelLabel}
+            {cancelLabel ?? t('confirmDeleteModal_unique.cancel')}
           </button>
           <button
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="w-full cursor-pointer sm:w-auto rounded-xl px-4 py-2 font-semibold text-white transition hover:opacity-95 active:scale-[0.98] disabled:opacity-60"
-            style={{ background: '#FB7C19' }}
+            className="w-full cursor-pointer sm:w-auto rounded-xl px-4 py-2 font-semibold bg-orange-500 text-white hover:bg-orange-600 transition active:scale-[0.98] disabled:opacity-60"
           >
-            {loading ? 'Deleting…' : confirmLabel}
+            {loading ? t('confirmDeleteModal_unique.deleting') : (confirmLabel ?? t('confirmDeleteModal_unique.confirm'))}
           </button>
         </div>
       </div>

@@ -1,23 +1,46 @@
 "use client";
-import { FC, ReactNode } from "react";
+
+import { FC, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
-interface ViewDataModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  data: { label: string; value: string | number | ReactNode }[];
-}
+type Student = {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string;
+  avg_score: number;
+  group?: { name: string };
+};
 
-const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data }) => {
+type StudentModalProps = {
+  student: Student | null;
+  onClose: () => void;
+};
+
+const StudentModal: FC<StudentModalProps> = ({ student, onClose }) => {
+  const [mounted, setMounted] = useState(false);
   const { t } = useTranslation();
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
+  if (!student || !mounted) return null;
+
+  const data = [
+    { label: t("studentModal.labels.name"), value: `${student.first_name} ${student.last_name}` },
+    { label: t("studentModal.labels.email"), value: student.email },
+    { label: t("studentModal.labels.role"), value: student.role },
+    { label: t("studentModal.labels.group"), value: student.group?.name || t("studentModal.groupNA") },
+    { label: t("studentModal.labels.avgScore"), value: student.avg_score }
+  ];
+
+  const modal = (
     <div
-      className="fixed select-none inset-0 z-50 flex items-center justify-center bg-[#00000066] bg-opacity-60 p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#00000066] p-4"
       onClick={onClose}
     >
       <div
@@ -35,19 +58,19 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
 
         {/* Header */}
         <div className="p-3 sm:py-6 bg-gradient-to-r from-blue-100 to-blue-50 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">
-            {t("viewDataModal_unique.headerTitle", { title })}
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-800">{t("studentModal.title")}</h2>
         </div>
 
         {/* Body */}
         <div className="p-3 grid grid-cols-1 gap-2 sm:gap-3 sm:grid-cols-2">
-          {data?.map((item, idx) => (
+          {data.map((item, idx) => (
             <div
               key={idx}
               className="flex flex-row justify-between items-center p-2 bg-gray-50 rounded-xl hover:bg-gray-100 gap-2 transition"
             >
-              <span className="font-semibold text-gray-600 capitalize">{item.label}</span>
+              <span className="font-semibold text-gray-600 capitalize">
+                {item.label}
+              </span>
               <span className="text-gray-800 mt-1 sm:mt-0">{item.value}</span>
             </div>
           ))}
@@ -59,12 +82,14 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
             onClick={onClose}
             className="px-5 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition cursor-pointer"
           >
-            {t("viewDataModal_unique.closeButton")}
+            {t("studentModal.close")}
           </button>
         </div>
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 };
 
-export default ViewDataModal;
+export default StudentModal;

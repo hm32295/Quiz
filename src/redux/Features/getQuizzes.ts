@@ -3,7 +3,7 @@ import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
-export const getQuizAsyncThunk = createAsyncThunk('getQuiz/getQuizAsyncThunk', async (id ,{rejectWithValue})=>{
+export const getQuizAsyncThunk = createAsyncThunk('getQuiz/getQuizAsyncThunk', async (_ ,{rejectWithValue})=>{
         
      try {
         const response= await axiosInstance.get(QUIZ_URL.GET_ALL)

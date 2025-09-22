@@ -1,10 +1,8 @@
 "use client";
-import AddAndEditQuiz from "@/components/addAndEditQuiz/addAndEditQuiz";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal/confirmDeleteModal";
 import GenericTable from "@/components/GenericTableProps/GenericTableProps";
 import { ColumnsHederTableInQuizzes } from "@/interfaces/interfaces";
 import { deleteQuizAsyncThunk } from "@/redux/Features/deleteQuiz";
-import { getQuizAsyncThunk } from "@/redux/Features/getQuizzes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,114 +10,123 @@ import { useDispatch, useSelector } from "react-redux";
 import UpcomingQuizzes from "@/components/upcomingQuizzes/upcomingQuizzes";
 import ActionsPanel from "@/components/actionsPanelQuiz/actionsPanelQuiz";
 import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveCompletedQuiz";
-import { show } from "@/redux/Features/createQuiz";
-
-const columns:ColumnsHederTableInQuizzes[] = [
-  { key: "Title", label: "Quiz Title" },
-  { key: "Question", label: "Question Desc" },
-  { key: "level", label: "Question difficulty level" },
-  { key: "Date", label: "Date" },
-];
-
+import { setData, show, showEdit } from "@/redux/Features/createQuiz";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function Quiz() {
-  const [dataSingle,setDataSingle] = useState({});
-  const [update,setUpdate] = useState<{} | null>(null);
-  const router = useRouter()
+  const { t } = useTranslation();
+  const [dataSingle, setDataSingle] = useState<any>({});
+  const router = useRouter();
   const dispatch = useDispatch();
-  const {data:dataQuizCompleted} = useSelector((state :any)=>state.lastFiveCompletedQuizSlice)
+  const { data: dataQuizCompleted } = useSelector(
+    (state: any) => state.lastFiveCompletedQuizSlice
+  );
 
+  const columns: ColumnsHederTableInQuizzes[] = [
+    { key: "Title", label: t("quizPage_tableTitle") },
+    { key: "Question", label: t("quizPage_tableQuestion") },
+    { key: "level", label: t("quizPage_tableLevel") },
+    { key: "Date", label: t("quizPage_tableDate") },
+  ];
 
-  const handelDataToRead =()=>{
-    
-    if(!dataQuizCompleted) return
-    
-    return dataQuizCompleted.map((quiz)=>{
-      return { Title: quiz.title, Question: quiz.questions.length, level: quiz.difficulty,Date:quiz.schadule, ...quiz }
-    })
+  const handelDataToRead = () => {
+    if (!dataQuizCompleted) return [];
+    return dataQuizCompleted.map((quiz: any) => {
+      return {
+        Title: quiz.title,
+        Question: quiz.questions.length,
+        level: quiz.difficulty,
+        Date: quiz.schadule,
+        ...quiz,
+      };
+    });
+  };
 
-  }
-  useEffect(()=>{
-      dispatch(lastFiveCompletedQuizAsyncThunk());
+  useEffect(() => {
+    dispatch(lastFiveCompletedQuizAsyncThunk() as any);
+  }, [dispatch]);
 
-    },[dispatch])
-      
   const [open, setOpen] = useState(false);
 
-  const handleCloseConfirm = () => {
-      console.log(dataSingle._id);
-    if(!dataSingle._id) return
-    dispatch(deleteQuizAsyncThunk(dataSingle._id))
-    dispatch(getQuizAsyncThunk())
+  const handleCloseConfirm = async () => {
+    if (!dataSingle._id) return;
+    try {
+      const response = await dispatch(deleteQuizAsyncThunk(dataSingle._id) as any);
+      if (response?.payload?.message) {
+        toast.success(response.payload.message || t("quizPage_deleteSuccess"));
+      } else if (response?.payload) {
+        toast.error(response?.payload || t("quizPage_deleteError"));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(lastFiveCompletedQuizAsyncThunk() as any);
     setOpen(false);
   };
 
-  const handleOpenConfirm = () => {
-    setOpen(true);
-  
-    
+  const openAddAndEditFun = async (row: any) => {
+    try {
+      await dispatch(setData(row));
+      dispatch(showEdit());
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const openAddAndEditFun = ()=>{
 
-    setUpdate(dataSingle)
-    dispatch(show())
-  }
-  
-
-  
   return (
     <>
-      <ActionsPanel  onClick={() => {setUpdate(null); dispatch(show())}}/>
+      <ActionsPanel onClick={() => dispatch(show())} />
       <UpcomingQuizzes />
 
-      <div className="text-lg font-bold mb-4 text-gray-800 capitalize">Completed Quizzes</div>
+      <div className="text-lg font-bold mb-4 text-gray-800 capitalize">
+        {t("quizPage_completedQuizzes")}
+      </div>
       <GenericTable
         columns={columns}
         setDataSingle={setDataSingle}
         titleItem="quiz"
         data={handelDataToRead()}
-        actions={(row) => [
+        actions={(row: any) => [
           {
             type: "view",
             color: "red",
-             component: (
-              <Link href={`/instructor/quizes/${row._id}`} className="text-blue-500"> Edit</Link>
+            component: (
+              <Link href={`/instructor/quizes/${row._id}`} className="text-blue-500">
+                {t("quizPage_actionEdit")}
+              </Link>
             ),
-            onClick: () =>{router.push(`/instructor/quizes/${row._id}`,row)},
+            onClick: () => {
+              router.push(`/instructor/quizes/${row._id}`, row);
+            },
           },
           {
             type: "edit",
             color: "black",
-           
-            onClick: () =>{openAddAndEditFun()},
+            onClick: () => {
+              openAddAndEditFun(row);
+            },
           },
           {
             type: "delete",
             color: "blue",
-            onClick: () =>{setDataSingle(row); handleOpenConfirm()},
+            onClick: () => {
+              setDataSingle(row);
+              setOpen(true);
+            },
           },
         ]}
       />
- 
+
       <ConfirmDeleteModal
         isOpen={open}
         onCancel={() => setOpen(false)}
         onConfirm={handleCloseConfirm}
-        title="Delete this course?"
-        message={
-          <span>
-            This will permanently remove the course and all related data. <br />
-            You can’t undo this action.
-          </span>
-        }
-        confirmLabel="Yes, delete"
-        cancelLabel="Keep it"
+        title={t("quizPage_modalTitle")}
+        message={<span>{t("quizPage_modalMessage")}</span>}
+        confirmLabel={t("quizPage_modalConfirm")}
+        cancelLabel={t("quizPage_modalCancel")}
       />
-
-      <AddAndEditQuiz
-          dataUpdate={update}
-        
-        />
     </>
   );
 }

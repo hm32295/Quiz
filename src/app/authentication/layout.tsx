@@ -10,8 +10,6 @@ export default function RootLayout({
 }>) {
     return (
     <>
-         {/* <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("ar")}>العربية</button>
-               <button className='bg-amber-50 text-black' onClick={() => i18n.changeLanguage("en")}>English</button> */}
         
          <div className="p-[20px] sm:p-[50px] min-h-[100vh] overflow-auto flex justify-center items-center bg-[#0D1321]  ">
                <div className='w-full max-w-[1350px] flex items-start gap-[50px] justify-center'>

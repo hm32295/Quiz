@@ -25,6 +25,7 @@ import singleQuizReducer from './Features/singleQuiz'
 import submitQuizReducer from './Features/submitQuiz'
 import topStudentReducer from './Features/topStudents'
 import singleStudentReducer from './Features/singleStudent'
+import studentWithOutGroupReducerReducer from './Features/getStudentWithOutGroup'
 
 
 const store =  configureStore({
@@ -55,6 +56,7 @@ const store =  configureStore({
       submitQuiz : submitQuizReducer,
       topStudent : topStudentReducer,
       singleStudent : singleStudentReducer,
+      studentWithOutGroupReducer : studentWithOutGroupReducerReducer,
       
     },
   })

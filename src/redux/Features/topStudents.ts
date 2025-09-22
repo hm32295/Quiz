@@ -21,6 +21,7 @@ export const topStudentAsyncThunk = createAsyncThunk(
    
     try {
       const response = await axiosInstance.get(STUDENT_URL.TOP_FIVE);
+      console.log('top=>', response.data);
       
       return response.data;
       

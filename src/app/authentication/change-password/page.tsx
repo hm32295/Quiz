@@ -1,11 +1,11 @@
 'use client';
 import Button from '@/components/button/button'
-import IconSAuthentication from '@/components/iconSAuthentication/IconSAuthentication';
 import Input from '@/components/input/input'
 import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
 import { changePasswordTypes } from '@/interfaces/interfaces';
 import { changePasswordUser } from '@/redux/Features/changePassword';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
@@ -14,16 +14,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 export default function ChangePassword() {
   const dispatch = useDispatch();
-  const { isLoading,error,data} = useSelector(state => state.login );
- 
+ const[ loading ,setLoading] = useState(false)
   const { t } = useTranslation();
 
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<changePasswordTypes>();
     
-  const submit = (data:changePasswordTypes)=>{
+  const submit = async (data:changePasswordTypes)=>{
     data = {data,toast, reset,t}
-      dispatch(changePasswordUser(data));
+    setLoading(true)
+    try {
+      await dispatch(changePasswordUser(data) as any);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    setLoading(false)
       
     }
   return (
@@ -42,7 +49,7 @@ export default function ChangePassword() {
       </Input>
      
       <Button  content={t('buttonChange')} >
-          {isLoading ? <MoonLoaderToButton/> : <IoMdSend/>}
+          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>

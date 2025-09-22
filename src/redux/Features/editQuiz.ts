@@ -18,6 +18,7 @@ export const editQuizAsyncThunk = createAsyncThunk( "editQuiz/editQuizAsyncThunk
  
     try {
       const response = await axiosInstance.put(QUIZ_URL.UPDATE(data.id),data.data);
+    console.log(response.data);
     
       return response.data;
       

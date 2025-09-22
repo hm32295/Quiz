@@ -1,89 +1,97 @@
+"use client";
+
 import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
- import React, { useEffect } from 'react'
+import { FaArrowRight, FaArrowLeft, FaUser } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { topStudentAsyncThunk } from "@/redux/Features/topStudents";
- 
-const students = [
-  {
-    id: 1,
-    name: "Emmanuel James",
-    rank: "2nd",
-    score: "87%",
-    img: "/test student.jpg",
-  },
-  {
-    id: 2,
-    name: "Alice Jasmine",
-    rank: "12th",
-    score: "69%",
-    img: "/test student.jpg",
-  },
-  {
-    id: 3,
-    name: "Harrison Menlaye",
-    rank: "17th",
-    score: "60%",
-    img: "/test student.jpg",
-  },
-  {
-    id: 4,
-    name: "Jones Doherty",
-    rank: "5th",
-    score: "80%",
-    img: "/test student.jpg",
-  },
-];
+import { StudentAsyncThunk } from "@/redux/Features/getStudent";
+import TableSkeleton from "../loading/tableSkeletonLoader";
+import StudentModal from "../singleStudent";
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
+interface studentsType {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string;
+  avg_score: number;
+  group: { name: string };
+  img?: string;
+}
 
- export default function TopStudents() {
-    const dispatch = useDispatch();
-    const {data, isLoading} = useSelector(state=> state.topStudent)
-    useEffect(()=>{
-        dispatch(topStudentAsyncThunk())
+export default function TopStudents() {
+  const dispatch = useDispatch();
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const { data, isLoading } = useSelector((state: any) => state.Student);
+  const { t, i18n } = useTranslation();
 
-    },[dispatch])
-    if(isLoading) console.log(data)
-   return (
-      <div className="bg-white rounded-2xl shadow p-4 animate__animated animate__fadeInRight">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-800">Top 5 Students</h2>
-          <button className="text-green-600 text-sm flex items-center gap-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:text-green-700">
-            All Students <FaArrowRight />
-          </button>
-        </div>
+  const direction = i18n.dir(); // "ltr" or "rtl"
 
-        <div className="space-y-3">
-          {students.map((student) => (
-            <div
-              key={student.id}
-              className="flex items-center justify-between bg-gray-50 rounded-xl p-3"
-            >
-              
-              <div className="flex items-center gap-3">
+  useEffect(() => {
+    dispatch(topStudentAsyncThunk() as any);
+    dispatch(StudentAsyncThunk() as any);
+  }, [dispatch]);
+
+  if (isLoading) return <TableSkeleton cols={1} rows={5} />;
+
+  const getFiveTopStudents = () => {
+    const withAvg = data.filter((s: studentsType) => typeof s.avg_score === "number");
+    const sorted = withAvg.sort((a: studentsType, b: studentsType) => (b.avg_score ?? 0) - (a.avg_score ?? 0));
+    return sorted.slice(0, 5);
+  };
+
+  const ArrowIcon = direction === "rtl" ? FaArrowLeft : FaArrowRight;
+
+  return (
+    <div className="bg-white rounded-2xl shadow p-4 animate__animated animate__fadeInRight">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-gray-800">{t("topStudents.title")}</h2>
+        <Link
+          href={"/instructor/student/students"}
+          className="text-green-600 text-sm flex items-center gap-1 cursor-pointer transition-all duration-300 hover:scale-105 hover:text-green-700"
+        >
+          {t("topStudents.allStudents")} <ArrowIcon />
+        </Link>
+      </div>
+
+      <div className="space-y-3">
+        {getFiveTopStudents().map((student: studentsType) => (
+          <div
+            key={student._id}
+            onClick={() => setSelectedStudent(student)}
+            className="flex items-center justify-between bg-gray-50 rounded-xl p-3"
+          >
+            <div className="flex items-center gap-3">
+              {student?.img ? (
                 <Image
-                  src={student.img}
-                  width={40}
-                  height={40}
-                  alt={student.name}
+                  src={student.img || "/test student.jpg"}
+                  alt={student.first_name}
+                  width={56}
+                  height={56}
                   className="w-10 h-10 rounded-full object-cover"
                 />
-                <div>
-                  <h3 className="text-gray-800 font-medium text-sm">
-                    {student.name}
-                  </h3>
-                  <p className="text-gray-500 text-xs">
-                    Class rank: {student.rank} | Average score: {student.score}
-                  </p>
-                </div>
+              ) : (
+                <FaUser size={50} color="#999" />
+              )}
+              <div>
+                <h3 className="text-gray-800 font-medium text-sm capitalize">
+                  {student.first_name + " " + student.last_name}
+                </h3>
+                <p className="text-gray-500 text-xs">
+                  {t("topStudents.avgScore")}: {student.avg_score || 0}
+                </p>
               </div>
-
-
-              <FaArrowRight className="text-gray-600 transition-all duration-300 hover:scale-105 hover:text-gray-950 cursor-pointer" />
             </div>
-          ))}
-        </div>
+
+            <ArrowIcon className="text-gray-600 transition-all duration-300 hover:scale-105 hover:text-gray-950 cursor-pointer" />
+          </div>
+        ))}
       </div>
-   )
- }
- 
+
+      <StudentModal student={selectedStudent} onClose={() => setSelectedStudent(null)} />
+    </div>
+  );
+}

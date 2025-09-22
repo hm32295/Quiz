@@ -7,7 +7,8 @@ import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 import { StudentAsyncThunk } from "@/redux/Features/getStudent";
 import { groupAsyncThunk } from "@/redux/Features/getGroup";
-import { singleStudentAsyncThunk } from "@/redux/Features/singleStudent";
+import StudentModal from "@/components/singleStudent";
+import { useTranslation } from "react-i18next";
 
 interface TypeGroup {
   _id: string;
@@ -17,31 +18,7 @@ interface TypeGroup {
   students: string[];
   max_students: number;
 }
-/***  
- * [
-    {
-        "_id": "68ad68a944dab7b8cb0c919d",
-        "first_name": "hamza",
-        "last_name": "Mohamed",
-        "email": "hamza.mo161@gmail.com",
-        "status": "active",
-        "role": "Student",
-        "group": {
-            "_id": "68bea1ed5358146037d4bb1b",
-            "name": "data analysis",
-            "status": "active",
-            "instructor": "688a0cd644dab7b8cb0431dd",
-            "students": [
-                "68ad68a944dab7b8cb0c919d"
-            ],
-            "max_students": 25,
-            "updatedAt": "2025-09-08T11:17:18.048Z",
-            "createdAt": "2025-09-08T09:29:17.534Z",
-            "__v": 0
-        }
-    }
-]
- */
+
 interface TypeStudent {
   _id: string;
   first_name: string;
@@ -53,15 +30,15 @@ interface TypeStudent {
 }
 
 export default function StudentsList() {
+  const { t, i18n } = useTranslation();
   const [activeGroup, setActiveGroup] = useState("");
   const [studentsGroup, setStudentsGroup] = useState<TypeStudent[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<TypeStudent | null>(
+    null
+  );
 
-  const { data: groups, isLoading: isLoadingGroup } = useSelector(
-    (state: any) => state.Group
-  );
-  const { data: allStudents, isLoading: isLoadingAllStudents } = useSelector(
-    (state: any) => state.Student
-  );
+  const { data: groups } = useSelector((state: any) => state.Group);
+  const { data: allStudents } = useSelector((state: any) => state.Student);
 
   const dispatch = useDispatch();
 
@@ -77,17 +54,18 @@ export default function StudentsList() {
       const filtered = allStudents.filter((student: TypeStudent) =>
         group.students.includes(student._id)
       );
-      console.log(filtered);
-      
       setStudentsGroup(filtered);
     }
   };
+
+  // نحدد الاتجاه
+  const direction = i18n.dir();
 
   return (
     <div className="p-4 bg-white rounded-2xl shadow animate__animated animate__fadeIn">
       {/* Title */}
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Students list
+        {t("studentsListPage.title")}
       </h2>
 
       {/* Tabs */}
@@ -115,10 +93,9 @@ export default function StudentsList() {
               key={student._id}
               className="flex items-center justify-between rounded-xl border p-3 transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] animate__animated animate__fadeInUp"
             >
-              {/* Profile */}
               <div className="flex items-center gap-3">
                 <div className="w-16 h-16 rounded-lg overflow-hidden flex items-center justify-center bg-gray-200">
-                  {student?.img ?
+                  {student?.img ? (
                     <Image
                       src={student.img || "/test student.jpg"}
                       alt={student.first_name}
@@ -126,36 +103,48 @@ export default function StudentsList() {
                       height={56}
                       className="object-cover w-full h-full"
                     />
-                   :<FaUser size={50} color="#999"/>
-                   }
+                  ) : (
+                    <FaUser size={50} color="#999" />
+                  )}
                 </div>
                 <div>
                   <h3 className="capitalize text-gray-800 font-medium text-sm">
                     {student.first_name} {student.last_name}
                   </h3>
                   <p className="text-gray-500 text-xs">
-                   email : {student.email || "-"} 
+                    {t("studentsListPage.labels.email")}:{" "}
+                    {student.email || "-"}
                   </p>
                   <p className="text-gray-500 text-xs">
-                   status : {student.status || "-"}  
+                    {t("studentsListPage.labels.status")}:{" "}
+                    {student.status || "-"}
                   </p>
                 </div>
               </div>
 
               {/* Icon */}
-              <FaArrowRight className="text-gray-700 transition-all duration-300 group-hover:translate-x-1" />
+              <div onClick={() => setSelectedStudent(student)}>
+                <FaArrowRight
+                  className={`cursor-pointer text-gray-700 transition-all duration-300 group-hover:translate-x-1 ${
+                    direction === "rtl" ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
             </div>
           ))
         ) : (
           <p className="text-gray-500 text-sm col-span-2 text-center">
             {activeGroup
-              ? "No students found in this group."
-              : "Please select a group."}
+              ? t("studentsListPage.messages.noStudents")
+              : t("studentsListPage.buttons.selectGroup")}
           </p>
         )}
       </div>
 
-     
+      <StudentModal
+        student={selectedStudent}
+        onClose={() => setSelectedStudent(null)}
+      />
     </div>
   );
 }

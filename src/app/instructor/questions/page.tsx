@@ -1,209 +1,169 @@
-
 "use client";
+import React, { useEffect, useState } from "react";
 import AddAndEditQuestion from "@/components/addAndEditQuestion/addAndEditQuestion";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal/confirmDeleteModal";
 import GenericTable from "@/components/GenericTableProps/GenericTableProps";
+import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import ViewDataModal from "@/components/viewData/viewData";
-import { addQuestionAsyncThunk } from "@/redux/Features/addQuestion";
 import { DeleteQuestionAsyncThunk } from "@/redux/Features/deleteQuestion";
-import { editQuestionAsyncThunk } from "@/redux/Features/editQuestion";
 import { QuestionAsyncThunk } from "@/redux/Features/questionApi";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
-const columns = [
-  { key: "Title", label: "  Title" },
-  { key: "Description", label: "description" },
-  { key: "level", label: "level" },
-  { key: "Points", label: "Points" },
-];
+export default function QuestionsWithI18n() {
+  const { t } = useTranslation();
 
-
-export default function Questions() {
-  
-  const [dataSingle,setDataSingle] = useState({});
-  const [isEdit, setIsEdit] = useState(false)
+  // unique local state names (keeps consistent with user's preference)
+  const [dataSingle, setDataSingle] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch();
-  const { register, handleSubmit,reset } = useForm();
 
-// Add Question
-    const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState(false);
-    const onSubmit =async (data: any) => {
-      const dataForm = {
-          title: data.title,
-          description: data.description,
-          options :{A: data.A,
-                    B: data.B,
-                    C: data.C,
-                    D: data.D
-                  },
-          answer: data.answer,
-          difficulty: data.difficulty,
-          type: data.type
-      }
-
-      if(!dataSingle?.data?._id){
-        
-        await dispatch(addQuestionAsyncThunk(dataForm)).then(() => {
-          dispatch(QuestionAsyncThunk());
-        });
-      }else if(dataSingle.data._id){
-        await dispatch(editQuestionAsyncThunk({dataForm,id:dataSingle.data._id})).then(() => {
-          dispatch(QuestionAsyncThunk());
-        });
-      }
-      reset()
-      setOpenModelEditAndAdd(false); 
-    };
-
-    const addQuestion=()=>{
-      setIsEdit(false)
-      setDataSingle({});
-      reset({
-        title: "",
-        description: "",
-        A: "",
-        B: "",
-        C: "",
-        D: "",
-        answer: "",
-        difficulty: "",
-        type: "",
-      });
-      setOpenModelEditAndAdd(true)
-    }
-
-  // Get All Question
-
-  const {data,isLoading} = useSelector(state=>state.Question)
-  useEffect(()=>{
-    dispatch(QuestionAsyncThunk());
-  },[dispatch])
-    
-// View Details
-
-  const [openViewData, setOpenViewData] = useState(false);
-  const handelDataToView =(data:any)=>{
-   if (!data.data) return
-    if(data){
-
-        return[
-          { label: "title", value: data.data.title },
-          { label: "description", value: data.data.description },
-          { label: "answer", value: data.data.answer },
-          { label: "status", value: data.data.status },
-          { label: "difficulty", value: data.data.difficulty },
-          { label: "points", value: data.data.points },
-          { label: "type", value: data.data.type },
-        ];
-    }
-  
-}
-// Delete Question
-
-  const [open, setOpen] = useState(false);
-  const handleDeleteConfirm = async () => {
-      setOpen(false);
-      if (dataSingle?.data?._id) {
-        await dispatch(DeleteQuestionAsyncThunk(dataSingle.data._id));
-        dispatch(QuestionAsyncThunk());
-      }
+  // Add/Edit modal
+  const [openAddEditModal, setOpenAddEditModal] = useState(false);
+  const handleAddClick = async () => {
+    await setIsEditMode(false);
+    await setDataSingle({});
+    setOpenAddEditModal(true);
   };
 
-// Edit Question
-const handleEditQuestion = () => {
-  const newData = dataSingle?.data
-  setIsEdit(true)
-  reset({
-    title: newData?.title || "",
-    description: newData?.description || "",
-    A: newData?.options?.A || "",
-    B: newData?.options?.B || "",
-    C: newData?.options?.C || "",
-    D: newData?.options?.D || "",
-    answer: newData?.answer || "",
-    difficulty: newData?.difficulty || "",
-    type: newData?.type || "",
-  });
-  setOpenModelEditAndAdd(true);
-};
+  // Get all questions
+  const { data, isLoading } = useSelector((state) => state.Question || {});
 
-if(isLoading){return 'Loading....'}
+  useEffect(() => {
+    dispatch(QuestionAsyncThunk() as any);
+  }, [dispatch]);
+
+  // View data modal
+  const [openViewData, setOpenViewData] = useState(false);
+  const mapDataToView = (item) => {
+    if (!item || !item.data) return;
+    const dd = item.data;
+    return [
+      { label: t("questionsPage.modals.view.fields.title"), value: dd.title },
+      { label: t("questionsPage.modals.view.fields.description"), value: dd.description },
+      { label: t("questionsPage.modals.view.fields.answer"), value: dd.answer },
+      { label: t("questionsPage.modals.view.fields.status"), value: dd.status },
+      { label: t("questionsPage.modals.view.fields.difficulty"), value: dd.difficulty },
+      { label: t("questionsPage.modals.view.fields.points"), value: dd.points },
+      { label: t("questionsPage.modals.view.fields.type"), value: dd.type }
+    ];
+  };
+
+  // Delete question
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const handleDeleteConfirm = async () => {
+    setOpenDeleteConfirm(false);
+    const id = dataSingle?.data?._id;
+    if (id) {
+      try {
+        const response = await dispatch(DeleteQuestionAsyncThunk(id) as any);
+        // response.payload.message -> success, otherwise error
+        if (response?.payload?.message) {
+          toast.success(response.payload.message || t("questionsPage.toast.deleteSuccess"));
+        } else if (response?.payload) {
+          toast.error(response.payload || t("questionsPage.toast.deleteError"));
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(t("questionsPage.modals.addEdit.error"));
+      }
+      dispatch(QuestionAsyncThunk() as any);
+    }
+  };
+
+  // Edit question
+  const handleEditQuestion = async () => {
+    await setIsEditMode(true);
+    setOpenAddEditModal(true);
+  };
+
+  // columns must use translation and be inside component so t() works
+  const columns = [
+    { key: "Title", label: t("questionsPage.table.columns.title") },
+    { key: "Description", label: t("questionsPage.table.columns.description") },
+    { key: "level", label: t("questionsPage.table.columns.level") },
+    { key: "Points", label: t("questionsPage.table.columns.points") }
+  ];
+
+  if (isLoading) {
+    return <TableSkeleton rows={5} cols={3} />;
+  }
 
   return (
     <>
-    <div className="flex justify-between p-3 ">
-      <h2 className="font-bold capitalize">Bank Of Questions</h2>
-      <button
-      onClick={()=>{addQuestion()}} className="flex items-center gap-1 cursor-pointer">
-        <FaPlusCircle  />
-        Add Question
-      </button>
-    </div>
+      <div className="flex justify-between p-3 ">
+        <h2 className="font-bold capitalize">{t("questionsPage.header.title")}</h2>
+        <button
+          onClick={() => {
+            handleAddClick();
+          }}
+          className="flex items-center gap-1 cursor-pointer"
+        >
+          <FaPlusCircle />
+          {t("questionsPage.header.addButton")}
+        </button>
+      </div>
+
       <GenericTable
         columns={columns}
-        titleItem = 'Question'
+        titleItem={t("questionsPage.table.titleItem")}
         data={data}
         setDataSingle={setDataSingle}
         actions={(row) => [
           {
             type: "view",
             color: "red",
-            onClick: () => {setOpenViewData(true); setDataSingle(row.data);},
+            onClick: async () => {
+              await setDataSingle(row);
+              setOpenViewData(true);
+            },
+            label: t("questionsPage.actions.view")
           },
           {
             type: "edit",
             color: "black",
-            onClick: () => {setDataSingle(row.data); handleEditQuestion();},
+            onClick: () => {
+              handleEditQuestion();
+            },
+            label: t("questionsPage.actions.edit")
           },
           {
             type: "delete",
             color: "blue",
-            onClick: () =>{setDataSingle(row.data); setOpen(true)},
-          },
+            onClick: async () => {
+              await setDataSingle(row);
+              setOpenDeleteConfirm(true);
+            },
+            label: t("questionsPage.actions.delete")
+          }
         ]}
       />
 
       <ConfirmDeleteModal
-        isOpen={open}
-        onCancel={() => setOpen(false)}
+        isOpen={openDeleteConfirm}
+        onCancel={() => setOpenDeleteConfirm(false)}
         onConfirm={handleDeleteConfirm}
-        title="Delete this course?"
-        message={
-          <span>
-            This will permanently remove the course and all related data. <br />
-            You can’t undo this action.
-          </span>
-        }
-        confirmLabel="Yes, delete"
-        cancelLabel="Keep it"
+        title={t("questionsPage.modals.delete.title")}
+        message={<span>{t("questionsPage.modals.delete.message")}</span>}
+        confirmLabel={t("questionsPage.modals.delete.confirmLabel")}
+        cancelLabel={t("questionsPage.modals.delete.cancelLabel")}
       />
 
-       <ViewDataModal
-          isOpen={openViewData}
-          onClose={() => setOpenViewData(false)}
-          title="Question "
-          data={handelDataToView(dataSingle)}
-        />
+      <ViewDataModal
+        isOpen={openViewData}
+        onClose={() => setOpenViewData(false)}
+        title={t("questionsPage.modals.view.title")}
+        data={mapDataToView(dataSingle)}
+      />
 
-
-       <AddAndEditQuestion
-          isOpen={openModelEditAndAdd}
-          edit ={isEdit}
-          onClose={() => setOpenModelEditAndAdd(false)}
-          register={register}
-          isLoading={isLoading}
-          onSubmit={handleSubmit(onSubmit)}
-        />
+      <AddAndEditQuestion
+        dataSingle={dataSingle}
+        isOpen={openAddEditModal}
+        edit={isEditMode}
+        onClose={() => setOpenAddEditModal(false)}
+      />
     </>
-
-
-
   );
 }
-
-
-
-

@@ -3,8 +3,11 @@
 import { joinQuizAsyncThunk } from "@/redux/Features/joinQuiz";
 import "animate.css";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import Spinner from "../loading/spinnerComponent";
+import { useTranslation } from "react-i18next";
 
 type JoinQuizModalProps = {
   isOpen: boolean;
@@ -17,22 +20,25 @@ interface typeSubmit {
 
 export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
   const { register, handleSubmit, reset } = useForm<typeSubmit>();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<any>();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const submit = async (data: typeSubmit) => {
+    setLoading(true);
     try {
       const res = await dispatch(joinQuizAsyncThunk(data)).unwrap();
-
       if (res?.data?.quiz) {
         const quizId = res.data.quiz;
         router.push(`/learner/quizzes/${quizId}`);
       }
-
-      onClose();
-      reset({ code: "" });
     } catch (err) {
       console.error("Error joining quiz:", err);
+    } finally {
+      setLoading(false);
+      onClose();
+      reset({ code: "" });
     }
   };
 
@@ -47,21 +53,23 @@ export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md text-center animate__animated animate__zoomIn"
       >
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Join Quiz</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          {t("joinQuizModal_title")}
+        </h2>
         <p className="text-gray-500 mb-6 text-sm">
-          Input the code received for the quiz below to join
+          {t("joinQuizModal_description")}
         </p>
 
         {/* Input */}
         <form onSubmit={handleSubmit(submit)}>
           <div className="flex items-center border rounded-lg overflow-hidden mb-6">
             <span className="bg-orange-100 px-4 py-2 text-gray-700 font-semibold">
-              Code
+              {t("joinQuizModal_codeLabel")}
             </span>
             <input
               type="text"
-              {...register("code", { required: "The field is required" })}
-              placeholder="Enter quiz code"
+              {...register("code", { required: t("joinQuizModal_required") })}
+              placeholder={t("joinQuizModal_codePlaceholder")}
               className="flex-1 px-3 py-2 focus:outline-none text-gray-700"
             />
           </div>
@@ -70,14 +78,14 @@ export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
               type="submit"
               className="bg-green-500 cursor-pointer text-white py-2 rounded-lg shadow hover:bg-green-600 transition"
             >
-              ✓
+              {loading ? <Spinner /> : t("joinQuizModal_submit")}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="bg-red-500 cursor-pointer text-white py-2 rounded-lg shadow hover:bg-red-600 transition"
             >
-              ✕
+              {t("joinQuizModal_cancel")}
             </button>
           </div>
         </form>

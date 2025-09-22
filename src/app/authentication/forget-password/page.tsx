@@ -7,6 +7,7 @@ import { ForgetPasswordTypes } from '@/interfaces/interfaces';
 import {  forgetPasswordUser } from '@/redux/Features/forgetPassword';
 import { EMAIL_VALIDATION } from '@/services/validation';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
@@ -15,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 export default function ForgetPassword() {
   const dispatch = useDispatch();
-  const { isLoading,error,data} = useSelector(state => state.login );
+  const [loading , setLoading] = useState(false)
   const router = useRouter()
  
   const { t } = useTranslation();
@@ -23,10 +24,16 @@ export default function ForgetPassword() {
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<ForgetPasswordTypes>();
     
-  const submit = (data:ForgetPasswordTypes)=>{
+  const submit = async (data:ForgetPasswordTypes)=>{
     data = {data,toast, reset,t,router}
-      dispatch(forgetPasswordUser(data));
+      setLoading(true)
+    try {
+      await dispatch(forgetPasswordUser(data as any) as any);
+    } catch (error) {
+      console.log(error);
       
+    }
+      setLoading(false)
     }
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -37,7 +44,7 @@ export default function ForgetPassword() {
       </Input>
 
       <Button link={'/authentication/login'} title={t('linkTitleForgetPassword')} content={t('buttonForgetPassword')} >
-          {isLoading ? <MoonLoaderToButton/> : <IoMdSend/>}
+          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>
