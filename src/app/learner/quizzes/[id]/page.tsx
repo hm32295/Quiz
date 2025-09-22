@@ -10,14 +10,14 @@ import QuizResults from "@/components/quizResults/quizResults";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
 import { AppDispatch } from "@/redux/store";
+import { useParams } from "next/navigation";
 
-interface QuizPageProps {
-  params: { id: string };
-}
 
-export default function QuizPage({ params }: QuizPageProps) {
+
+export default function QuizPage() {
   const { t } = useTranslation();
-  const { id } = params;
+  const params = useParams();        
+  const id = params?.id as string;
 
   const questions: any[] | null = null; 
   const dispatch = useDispatch<AppDispatch>();
