@@ -1,16 +1,51 @@
-'use client'
+"use client";
 import GenericTable from '@/components/GenericTableProps/GenericTableProps';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { RootState } from '@/redux/store';
+
+// Participant type
+interface Participant {
+  participant?: {
+    first_name: string;
+    last_name: string;
+  };
+  score: number;
+  started_at: string;
+  finished_at: string;
+}
+
+// Quiz type
+interface Quiz {
+  _id: string;
+  questions_number: number;
+  score_per_question: number;
+}
+
+// Result slice item type
+interface ResultItem {
+  quiz: Quiz;
+  participants: Participant[];
+}
+
+// Row type for table
+interface ResultRow {
+  studentName: string;
+  Score: number;
+  Average: string;
+  timeSubmitted: string;
+}
 
 export default function ResultsDetails() {
   const { t } = useTranslation();
-  const params = useParams(); 
-  const quizId = params.id;
+  const params = useParams();
+  const quizId = params.id as string;
 
-  const { data = [], isLoading } = useSelector((state: any) => state.results);
+  const { data = [], isLoading } = useSelector(
+    (state: RootState) => state.results as { data: ResultItem[]; isLoading: boolean }
+  );
 
   useEffect(() => {
     if (!quizId) return;
@@ -31,11 +66,11 @@ export default function ResultsDetails() {
     return average.toFixed(2) + "%";
   };
 
-  const handelDataToView = () => {
-    const quiz = data?.find((quiz: any) => quiz.quiz._id === quizId);
+  const handelDataToView = (): ResultRow[] => {
+    const quiz = data?.find((quiz: ResultItem) => quiz.quiz._id === quizId);
     if (!quiz) return [];
 
-    return quiz.participants.map((participant: any) => ({
+    return quiz.participants.map((participant: Participant) => ({
       studentName: participant.participant
         ? `${participant.participant.first_name} ${participant.participant.last_name}`
         : t("resultsDetails_unknown"),

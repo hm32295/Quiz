@@ -11,26 +11,47 @@ import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
+
+
+interface Question {
+  _id: string;
+  title: string;
+  description: string;
+  answer: string;
+  status: string;
+  difficulty: string;
+  points: number;
+  type: string;
+}
+
+
+interface QuestionState {
+  data: Question[];
+  isLoading: boolean;
+  error?: string | null;
+}
 
 export default function QuestionsWithI18n() {
   const { t } = useTranslation();
 
-  // unique local state names (keeps consistent with user's preference)
-  const [dataSingle, setDataSingle] = useState({});
+  
+  const [dataSingle, setDataSingle] = useState<Question | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   // Add/Edit modal
   const [openAddEditModal, setOpenAddEditModal] = useState(false);
   const handleAddClick = async () => {
-    await setIsEditMode(false);
-    await setDataSingle({});
+    setIsEditMode(false);
+    setDataSingle(null);
     setOpenAddEditModal(true);
   };
 
-  // Get all questions
-  const { data, isLoading } = useSelector((state) => state.Question || {});
+  
+  const { data, isLoading } = useSelector(
+    (state: RootState) => state.Question as QuestionState
+  );
 
   useEffect(() => {
     dispatch(QuestionAsyncThunk());
@@ -38,17 +59,16 @@ export default function QuestionsWithI18n() {
 
   // View data modal
   const [openViewData, setOpenViewData] = useState(false);
-  const mapDataToView = (item) => {
-    if (!item || !item.data) return;
-    const dd = item.data;
+  const mapDataToView = (item: Question | null) => {
+    if (!item) return;
     return [
-      { label: t("questionsPage.modals.view.fields.title"), value: dd.title },
-      { label: t("questionsPage.modals.view.fields.description"), value: dd.description },
-      { label: t("questionsPage.modals.view.fields.answer"), value: dd.answer },
-      { label: t("questionsPage.modals.view.fields.status"), value: dd.status },
-      { label: t("questionsPage.modals.view.fields.difficulty"), value: dd.difficulty },
-      { label: t("questionsPage.modals.view.fields.points"), value: dd.points },
-      { label: t("questionsPage.modals.view.fields.type"), value: dd.type }
+      { label: t("questionsPage.modals.view.fields.title"), value: item.title },
+      { label: t("questionsPage.modals.view.fields.description"), value: item.description },
+      { label: t("questionsPage.modals.view.fields.answer"), value: item.answer },
+      { label: t("questionsPage.modals.view.fields.status"), value: item.status },
+      { label: t("questionsPage.modals.view.fields.difficulty"), value: item.difficulty },
+      { label: t("questionsPage.modals.view.fields.points"), value: item.points },
+      { label: t("questionsPage.modals.view.fields.type"), value: item.type }
     ];
   };
 
@@ -56,11 +76,10 @@ export default function QuestionsWithI18n() {
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const handleDeleteConfirm = async () => {
     setOpenDeleteConfirm(false);
-    const id = dataSingle?.data?._id;
+    const id = dataSingle?._id;
     if (id) {
       try {
         const response = await dispatch(DeleteQuestionAsyncThunk(id));
-        // response.payload.message -> success, otherwise error
         if (response?.payload?.message) {
           toast.success(response.payload.message || t("questionsPage.toast.deleteSuccess"));
         } else if (response?.payload) {
@@ -76,11 +95,11 @@ export default function QuestionsWithI18n() {
 
   // Edit question
   const handleEditQuestion = async () => {
-    await setIsEditMode(true);
+    setIsEditMode(true);
     setOpenAddEditModal(true);
   };
 
-  // columns must use translation and be inside component so t() works
+  // columns
   const columns = [
     { key: "Title", label: t("questionsPage.table.columns.title") },
     { key: "Description", label: t("questionsPage.table.columns.description") },
@@ -97,9 +116,7 @@ export default function QuestionsWithI18n() {
       <div className="flex justify-between p-3 ">
         <h2 className="font-bold capitalize">{t("questionsPage.header.title")}</h2>
         <button
-          onClick={() => {
-            handleAddClick();
-          }}
+          onClick={handleAddClick}
           className="flex items-center gap-1 cursor-pointer"
         >
           <FaPlusCircle />
@@ -112,12 +129,12 @@ export default function QuestionsWithI18n() {
         titleItem={t("questionsPage.table.titleItem")}
         data={data}
         setDataSingle={setDataSingle}
-        actions={(row) => [
+        actions={(row: Question) => [
           {
             type: "view",
             color: "red",
             onClick: async () => {
-              await setDataSingle(row);
+              setDataSingle(row);
               setOpenViewData(true);
             },
             label: t("questionsPage.actions.view")
@@ -125,16 +142,14 @@ export default function QuestionsWithI18n() {
           {
             type: "edit",
             color: "black",
-            onClick: () => {
-              handleEditQuestion();
-            },
+            onClick: handleEditQuestion,
             label: t("questionsPage.actions.edit")
           },
           {
             type: "delete",
             color: "blue",
             onClick: async () => {
-              await setDataSingle(row);
+              setDataSingle(row);
               setOpenDeleteConfirm(true);
             },
             label: t("questionsPage.actions.delete")

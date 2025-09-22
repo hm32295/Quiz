@@ -6,11 +6,29 @@ import { resultsAsyncThunk } from '@/redux/Features/results';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
+
+// ✅ Quiz interface
+interface Quiz {
+  _id: string;
+  title: string;
+  questions: { _id: string; title: string }[];
+  difficulty: string;
+  schadule: string;
+  [key: string]: unknown; // علشان أي بيانات زيادة من الـ API
+}
+
+// ✅ ResultItem interface
+interface ResultItem {
+  quiz: Quiz;
+  [key: string]: unknown;
+}
 
 export default function Results() {
   const { t } = useTranslation();
-  const { data, isLoading } = useSelector((state: any) => state.results);
+  const { data, isLoading } = useSelector(
+    (state: RootState) => state.results as { data: ResultItem[]; isLoading: boolean }
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -21,13 +39,13 @@ export default function Results() {
     { key: 'Title', label: t('resultsPage.columns.title') },
     { key: 'Question', label: t('resultsPage.columns.question') },
     { key: 'level', label: t('resultsPage.columns.level') },
-    { key: 'Date', label: t('resultsPage.columns.date') }
+    { key: 'Date', label: t('resultsPage.columns.date') },
   ];
 
   const handelDataToRead = () => {
-    if (!data) return;
+    if (!data) return [];
 
-    return data.map((item: any) => {
+    return data.map((item: ResultItem) => {
       const quiz = item.quiz;
       return {
         Title: quiz?.title ?? '',

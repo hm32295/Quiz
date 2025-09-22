@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import NoData from "@/components/no-data/noData";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 
 interface Group {
   _id: string;
@@ -30,7 +30,7 @@ interface typeView {
 export default function GroupsList() {
   const { t } = useTranslation();
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
-  const { data, isLoading } = useSelector((state: any) => state.Group);
+  const { data, isLoading } = useSelector((state:RootState) => state.Group);
   const [openViewData, setOpenViewData] = useState(false);
   const [dataUpdate, setDataUpdate] = useState<Group | null>(null);
   const [viewData, setViewData] = useState<typeView[]>([]);
@@ -48,6 +48,7 @@ export default function GroupsList() {
 
   const deleteGroup = async () => {
     setOpenDeleteConfirm(false);
+    
     if (dataUpdate?._id) {
       try {
         const response = await dispatch(deleteGroupAsyncThunk(dataUpdate._id));

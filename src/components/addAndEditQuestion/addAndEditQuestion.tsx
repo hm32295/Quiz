@@ -9,6 +9,7 @@ import { QuestionAsyncThunk } from "@/redux/Features/questionApi";
 import { editQuestionAsyncThunk } from "@/redux/Features/editQuestion";
 import Spinner from "../loading/spinnerComponent";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 interface OptionType {
   A: string;
@@ -51,7 +52,7 @@ export default function AddAndEditQuestion({
 }: QuestionModalProps) {
   const { t } = useTranslation();
   const { register, handleSubmit, reset } = useForm<DataSingleType>();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(false);
 
   const fieldRequired = {
@@ -86,13 +87,10 @@ export default function AddAndEditQuestion({
     try {
       let response;
       if (!edit) {
-        response = await dispatch(addQuestionAsyncThunk(dataForm) as any);
+        response = await dispatch(addQuestionAsyncThunk(dataForm));
       } else if (edit && dataSingle?.data?._id) {
         response = await dispatch(
-          editQuestionAsyncThunk({
-            dataForm,
-            id: dataSingle.data._id,
-          } as any) as any
+          editQuestionAsyncThunk({ dataForm, id: dataSingle.data._id,} )
         );
       }
 
@@ -113,7 +111,7 @@ export default function AddAndEditQuestion({
       );
     } finally {
       setLoading(false);
-      dispatch(QuestionAsyncThunk() as any);
+      dispatch(QuestionAsyncThunk());
     }
   };
 
@@ -139,7 +137,7 @@ export default function AddAndEditQuestion({
       answer: defaults.answer,
       difficulty: defaults.difficulty,
       type: defaults.type,
-    } as any);
+    });
   }, [edit, reset, dataSingle]);
 
   if (!isOpen) return null;

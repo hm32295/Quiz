@@ -2,28 +2,40 @@ import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface lastFiveCompletedQuizState {
-  isLoading: boolean;
-  error: string | null;
-  data: any[];
+export interface Quiz {
+  _id: string;
+  title: string;
+  questions: string[];
+  difficulty: string;
+  schadule: string;
 }
 
-const initialState: lastFiveCompletedQuizState = {
+interface LastFiveCompletedQuizState {
+  isLoading: boolean;
+  error: string | null;
+  data: Quiz[];
+}
+
+const initialState: LastFiveCompletedQuizState = {
   isLoading: false,
   error: null,
   data: [],
 };
 
-export const lastFiveCompletedQuizAsyncThunk = createAsyncThunk(
+export const lastFiveCompletedQuizAsyncThunk = createAsyncThunk<
+  Quiz[],
+  void,
+  { rejectValue: string }
+>(
   "lastFiveCompletedQuiz/lastFiveCompletedQuizAsyncThunk",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(QUIZ_URL.COMPLETED);
-      return response.data;
-      
+      return response.data as Quiz[];
     } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -42,10 +54,13 @@ const lastFiveCompletedQuizSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      .addCase(lastFiveCompletedQuizAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
-        state.isLoading = false;
-        state.data = action.payload;
-      });
+      .addCase(
+        lastFiveCompletedQuizAsyncThunk.fulfilled,
+        (state, action: PayloadAction<Quiz[]>) => {
+          state.isLoading = false;
+          state.data = action.payload;
+        }
+      );
   },
 });
 

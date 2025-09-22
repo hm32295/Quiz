@@ -9,19 +9,22 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import UpcomingQuizzes from "@/components/upcomingQuizzes/upcomingQuizzes";
 import ActionsPanel from "@/components/actionsPanelQuiz/actionsPanelQuiz";
-import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveCompletedQuiz";
+import {
+  lastFiveCompletedQuizAsyncThunk,
+  Quiz,
+} from "@/redux/Features/lastFiveCompletedQuiz";
 import { setData, show, showEdit } from "@/redux/Features/createQuiz";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 
-export default function Quiz() {
+export default function QuizPage() {
   const { t } = useTranslation();
-  const [dataSingle, setDataSingle] = useState<any>({});
+  const [dataSingle, setDataSingle] = useState<Quiz | null>(null);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { data: dataQuizCompleted } = useSelector(
-    (state: any) => state.lastFiveCompletedQuizSlice
+    (state: RootState) => state.lastFiveCompletedQuizSlice
   );
 
   const columns: ColumnsHederTableInQuizzes[] = [
@@ -33,15 +36,13 @@ export default function Quiz() {
 
   const handelDataToRead = () => {
     if (!dataQuizCompleted) return [];
-    return dataQuizCompleted.map((quiz: any) => {
-      return {
-        Title: quiz.title,
-        Question: quiz.questions.length,
-        level: quiz.difficulty,
-        Date: quiz.schadule,
-        ...quiz,
-      };
-    });
+    return dataQuizCompleted.map((quiz: Quiz) => ({
+      Title: quiz.title,
+      Question: quiz.questions.length,
+      level: quiz.difficulty,
+      Date: quiz.schadule,
+      ...quiz,
+    }));
   };
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function Quiz() {
   const [open, setOpen] = useState(false);
 
   const handleCloseConfirm = async () => {
-    if (!dataSingle._id) return;
+    if (!dataSingle?._id) return;
     try {
       const response = await dispatch(deleteQuizAsyncThunk(dataSingle._id));
       if (response?.payload?.message) {
@@ -66,7 +67,7 @@ export default function Quiz() {
     setOpen(false);
   };
 
-  const openAddAndEditFun = async (row: any) => {
+  const openAddAndEditFun = async (row: Quiz) => {
     try {
       await dispatch(setData(row));
       dispatch(showEdit());
@@ -88,12 +89,15 @@ export default function Quiz() {
         setDataSingle={setDataSingle}
         titleItem="quiz"
         data={handelDataToRead()}
-        actions={(row: any) => [
+        actions={(row: Quiz) => [
           {
             type: "view",
             color: "red",
             component: (
-              <Link href={`/instructor/quizes/${row._id}`} className="text-blue-500">
+              <Link
+                href={`/instructor/quizes/${row._id}`}
+                className="text-blue-500"
+              >
                 {t("quizPage_actionEdit")}
               </Link>
             ),

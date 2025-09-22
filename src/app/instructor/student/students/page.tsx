@@ -3,17 +3,37 @@ import GenericTable from '@/components/GenericTableProps/GenericTableProps';
 import TableSkeleton from '@/components/loading/tableSkeletonLoader';
 import StudentModal from '@/components/singleStudent';
 import { StudentAsyncThunk } from '@/redux/Features/getStudent';
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { AppDispatch } from '@/redux/store';
+import { AppDispatch, RootState } from '@/redux/store';
+
+interface Student {
+  _id: string;
+  first_name: string;
+  email: string;
+  status: string;
+  role: string;
+  [key: string]: unknown;
+}
+
+interface StudentState {
+  data: Student[];
+  isLoading: boolean;
+  error?: string | null;
+}
 
 export default function Students() {
   const { t } = useTranslation();
-  const [, setDataSingle] = useState({});
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [, setDataSingle] = useState<Student | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isLoading } = useSelector((state: any) => state.Student);
+
+  // ✅ استخدم التايب
+  const { data, isLoading } = useSelector(
+    (state: RootState) => state.Student as StudentState
+  );
 
   useEffect(() => {
     dispatch(StudentAsyncThunk());
@@ -35,7 +55,7 @@ export default function Students() {
         titleItem={t('studentsPage.tableTitle')}
         data={data}
         setDataSingle={setDataSingle}
-        actions={(row: any) => [
+        actions={(row: Student) => [
           {
             type: t('studentsPage.actions.view'),
             color: 'red',

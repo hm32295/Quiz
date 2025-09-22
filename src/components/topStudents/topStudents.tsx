@@ -10,9 +10,9 @@ import TableSkeleton from "../loading/tableSkeletonLoader";
 import StudentModal from "../singleStudent";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 
-interface studentsType {
+interface StudentsType {
   _id: string;
   first_name: string;
   last_name: string;
@@ -25,11 +25,15 @@ interface studentsType {
 
 export default function TopStudents() {
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedStudent, setSelectedStudent] = useState<any>(null);
-  const { data, isLoading } = useSelector((state: any) => state.Student);
-  const { t, i18n } = useTranslation();
+  const [selectedStudent, setSelectedStudent] = useState<StudentsType | null>(null);
 
-  const direction = i18n.dir(); 
+  const { data, isLoading } = useSelector(
+    (state: RootState) =>
+      state.Student as { data: StudentsType[]; isLoading: boolean }
+  );
+
+  const { t, i18n } = useTranslation();
+  const direction = i18n.dir();
 
   useEffect(() => {
     dispatch(topStudentAsyncThunk());
@@ -38,9 +42,11 @@ export default function TopStudents() {
 
   if (isLoading) return <TableSkeleton cols={1} rows={5} />;
 
-  const getFiveTopStudents = () => {
-    const withAvg = data.filter((s: studentsType) => typeof s.avg_score === "number");
-    const sorted = withAvg.sort((a: studentsType, b: studentsType) => (b.avg_score ?? 0) - (a.avg_score ?? 0));
+  const getFiveTopStudents = (): StudentsType[] => {
+    const withAvg = data.filter((s) => typeof s.avg_score === "number");
+    const sorted = [...withAvg].sort(
+      (a, b) => (b.avg_score ?? 0) - (a.avg_score ?? 0)
+    );
     return sorted.slice(0, 5);
   };
 
@@ -59,7 +65,7 @@ export default function TopStudents() {
       </div>
 
       <div className="space-y-3">
-        {getFiveTopStudents().map((student: studentsType) => (
+        {getFiveTopStudents().map((student) => (
           <div
             key={student._id}
             onClick={() => setSelectedStudent(student)}
