@@ -11,14 +11,15 @@ import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
 import { AppDispatch } from "@/redux/store";
 
-type Props = {
-  params: any
+type QuizPageProps = {
+  params: Promise<{ id: string }>;
   questions?: any[] | null;
 };
 
-export default function Quiz({ params, questions = null }: Props) {
+export default function QuizPage({ params, questions = null }: QuizPageProps) {
   const { t } = useTranslation();
   const { id } = use(params);
+
   const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector((state: any) => state.singleQuiz);
 
@@ -50,17 +51,16 @@ export default function Quiz({ params, questions = null }: Props) {
     });
   };
 
-  const getAnswer = (question: string) => {
-    return answers.find((a) => a.question === question)?.answer || "";
-  };
+  const getAnswer = (question: string) =>
+    answers.find((a) => a.question === question)?.answer || "";
 
-  const showAnswers = () => {
-    setSubmitted(true);
-  };
+  const showAnswers = () => setSubmitted(true);
 
   const handelSubmit = async () => {
     if (answers.length) {
-      const res = await dispatch(submitQuizAsyncThunk({ id: id, data: answers } as any));
+      const res = await dispatch(
+        submitQuizAsyncThunk({ id, data: answers } as any)
+      );
       if (res.payload) {
         setResultData(res.payload);
         setShowResult(true);
@@ -219,7 +219,7 @@ export default function Quiz({ params, questions = null }: Props) {
           </button>
         ) : (
           <button
-            onClick={() => showAnswers()}
+            onClick={showAnswers}
             className="px-4 py-2 capitalize cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow animate__animated animate__pulse animate__infinite"
           >
             {t("quizTakingPage.submitQuiz")}
