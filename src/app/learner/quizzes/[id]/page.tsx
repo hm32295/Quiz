@@ -9,16 +9,17 @@ import { submitQuizAsyncThunk } from "@/redux/Features/submitQuiz";
 import QuizResults from "@/components/quizResults/quizResults";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 type Props = {
-  params: Promise<{ id: string }>;
+  params: any
   questions?: any[] | null;
 };
 
 export default function Quiz({ params, questions = null }: Props) {
   const { t } = useTranslation();
   const { id } = use(params);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector((state: any) => state.singleQuiz);
 
   const [answers, setAnswers] = useState<{ question: string; answer: string }[]>([]);
@@ -33,7 +34,7 @@ export default function Quiz({ params, questions = null }: Props) {
 
   useEffect(() => {
     if (id) {
-      dispatch(singleQuizAsyncThunk(id) as any);
+      dispatch(singleQuizAsyncThunk(id));
     }
   }, [id, dispatch]);
 
@@ -59,9 +60,7 @@ export default function Quiz({ params, questions = null }: Props) {
 
   const handelSubmit = async () => {
     if (answers.length) {
-      const res: any = await dispatch(
-        submitQuizAsyncThunk({ id: id, data: answers } as any) as any
-      );
+      const res = await dispatch(submitQuizAsyncThunk({ id: id, data: answers } as any));
       if (res.payload) {
         setResultData(res.payload);
         setShowResult(true);
