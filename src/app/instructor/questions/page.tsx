@@ -11,6 +11,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 export default function QuestionsWithI18n() {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export default function QuestionsWithI18n() {
   // unique local state names (keeps consistent with user's preference)
   const [dataSingle, setDataSingle] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   // Add/Edit modal
   const [openAddEditModal, setOpenAddEditModal] = useState(false);
@@ -32,7 +33,7 @@ export default function QuestionsWithI18n() {
   const { data, isLoading } = useSelector((state) => state.Question || {});
 
   useEffect(() => {
-    dispatch(QuestionAsyncThunk() as any);
+    dispatch(QuestionAsyncThunk());
   }, [dispatch]);
 
   // View data modal
@@ -58,7 +59,7 @@ export default function QuestionsWithI18n() {
     const id = dataSingle?.data?._id;
     if (id) {
       try {
-        const response = await dispatch(DeleteQuestionAsyncThunk(id) as any);
+        const response = await dispatch(DeleteQuestionAsyncThunk(id));
         // response.payload.message -> success, otherwise error
         if (response?.payload?.message) {
           toast.success(response.payload.message || t("questionsPage.toast.deleteSuccess"));
@@ -69,7 +70,7 @@ export default function QuestionsWithI18n() {
         console.error(error);
         toast.error(t("questionsPage.modals.addEdit.error"));
       }
-      dispatch(QuestionAsyncThunk() as any);
+      dispatch(QuestionAsyncThunk());
     }
   };
 

@@ -8,20 +8,21 @@ import { getQuizAsyncThunk } from "@/redux/Features/getQuizzes";
 import { setData, showEdit } from "@/redux/Features/createQuiz";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 export default function QuizCard() {
   const { t } = useTranslation();
   const params = useParams();
   const id = params?.id as string;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data: quizzes, isLoading } = useSelector((state: any) => state.getQuiz);
 
   const quiz = quizzes?.find((q: any) => q._id === id);
 
   useEffect(() => {
     if (!quizzes || quizzes.length === 0) {
-      dispatch(getQuizAsyncThunk() as any);
+      dispatch(getQuizAsyncThunk());
     }
   }, [dispatch, quizzes]);
 

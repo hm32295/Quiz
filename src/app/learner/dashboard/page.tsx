@@ -10,6 +10,7 @@ import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveComple
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -25,13 +26,13 @@ export default function Dashboard() {
   const [openModelJoinQuiz, setOpenModelJoinQuiz] = useState(false);
 
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data: dataQuizCompleted, isLoading } = useSelector(
     (state) => state.lastFiveCompletedQuizSlice
   );
 
   useEffect(() => {
-    dispatch(lastFiveCompletedQuizAsyncThunk() as any);
+    dispatch(lastFiveCompletedQuizAsyncThunk());
   }, [dispatch]);
 
   if (isLoading) return <TableSkeleton />;

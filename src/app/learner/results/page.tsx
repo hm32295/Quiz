@@ -6,14 +6,15 @@ import { resultsAsyncThunk } from '@/redux/Features/results';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { AppDispatch } from '@/redux/store';
 
 export default function Results() {
   const { t } = useTranslation();
   const { data, isLoading } = useSelector((state: any) => state.results);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(resultsAsyncThunk() as any);
+    dispatch(resultsAsyncThunk());
   }, [dispatch]);
 
   const columns: ColumnsHederTableInQuizzes[] = [

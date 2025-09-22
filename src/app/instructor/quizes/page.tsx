@@ -13,12 +13,13 @@ import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveComple
 import { setData, show, showEdit } from "@/redux/Features/createQuiz";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 export default function Quiz() {
   const { t } = useTranslation();
   const [dataSingle, setDataSingle] = useState<any>({});
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data: dataQuizCompleted } = useSelector(
     (state: any) => state.lastFiveCompletedQuizSlice
   );
@@ -44,7 +45,7 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    dispatch(lastFiveCompletedQuizAsyncThunk() as any);
+    dispatch(lastFiveCompletedQuizAsyncThunk());
   }, [dispatch]);
 
   const [open, setOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function Quiz() {
   const handleCloseConfirm = async () => {
     if (!dataSingle._id) return;
     try {
-      const response = await dispatch(deleteQuizAsyncThunk(dataSingle._id) as any);
+      const response = await dispatch(deleteQuizAsyncThunk(dataSingle._id));
       if (response?.payload?.message) {
         toast.success(response.payload.message || t("quizPage_deleteSuccess"));
       } else if (response?.payload) {
@@ -61,7 +62,7 @@ export default function Quiz() {
     } catch (error) {
       console.log(error);
     }
-    dispatch(lastFiveCompletedQuizAsyncThunk() as any);
+    dispatch(lastFiveCompletedQuizAsyncThunk());
     setOpen(false);
   };
 

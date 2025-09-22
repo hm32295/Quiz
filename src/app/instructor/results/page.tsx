@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 interface QuizType {
   _id: string;
@@ -47,12 +48,12 @@ export default function Results() {
   const [, setDataSingle] = useState<any>([]);
   const { data = [], isLoading } = useSelector((state: any) => state.results);
   const { data: group = [], isLoading: isLoadingGroup } = useSelector((state: any) => state.Group);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(resultsAsyncThunk() as any);
-    dispatch(groupAsyncThunk() as any);
+    dispatch(resultsAsyncThunk());
+    dispatch(groupAsyncThunk());
   }, [dispatch]);
 
   if (isLoading || isLoadingGroup) {

@@ -58,9 +58,7 @@ export default function QuizPage() {
 
   const handelSubmit = async () => {
     if (answers.length) {
-      const res = await dispatch(
-        submitQuizAsyncThunk({ id, data: answers } as any)
-      );
+      const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
       if (res.payload) {
         setResultData(res.payload);
         setShowResult(true);

@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import NoData from "@/components/no-data/noData";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 interface Group {
   _id: string;
@@ -34,10 +35,10 @@ export default function GroupsList() {
   const [dataUpdate, setDataUpdate] = useState<Group | null>(null);
   const [viewData, setViewData] = useState<typeView[]>([]);
   const [openModelEditAndAdd, setOpenModelEditAndAdd] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(groupAsyncThunk() as any);
+    dispatch(groupAsyncThunk());
   }, [dispatch]);
 
   const update = (e: React.MouseEvent) => {
@@ -49,7 +50,7 @@ export default function GroupsList() {
     setOpenDeleteConfirm(false);
     if (dataUpdate?._id) {
       try {
-        const response = await dispatch(deleteGroupAsyncThunk(dataUpdate._id) as any);
+        const response = await dispatch(deleteGroupAsyncThunk(dataUpdate._id));
         if (response.payload.message) {
           toast.success(response.payload.message || t("groupsListPage.messages.deleteSuccess"));
         }
@@ -60,7 +61,7 @@ export default function GroupsList() {
         console.log(error);
       }
     }
-    dispatch(groupAsyncThunk() as any);
+    dispatch(groupAsyncThunk());
   };
 
   const handelDataToView = (group: Group) => {

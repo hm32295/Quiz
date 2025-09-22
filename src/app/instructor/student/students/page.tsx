@@ -6,16 +6,17 @@ import { StudentAsyncThunk } from '@/redux/Features/getStudent';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next';
+import { AppDispatch } from '@/redux/store';
 
 export default function Students() {
   const { t } = useTranslation();
   const [, setDataSingle] = useState({});
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector((state: any) => state.Student);
 
   useEffect(() => {
-    dispatch(StudentAsyncThunk() as any);
+    dispatch(StudentAsyncThunk());
   }, [dispatch]);
 
   const columns = [

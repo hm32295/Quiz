@@ -9,6 +9,7 @@ import { StudentAsyncThunk } from "@/redux/Features/getStudent";
 import { groupAsyncThunk } from "@/redux/Features/getGroup";
 import StudentModal from "@/components/singleStudent";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 interface TypeGroup {
   _id: string;
@@ -40,11 +41,11 @@ export default function StudentsList() {
   const { data: groups } = useSelector((state: any) => state.Group);
   const { data: allStudents } = useSelector((state: any) => state.Student);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(groupAsyncThunk() as any);
-    dispatch(StudentAsyncThunk() as any);
+    dispatch(groupAsyncThunk());
+    dispatch(StudentAsyncThunk());
   }, [dispatch]);
 
   const handleGroupClick = (group: TypeGroup) => {

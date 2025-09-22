@@ -10,6 +10,7 @@ import TableSkeleton from "../loading/tableSkeletonLoader";
 import StudentModal from "../singleStudent";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 interface studentsType {
   _id: string;
@@ -23,16 +24,16 @@ interface studentsType {
 }
 
 export default function TopStudents() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const { data, isLoading } = useSelector((state: any) => state.Student);
   const { t, i18n } = useTranslation();
 
-  const direction = i18n.dir(); // "ltr" or "rtl"
+  const direction = i18n.dir(); 
 
   useEffect(() => {
-    dispatch(topStudentAsyncThunk() as any);
-    dispatch(StudentAsyncThunk() as any);
+    dispatch(topStudentAsyncThunk());
+    dispatch(StudentAsyncThunk());
   }, [dispatch]);
 
   if (isLoading) return <TableSkeleton cols={1} rows={5} />;

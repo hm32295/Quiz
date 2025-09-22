@@ -6,6 +6,7 @@ import { firstFiveInCommingAsyncThunk } from "@/redux/Features/firstFiveIncommin
 import { useEffect } from "react";
 import TableSkeleton from "../loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
+import { AppDispatch } from "@/redux/store";
 
 type QuizCardProps = {
   title: string;
@@ -59,13 +60,13 @@ const QuizCard = ({ title, schadule, image, participants }: QuizCardProps) => {
 
 export default function UpcomingQuizzes() {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { data, isLoading } = useSelector(
     (state: any) => state.firstFiveInCommingSlice
   );
 
   useEffect(() => {
-    dispatch(firstFiveInCommingAsyncThunk() as any);
+    dispatch(firstFiveInCommingAsyncThunk());
   }, [dispatch]);
 
   if (isLoading) return <TableSkeleton cols={1} rows={4} />;
