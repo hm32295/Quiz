@@ -1,22 +1,38 @@
 import { axiosInstance } from "@/services/api";
-import {  QUIZ_URL } from "@/services/endpoints";
+import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface submitQuizState { id: string; data: { question: string; answer: string; }[]; }
+interface SubmitQuizState {
+  id: string;
+  data: { question: string; answer: string }[];
+}
+
+interface SubmitQuizSliceState {
+  isLoading: boolean;
+  error: string | null;
+  data: any[];
+}
+
+const initialState: SubmitQuizSliceState = {
+  isLoading: false,
+  error: null,
+  data: [],
+};
 
 export const submitQuizAsyncThunk = createAsyncThunk(
   "submitQuiz/submitQuizAsyncThunk",
-  async (data:submitQuizState, { rejectWithValue }) => {
- 
-   
+  async (data: SubmitQuizState, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(QUIZ_URL.SUBMIT(data.id),{answers:data.data});
-       
+      const response = await axiosInstance.post(QUIZ_URL.SUBMIT(data.id), {
+        answers: data.data,
+      });
+
       return response.data;
-      
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong"
+      );
     }
   }
 );
@@ -35,10 +51,13 @@ const submitQuizSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      .addCase(submitQuizAsyncThunk.fulfilled, (state, action: PayloadAction<any[]>) => {
-        state.isLoading = false;
-        state.data = action.payload;
-      });
+      .addCase(
+        submitQuizAsyncThunk.fulfilled,
+        (state, action: PayloadAction<any[]>) => {
+          state.isLoading = false;
+          state.data = action.payload;
+        }
+      );
   },
 });
 
