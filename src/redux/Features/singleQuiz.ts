@@ -3,7 +3,16 @@ import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-export interface Quiz {
+
+interface QuizOption {
+  [key: string]: string; 
+}
+interface QuizQuestion {
+  _id: string;
+  title: string;
+  options: QuizOption;
+}
+ interface Quiz {
   _id: string;
   title: string;
   description: string;
@@ -12,11 +21,14 @@ export interface Quiz {
   schadule: string;
   group?: string;
   type?: string;
+  data?:{questions:
+    QuizQuestion[]
+  }
   duration?: string;
   score_per_question?: string;
 }
 
-interface SingleQuizState {
+export interface SingleQuizState {
   isLoading: boolean;
   error: string | null;
   data: Quiz | null;

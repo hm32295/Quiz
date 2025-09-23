@@ -1,6 +1,6 @@
 "use client";
 
-import { singleQuizAsyncThunk } from "@/redux/Features/singleQuiz";
+import { singleQuizAsyncThunk, SingleQuizState } from "@/redux/Features/singleQuiz";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "animate.css";
@@ -13,10 +13,55 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useParams } from "next/navigation";
 
 
+type OptionMap = { [key: string]: string };
+
+type Question = {
+  _id: string;
+  title: string;
+  options: OptionMap & { _id?: string };
+  answer: string; // letter e.g. 'A'
+};
 
 interface QuizOption {
   [key: string]: string; 
 }
+
+/*****
+ * 
+ * data:{
+    "_id": "68d26ce65358146037d599df",
+    "code": "I24GCI3",
+    "title": "_id?: string",
+    "description": "_id?: string",
+    "status": "open",
+    "instructor": "688a0cd644dab7b8cb0431dd",
+    "group": "68c7caec5358146037d4e181",
+    "questions_number": 1,
+    "questions": [
+        {
+            "_id": "68b28fd644dab7b8cb0cae6b",
+            "title": "Record updated successfully",
+            "options": {
+                "A": "A",
+                "B": "B",
+                "C": "C",
+                "D": "D",
+                "_id": "68b2c61744dab7b8cb0caf76"
+            }
+        }
+    ],
+    "schadule": "2025-09-30T12:48:00.000Z",
+    "duration": 2,
+    "score_per_question": 5,
+    "type": "FE",
+    "difficulty": "hard",
+    "updatedAt": "2025-09-23T09:48:22.101Z",
+    "createdAt": "2025-09-23T09:48:22.101Z",
+    "__v": 0
+}
+ * 
+ */
+
 
 interface QuizQuestion {
   _id: string;
@@ -29,8 +74,6 @@ interface Answer {
   question: string;
   answer: string;
 }
-
-
 type Attempt = {
   _id: string;
   quiz: string;
@@ -40,18 +83,16 @@ type Attempt = {
   finished_at: string;
   questions: Question[];
 };
-type OptionMap = { [key: string]: string };
-
-type Question = {
-  _id: string;
-  title: string;
-  options: OptionMap & { _id?: string };
-  answer: string; // letter e.g. 'A'
-};
 
 interface SubmitResult {
-  data :{ data: Attempt; }
-  score?: number;
+  data:Attempt
+  _id: string;
+  quiz: string;
+  participant: string;
+  score: number;
+  started_at: string;
+  finished_at: string;
+  questions: Question[];
   correctAnswers?: Record<string, string>;
 }
 
@@ -61,17 +102,19 @@ export default function QuizPage() {
   const id = params?.id as string;
 
   const dispatch = useDispatch<AppDispatch>();
-  const { data, isLoading } = useSelector(
-    (state: RootState) => state.singleQuiz
+  const { data, isLoading } = useSelector<RootState ,SingleQuizState>(
+    (state) => state.singleQuiz
   );
 
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  const [resultData, setResultData] = useState<SubmitResult | undefined>(undefined);
+  const [resultData, setResultData] = useState<SubmitResult | null>(null);
 
   const qs: QuizQuestion[] | undefined = data?.data?.questions;
+
+  
   const total = qs?.length || 0;
   const progress = total ? Math.round(((currentIndex + 1) / total) * 100) : 0;
 
@@ -102,7 +145,7 @@ export default function QuizPage() {
     if (answers.length) {
       const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
       if (res.payload) {
-        setResultData(res.payload as unknown as SubmitResult );
+        setResultData(res.payload as unknown as SubmitResult);
         setShowResult(true);
       }
     }
