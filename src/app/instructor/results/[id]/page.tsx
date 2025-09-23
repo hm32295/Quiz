@@ -32,10 +32,17 @@ interface ResultItem {
 
 // Row type for table
 interface ResultRow {
+  _id?: string
   studentName: string;
   Score: number;
   Average: string;
   timeSubmitted: string;
+}
+
+// Column type for GenericTable
+interface Column {
+  key: keyof ResultRow;
+  label: string;
 }
 
 export default function ResultsDetails() {
@@ -84,7 +91,7 @@ export default function ResultsDetails() {
     }));
   };
 
-  const columns = [
+  const columns: Column[] = [
     { key: "studentName", label: t("resultsDetails_column_studentName") },
     { key: "Score", label: t("resultsDetails_column_score") },
     { key: "Average", label: t("resultsDetails_column_average") },
@@ -93,7 +100,7 @@ export default function ResultsDetails() {
 
   return (
     <div className="w-full">
-      <GenericTable
+      <GenericTable<ResultRow>
         columns={columns}
         titleItem={t("resultsDetails_table_title")}
         data={handelDataToView()}
