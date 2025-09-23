@@ -14,6 +14,10 @@ interface QuizResponse {
   title: string;
   difficulty?: string;
   schedule?: string;
+  data?:{
+    message:string
+    code:string | undefined
+    }
 }
 
 const initialState: EditQuizState = {

@@ -14,7 +14,11 @@ export interface Quiz {
   duration: string;
   schadule: string;
   score_per_question: string;
-  code?: string; // لو السيرفر بيرجع كود بعد الإنشاء
+  code?: string;
+  data?:{
+    code:string;
+    message:string
+  }
 }
 
 interface SetQuizState {

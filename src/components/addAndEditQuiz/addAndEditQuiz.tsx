@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 import Spinner from "../loading/spinnerComponent";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
-import { PayloadAction } from "@reduxjs/toolkit";
 
 // ---------- Types ----------
 interface GroupForm {
@@ -94,54 +93,50 @@ export default function AddAndEditQuiz() {
   }, [isEdit_, reset, dataEdit]);
 
   // Submit
-  const onSubmit = async (data: GroupForm) => {
-    setLoading(true);
-    try {
-      if (isEdit_ && dataEdit?._id) {
-        const res = (await dispatch(
-          editQuizAsyncThunk({
-            data: { title: data.title },
-            id: dataEdit._id,
-          })
-        )) as PayloadAction<{ data?: { message: string } }>;
+const onSubmit = async (data: GroupForm) => {
+  setLoading(true);
 
-        if ("error" in res) toast.error(res.payload as string);
-        if (res?.payload?.data) {
-          reset({ title: "" });
-          toast.success(
-            res.payload.data.message || t("addAndEditQuiz.toast.updated")
-          );
-        }
-        dispatch(hidden());
-      } else {
-        const res = (await dispatch( setQuizAsyncThunk(data) )) ;
+  try {
+    if (isEdit_ && dataEdit?._id) {
+      const res = await dispatch(
+        editQuizAsyncThunk({ data: { title: data.title }, id: dataEdit._id })
+      ).unwrap();
 
-        if ("error" in res) toast.error(res.payload as unknown as string);
-        if (res?.payload?.data) {
-          toast.success(
-            res.payload.data.message || t("addAndEditQuiz.toast.added")
-          );
-          setSampleCode(res.payload.data.code);
-          setQuizCreatedModal(true);
-          reset({
-            title: "",
-            description: "",
-            group: "",
-            questions_number: 0,
-            difficulty: "",
-            type: "",
-            duration: "",
-            schadule: "",
-            score_per_question: "",
-          });
-        }
-      }
-      dispatch(getQuizAsyncThunk());
-    } catch (error) {
-      console.error(error);
+      toast.success(res.data?.message || t("addAndEditQuiz.toast.updated"));
+      reset({ title: "" });
+      dispatch(hidden());
+
+    } else {
+      const res = await dispatch(setQuizAsyncThunk(data)).unwrap();
+
+      toast.success(res.data?.message || t("addAndEditQuiz.toast.added"));
+      setSampleCode(res.data?.code || "");
+      setQuizCreatedModal(true);
+      reset({
+        title: "",
+        description: "",
+        group: "",
+        questions_number: 0,
+        difficulty: "",
+        type: "",
+        duration: "",
+        schadule: "",
+        score_per_question: "",
+      });
     }
+
+    dispatch(getQuizAsyncThunk());
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error(t("addAndEditQuiz.toast.error"));
+      }
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   // Groups data for SelectBox
   const handelDataGroup = () => {

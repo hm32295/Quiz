@@ -11,6 +11,7 @@ import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams } from "next/navigation";
+import Spinner from "@/components/loading/spinnerComponent";
 
 
 type OptionMap = { [key: string]: string };
@@ -105,7 +106,7 @@ export default function QuizPage() {
   const { data, isLoading } = useSelector<RootState ,SingleQuizState>(
     (state) => state.singleQuiz
   );
-
+  const [loading , setLoading] = useState(false)
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -142,6 +143,7 @@ export default function QuizPage() {
   const showAnswers = () => setSubmitted(true);
 
   const handelSubmit = async () => {
+    setLoading(true)
     if (answers.length) {
       const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
       if (res.payload) {
@@ -150,6 +152,7 @@ export default function QuizPage() {
       }
     }
     setSubmitted(false);
+    setLoading(false)
   };
 
   if (isLoading || !qs || qs.length === 0) {
@@ -215,7 +218,8 @@ export default function QuizPage() {
           onClick={handelSubmit}
           className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
         >
-          {t("quizTakingPage.submit")}
+          {loading ? <Spinner /> :t("quizTakingPage.submit")}
+        
         </button>
       </div>
     );
