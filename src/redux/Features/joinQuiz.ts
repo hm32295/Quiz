@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 interface JoinQuizResponse {
   _id: string;
@@ -38,10 +39,15 @@ export const joinQuizAsyncThunk = createAsyncThunk<
     try {
       const response = await axiosInstance.post(QUIZ_URL.JOIN, data);
       return response.data as JoinQuizResponse[];
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
-    }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
   }
 );
 

@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 
 interface Group {
@@ -33,12 +34,15 @@ export const groupAsyncThunk = createAsyncThunk<
     try {
       const response = await axiosInstance.get(GROUP_URL.GET_ALL);
       return response.data as Group[];
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(
-        error?.response?.data?.message || "Something went wrong"
-      );
-    }
+    }catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
   }
 );
 

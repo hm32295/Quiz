@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 type IncomingQuiz = {
   title: string;
@@ -24,6 +25,7 @@ const initialState: FirstFiveIncomingState = {
   data: [],
 };
 
+
 export const firstFiveInCommingAsyncThunk = createAsyncThunk<
   IncomingQuiz[], 
   void,         
@@ -34,11 +36,13 @@ export const firstFiveInCommingAsyncThunk = createAsyncThunk<
     try {
       const response = await axiosInstance.get(QUIZ_URL.INCOMING);
       return response.data as IncomingQuiz[];
-    } catch (error: any) {
-      console.error(error);
-      return rejectWithValue(
-        error?.response?.data?.message || "Something went wrong"
-      );
+    } catch (error: unknown) {
+        let message = "Something went wrong";
+
+        if (error instanceof AxiosError) {
+          message = error.response?.data?.message || message;
+        }
+      return rejectWithValue(message);
     }
   }
 );

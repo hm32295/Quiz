@@ -235,7 +235,7 @@ const GenericTable = <T extends { _id?: string }>({
                 >
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg font-bold text-gray-800">
-                      {"title" in row ? String((row as any).title) : `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row ? String((row).title) : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     {actions && (
                       <div className="relative" ref={(el) => (dropdownRefs.current[idx] = el)}>
@@ -290,7 +290,7 @@ const GenericTable = <T extends { _id?: string }>({
                 >
                   <div>
                     <h3 className="text-lg font-bold text-gray-800">
-                      {"title" in row ? String((row as any).title) : `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row ? String((row).title) : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     <p className="text-sm text-gray-600">
                       {columns.map((col) => `${String(row[col.key])} `).join(" | ")}

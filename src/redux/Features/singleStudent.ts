@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { STUDENT_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 export interface Student {
   _id: string;
@@ -32,10 +33,15 @@ export const singleStudentAsyncThunk = createAsyncThunk<
     try {
       const response = await axiosInstance.get(STUDENT_URL.GET_BY_ID(id));
       return response.data as Student;
-    } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
-    }
+    }catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
   }
 );
 

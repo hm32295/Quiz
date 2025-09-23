@@ -15,7 +15,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import { IoMdSend } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
-import { RiLockPasswordLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import CookieServices from "@/services/cookies/clientCookie";

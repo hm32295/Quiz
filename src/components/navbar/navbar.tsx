@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { CiMenuBurger } from "react-icons/ci";
 import { FaTimes, FaCheck } from "react-icons/fa";
 import NewQuizIcon from "../../../public/new quiz icon.png";
@@ -21,28 +21,33 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const pathname = usePathname();
 
-  const pageTitles: Record<string, string> = {
+  const pageTitles = useMemo(
+  () => ({
     "/instructor/dashboard": t("navbar_dashboard"),
     "/instructor/student": t("navbar_students"),
     "/instructor/group": t("navbar_groups"),
     "/instructor/quizes": t("navbar_quizzes"),
     "/instructor/questions": t("navbar_questions"),
     "/instructor/results": t("navbar_results"),
-  };
+  }),
+  [t] 
+);
 
-  const [currentPage, setCurrentPage] = useState(
-    pageTitles[pathname] || t("navbar_groups")
+   const [currentPage, setCurrentPage] = useState(
+    pageTitles[pathname as keyof typeof pageTitles] || t("navbar_groups")
   );
 
-  const handelCurrentPage = useCallback(
-    (pathname: string) => {
-      const matchedPage = Object.keys(pageTitles).find((key) =>
-        pathname.startsWith(key)
-      );
-      if (matchedPage) setCurrentPage(pageTitles[matchedPage]);
-    },
-    [pageTitles]
-  );
+const handelCurrentPage = useCallback(
+  (pathname: string) => {
+    const matchedPage = Object.keys(pageTitles).find((key) =>
+      pathname.startsWith(key)
+    );
+  if (matchedPage && matchedPage in pageTitles) {
+    setCurrentPage(pageTitles[matchedPage as keyof typeof pageTitles]);
+  }
+  },
+  [pageTitles] 
+);
 
   useEffect(() => {
     const cookieData = clientCookie.get("profile");

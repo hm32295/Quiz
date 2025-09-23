@@ -3,6 +3,7 @@ import { RegisterForm } from "@/interfaces/interfaces";
 import { axiosInstance } from "@/services/api";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 
 export const registerUser =createAsyncThunk('register/registerUser', async (data:RegisterForm ,{rejectWithValue})=>{
@@ -12,10 +13,15 @@ export const registerUser =createAsyncThunk('register/registerUser', async (data
         const response= await axiosInstance.post(AUTH_URL.REGISTER,data)    
         
         return response.data
-    } catch (error) {
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const register = createSlice({

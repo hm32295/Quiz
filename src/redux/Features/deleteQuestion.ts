@@ -3,6 +3,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 
 export const DeleteQuestionAsyncThunk = createAsyncThunk('DeleteQuestion/DeleteQuestionAsyncThunk', async (id:string ,{rejectWithValue})=>{
@@ -11,12 +12,15 @@ export const DeleteQuestionAsyncThunk = createAsyncThunk('DeleteQuestion/DeleteQ
         const response= await axiosInstance.delete(QUESTION_URL.DELETE(id)) 
         
         return response.data
-    } catch (error) {
-        console.log(error);
-        
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    }catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const DeleteQuestion = createSlice({

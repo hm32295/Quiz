@@ -3,6 +3,7 @@ import { changePasswordTypes } from "@/interfaces/interfaces";
 import { axiosInstance } from "@/services/api";
 import { AUTH_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 interface ChangePasswordResponse {
   message?: string;
   success?: boolean;
@@ -19,10 +20,14 @@ export const changePasswordUser = createAsyncThunk<
         const response= await axiosInstance.post(AUTH_URL.CHANGE_PASSWORD,data)
        
         return response.data
-    } catch (error) {
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    }catch (error: unknown) {
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const changePassword = createSlice({

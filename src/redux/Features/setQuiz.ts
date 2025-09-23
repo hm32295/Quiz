@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 export interface Quiz {
   _id?: string;
@@ -34,10 +35,15 @@ export const setQuizAsyncThunk = createAsyncThunk<Quiz, Quiz, { rejectValue: str
     try {
       const response = await axiosInstance.post(QUIZ_URL.CREATE, data);
       return response.data as Quiz;
-    } catch (error: any) {
-      console.log(error);
-      return rejectWithValue(error?.response?.data?.message || "Something went wrong");
-    }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
   }
 );
 

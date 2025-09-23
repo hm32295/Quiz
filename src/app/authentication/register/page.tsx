@@ -2,6 +2,7 @@
 import Button from '@/components/button/button'
 import IconSAuthentication from '@/components/iconSAuthentication/IconSAuthentication';
 import Input from '@/components/input/input'
+import SelectRegister from '@/components/selectBoxRegester/selectBoxRegester';
 import SelectBox from '@/components/selectBoxRegester/selectBoxRegester';
 import MoonLoaderToButton from '@/components/spinners/MoonLoaderToButton';
 import TitleAuth from '@/components/titleAuth/titleAuth'
@@ -81,38 +82,17 @@ export default function Register() {
       />
 
 
-
-      {/* <Input type={'email'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailRegister')} placeholder={t('placeholderEmailLogin')} >
-        <MdEmail color='#fff' size={'30px'}/>
-      </Input> */}
-
-
-      {/* <Input type={'text'} register={register} error={errors} validation={{ required: t('firstNameRequiredRegister') }} name='first_name' 
-      label={t('labelFirstName')} placeholder={t('placeholderFirstNameRegister')} >
-        <FaRegIdCard  color='#fff' size={'30px'}/>
-      </Input> */}
-      {/* <Input type={'text'} register={register} error={errors} validation={{ required: t('lastNameRequiredRegister') }} name='last_name' 
-      label={t('LabelLastName')} placeholder={t('placeholderLastNameRegister')} >
-        <FaRegIdCard  color='#fff' size={'30px'}/>
-      </Input> */}
-
-      <SelectBox
-            label={t('labelRoleRegister')}
-            placeholder={t('placeholderRoleRegister')}
-            name="role"
-            validation={{ required: t('roleRequiredRegister') }}
-            register={register}
-            error={errors} 
-
-            options={[   
-              { value: "Student", label: t('selectRoleRegisterStudent') },
-              { value: "Instructor", label: t("selectRoleRegisterInstructor") },
-            ]}
-          >
-             <MdEmail color='#fff' size={'30px'}/>
-          </SelectBox>
-
-
+      <SelectRegister 
+        label={t('labelRoleRegister')}
+        placeholder={t('placeholderRoleRegister')}
+        options={[   
+            { value: "Student", label: t('selectRoleRegisterStudent') },
+            { value: "Instructor", label: t("selectRoleRegisterInstructor") },
+          ]}
+        {...register('role',{ required: t('roleRequiredRegister') })}
+        startWithIcon={ <MdEmail color='#fff' size={'30px'}/>}
+        error={errors.role?.message}
+      />
 
     <Input 
         label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')}
@@ -122,10 +102,6 @@ export default function Register() {
         startWithIcon={<RiLockPasswordLine  color='#fff' size={'30px'}/>}
       />
 
-      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
-          name='password' type={'password'}  label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')} >
-        <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input> */}
      
       <Button  content={t('registerSuccess')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}

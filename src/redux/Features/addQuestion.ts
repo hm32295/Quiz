@@ -3,6 +3,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 interface OptionType {
   A: string;
@@ -31,12 +32,15 @@ export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsy
         const response= await axiosInstance.post(QUESTION_URL.CREATE,data)
        
         return response.data
-    } catch (error) {
-        console.log(error);
-        
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const addQuestion = createSlice({

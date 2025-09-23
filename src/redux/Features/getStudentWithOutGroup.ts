@@ -2,6 +2,7 @@
 import { axiosInstance } from "@/services/api";
 import {  STUDENT_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 export const studentWithOutGroupAsyncThunk =createAsyncThunk('studentWithOutGroup/studentWithOutGroupAsyncThunk', async (_,{rejectWithValue})=>{
        
@@ -12,10 +13,15 @@ export const studentWithOutGroupAsyncThunk =createAsyncThunk('studentWithOutGrou
         
        
         return dataResponse
-    } catch (error) {
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const studentWithOutGroup = createSlice({

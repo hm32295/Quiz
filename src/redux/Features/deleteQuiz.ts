@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/services/api";
 import { QUIZ_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 
 export const deleteQuizAsyncThunk = createAsyncThunk('deleteQuiz/deleteQuizAsyncThunk', async (id:string ,{rejectWithValue})=>{
@@ -12,12 +13,15 @@ export const deleteQuizAsyncThunk = createAsyncThunk('deleteQuiz/deleteQuizAsync
         
         
         return response.data
-    } catch (error) {
-        console.log(error);
-        
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const deleteQuiz = createSlice({

@@ -3,6 +3,7 @@
 import { axiosInstance } from "@/services/api";
 import { GROUP_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 
 // interface typeProps {
 //     id: string
@@ -17,12 +18,15 @@ export const deleteGroupAsyncThunk = createAsyncThunk('deleteGroup/deleteGroupAs
         const dataResponse = response.data
         
         return dataResponse
-    } catch (error) {
-        console.log(error);
-        
-        return rejectWithValue(error?.response?.data?.message)
-        
-      }
+    } catch (error: unknown) {
+          console.error(error);
+            let message = "Something went wrong";
+    
+            if (error instanceof AxiosError) {
+              message = error.response?.data?.message || message;
+            }
+          return rejectWithValue(message);
+        }
 })
 
 const deleteGroup = createSlice({
