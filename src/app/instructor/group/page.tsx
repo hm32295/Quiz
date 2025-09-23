@@ -154,7 +154,6 @@ export default function GroupsList() {
 
       <AddAndEditGroup
         dataUpdate={dataUpdate}
-        setOpenModelEditAndAdd={setOpenModelEditAndAdd}
         isOpen={openModelEditAndAdd}
         onClose={() => setOpenModelEditAndAdd(false)}
       />

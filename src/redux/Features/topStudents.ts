@@ -25,8 +25,8 @@ const initialState: TopStudentSliceState = {
 };
 
 export const topStudentAsyncThunk = createAsyncThunk<
-  TopStudent[], // نوع الـ return
-  void,        // نوع الـ argument
+  TopStudent[], 
+  void,      
   { rejectValue: string }
 >(
   "topStudent/topStudentAsyncThunk",

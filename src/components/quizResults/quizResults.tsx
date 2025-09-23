@@ -27,6 +27,7 @@ type Attempt = {
   questions: Question[];
 };
 
+
 type PropsQuizResults = {
   attempt: { data: Attempt };
   studentAnswers: { question: string; answer: string }[];

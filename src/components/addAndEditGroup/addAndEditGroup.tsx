@@ -24,15 +24,14 @@ interface GroupModalProps {
   isOpen: boolean;
   dataUpdate?: GroupForm | null;
   isLoading?: boolean;
-  setOpenModelEditAndAdd: () => void;
+  setOpenModelEditAndAdd?: () => void;
   onClose: () => void;
 }
 
 export default function AddAndEditGroup({
   isOpen,
   onClose,
-  dataUpdate,
-  setOpenModelEditAndAdd,
+  dataUpdate
 }: GroupModalProps) {
   const { t } = useTranslation();
   const [isAdd, setIsAdd] = useState(true);
@@ -86,7 +85,8 @@ export default function AddAndEditGroup({
 
       dispatch(groupAsyncThunk());
       reset({ name: "", students: [] });
-      setOpenModelEditAndAdd(false);
+     
+      onClose();
     } catch (err) {
       console.error("Failed to save group:", err);
       toast.error(t("addAndEditGroup_unique.toastError"));

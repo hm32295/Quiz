@@ -15,7 +15,7 @@ export interface SubmitQuizState {
 
 export interface SubmitQuizResponse {
   message: string;
-  score?: number; // أضف أي حقول إضافية تأتي من الـ API
+  score?: number; 
 }
 
 interface SubmitQuizSliceState {

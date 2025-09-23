@@ -12,8 +12,6 @@ import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams } from "next/navigation";
 
-
-
 interface QuizOption {
   [key: string]: string; 
 }
@@ -21,18 +19,37 @@ interface QuizOption {
 interface QuizQuestion {
   _id: string;
   title: string;
+  data?: Question[]
   options: QuizOption;
 }
-
 
 interface Answer {
   question: string;
   answer: string;
 }
 
-interface SubmitResult {
+type OptionMap = { [key: string]: string };
+
+type Question = {
+  _id: string;
+  title: string;
+  questions?:string[];
+  options: OptionMap & { _id?: string };
+  answer: string; // letter e.g. 'A'
+};
+
+type Attempt = {
+  _id: string;
+  quiz: string;
+  participant: string;
   score: number;
-  correctAnswers: Record<string, string>;
+  started_at: string;
+  finished_at: string;
+  questions: Question[];
+};
+
+interface SubmitResult {
+  data: Attempt;
 }
 
 export default function QuizPage() {
@@ -51,7 +68,7 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [resultData, setResultData] = useState<SubmitResult | null>(null);
 
-  const qs: QuizQuestion[] | undefined = data?.data?.questions;
+  const qs: QuizQuestion[] = data?.data?.questions;
   const total = qs?.length || 0;
   const progress = total ? Math.round(((currentIndex + 1) / total) * 100) : 0;
 
@@ -80,10 +97,16 @@ export default function QuizPage() {
 
   const handelSubmit = async () => {
     if (answers.length) {
-      const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
-      if (res.payload) {
-        setResultData(res.payload as SubmitResult);
+      const res = await dispatch(
+        submitQuizAsyncThunk({ id, data: answers })
+      );
+
+      if (res.payload && typeof res.payload !== "string") {
+        const payload = res.payload as unknown as Attempt;
+        setResultData({ data: payload });
         setShowResult(true);
+      } else {
+        console.warn("Unexpected payload:", res.payload);
       }
     }
     setSubmitted(false);

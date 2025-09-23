@@ -49,6 +49,7 @@ interface GroupType {
 }
 
 interface ResultRow extends ResultItem {
+  _id?: string
   Title: string;
   Date: string;
   Participants: number;
@@ -56,6 +57,7 @@ interface ResultRow extends ResultItem {
   groupName: string;
   persons: string;
 }
+
 
 export default function Results() {
   const { t } = useTranslation();
@@ -97,14 +99,13 @@ export default function Results() {
     }));
   };
 
-  const columns = [
+  const columns: { key: keyof ResultRow; label: string }[] = [
     { key: "Title", label: t("results_column_title") },
     { key: "groupName", label: t("results_column_groupName") },
     { key: "Participants", label: t("results_column_participants") },
     { key: "Date", label: t("results_column_date") },
     { key: "persons", label: t("results_column_persons") },
   ];
-
   return (
     <div className="w-full">
       <GenericTable<ResultRow>
@@ -123,7 +124,7 @@ export default function Results() {
             ),
             onClick: () => {
               console.log("view", row);
-              router.push(`/instructor/results/${row.quiz._id}`, row);
+              router.push(`/instructor/results/${row.quiz._id}`);
             },
           },
         ]}

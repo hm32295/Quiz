@@ -29,7 +29,17 @@ export default function QuizCard() {
   const dispatch = useDispatch<AppDispatch>();
   const { data: quizzes, isLoading } = useSelector((state: RootState) => state.getQuiz);
 
-  const quiz:typeQuiz = quizzes?.find((q: {_id:string}) => q._id === id);
+  const quiz:typeQuiz = quizzes?.find((q: {_id:string}) => q._id === id)?? {
+  
+  schadule: "",
+  title: "",
+  duration: "",
+  code: "",
+  questions_number: "",
+  score_per_question: "",
+  description: "",
+  type: ""
+};
 
   useEffect(() => {
     if (!quizzes || quizzes.length === 0) {

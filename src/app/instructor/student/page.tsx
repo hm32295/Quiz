@@ -11,32 +11,32 @@ import StudentModal from "@/components/singleStudent";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 
-interface TypeGroup {
+type Student = {
   _id: string;
-  name: string;
-  status: string;
-  instructor: string;
-  students: string[];
-  max_students: number;
-}
-
-interface TypeStudent {
-  _id: string;
+  status:string;
+  img?:string
   first_name: string;
   last_name: string;
   email: string;
-  status?: string;
-  score?: string;
-  img?: string;
+  role: string;
+  avg_score: number;
+  group?: { name: string };
 }
+interface Group {
+  _id: string;
+  name: string;
+  students: string[];
+  max_students: number;
+  status: string;
+  instructor?: string; // optional لو ساعات بييجي من الـ API وساعات لأ
+}
+
 
 export default function StudentsList() {
   const { t, i18n } = useTranslation();
   const [activeGroup, setActiveGroup] = useState("");
-  const [studentsGroup, setStudentsGroup] = useState<TypeStudent[]>([]);
-  const [selectedStudent, setSelectedStudent] = useState<TypeStudent | null>(
-    null
-  );
+  const [studentsGroup, setStudentsGroup] = useState<Student[]>([]);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   const { data: groups } = useSelector((state: RootState) => state.Group);
   const { data: allStudents } = useSelector((state: RootState) => state.Student);
@@ -48,11 +48,11 @@ export default function StudentsList() {
     dispatch(StudentAsyncThunk());
   }, [dispatch]);
 
-  const handleGroupClick = (group: TypeGroup) => {
+  const handleGroupClick = (group: Group) => {
     setActiveGroup(group.name);
 
     if (allStudents?.length) {
-      const filtered = allStudents.filter((student: TypeStudent) =>
+      const filtered = allStudents.filter((student: Student) =>
         group.students.includes(student._id)
       );
       setStudentsGroup(filtered);
@@ -71,7 +71,7 @@ export default function StudentsList() {
 
       {/* Tabs */}
       <div className="flex gap-3 mb-6 flex-wrap">
-        {groups?.map((group: TypeGroup) => (
+        {groups?.map((group: Group) => (
           <button
             key={group._id}
             onClick={() => handleGroupClick(group)}
@@ -113,12 +113,10 @@ export default function StudentsList() {
                     {student.first_name} {student.last_name}
                   </h3>
                   <p className="text-gray-500 text-xs">
-                    {t("studentsListPage.labels.email")}:{" "}
-                    {student.email || "-"}
+                    {t("studentsListPage.labels.email")}: {student.email || "-"}
                   </p>
                   <p className="text-gray-500 text-xs">
-                    {t("studentsListPage.labels.status")}:{" "}
-                    {student.status || "-"}
+                    {t("studentsListPage.labels.status")}: {student.status || "-"}
                   </p>
                 </div>
               </div>

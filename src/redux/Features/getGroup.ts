@@ -10,8 +10,8 @@ interface Group {
   students: string[];
   max_students: number;
   status: string;
+  instructor?: string; 
 }
-
 interface GroupState {
   isLoading: boolean;
   error: string | null;

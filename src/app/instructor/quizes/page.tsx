@@ -1,7 +1,7 @@
 "use client";
 import ConfirmDeleteModal from "@/components/confirmDeleteModal/confirmDeleteModal";
 import GenericTable from "@/components/GenericTableProps/GenericTableProps";
-import { ColumnsHederTableInQuizzes } from "@/interfaces/interfaces";
+// import { Column, QuizTableRow } from "@/interfaces/interfaces";
 import { deleteQuizAsyncThunk } from "@/redux/Features/deleteQuiz";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,20 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 
+
+interface Column<T> {
+  key: Extract<keyof T, string>; 
+  label: string;
+  render?: (value: T[Extract<keyof T, string>], row: T) => React.ReactNode;
+}
+
+
+ type QuizTableRow = Quiz & {
+  Title: string;
+  Question: number;
+  level: string;
+  Date: string;
+};
 export default function QuizPage() {
   const { t } = useTranslation();
   const [dataSingle, setDataSingle] = useState<Quiz | null>(null);
@@ -27,14 +41,15 @@ export default function QuizPage() {
     (state: RootState) => state.lastFiveCompletedQuizSlice
   );
 
-  const columns: ColumnsHederTableInQuizzes[] = [
+  // ✅ هنا استخدمنا النوع الجديد Column<QuizTableRow>
+  const columns: Column<QuizTableRow>[] = [
     { key: "Title", label: t("quizPage_tableTitle") },
     { key: "Question", label: t("quizPage_tableQuestion") },
     { key: "level", label: t("quizPage_tableLevel") },
     { key: "Date", label: t("quizPage_tableDate") },
   ];
 
-  const handelDataToRead = () => {
+  const handelDataToRead = (): QuizTableRow[] => {
     if (!dataQuizCompleted) return [];
     return dataQuizCompleted.map((quiz: Quiz) => ({
       Title: quiz.title,
@@ -84,12 +99,13 @@ export default function QuizPage() {
       <div className="text-lg font-bold mb-4 text-gray-800 capitalize">
         {t("quizPage_completedQuizzes")}
       </div>
-      <GenericTable
+
+      <GenericTable<QuizTableRow>
         columns={columns}
         setDataSingle={setDataSingle}
         titleItem="quiz"
         data={handelDataToRead()}
-        actions={(row: Quiz) => [
+        actions={(row: QuizTableRow) => [
           {
             type: "view",
             color: "red",
@@ -102,7 +118,7 @@ export default function QuizPage() {
               </Link>
             ),
             onClick: () => {
-              router.push(`/instructor/quizes/${row._id}`, row);
+              router.push(`/instructor/quizes/${row._id}`);
             },
           },
           {

@@ -39,7 +39,7 @@ interface DataType {
 
 interface QuestionModalProps {
   isOpen: boolean;
-  dataSingle?: DataType;
+  dataSingle?: DataType | undefined;
   onClose: () => void;
   edit: boolean;
 }

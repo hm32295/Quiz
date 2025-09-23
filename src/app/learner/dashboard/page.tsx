@@ -4,7 +4,6 @@ import GenericTable from "@/components/GenericTableProps/GenericTableProps";
 import JoinQuizModal from "@/components/joinQuizModal/joinQuizModal";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import UpcomingQuizzes from "@/components/upcomingQuizzes/upcomingQuizzes";
-import { ColumnsHederTableInQuizzes } from "@/interfaces/interfaces";
 import { lastFiveCompletedQuizAsyncThunk } from "@/redux/Features/lastFiveCompletedQuiz";
 
 import React, { useEffect, useState } from "react";
@@ -12,23 +11,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 
+// ✅ type for row in table
+interface QuizTableRow {
+  _id?: string; // للتوافق مع الجدول لو بيستخدم id
+  Title: string;
+  Question: number;
+  level: string;
+  Date: string;
+}
+
+// ✅ type for column
+interface ColumnHeader<T> {
+  key: keyof T;
+  label: string;
+}
+
 export default function Dashboard() {
   const { t } = useTranslation();
 
-  const columns: ColumnsHederTableInQuizzes[] = [
+  const columns: ColumnHeader<QuizTableRow>[] = [
     { key: "Title", label: t("dashboardQuizzes.columns.title") },
     { key: "Question", label: t("dashboardQuizzes.columns.question") },
     { key: "level", label: t("dashboardQuizzes.columns.level") },
     { key: "Date", label: t("dashboardQuizzes.columns.date") },
   ];
 
-  const [setDataSingle] = useState({});
+  const [dataSingle, setDataSingle] = useState<QuizTableRow | null>(null);
   const [openModelJoinQuiz, setOpenModelJoinQuiz] = useState(false);
-
 
   const dispatch = useDispatch<AppDispatch>();
   const { data: dataQuizCompleted, isLoading } = useSelector(
-    (state:RootState) => state.lastFiveCompletedQuizSlice
+    (state: RootState) => state.lastFiveCompletedQuizSlice
   );
 
   useEffect(() => {
@@ -37,18 +50,16 @@ export default function Dashboard() {
 
   if (isLoading) return <TableSkeleton />;
 
-  const handelDataToRead = () => {
-    if (!dataQuizCompleted) return;
+  const handelDataToRead = (): QuizTableRow[] | [] => {
+    if (!dataQuizCompleted) return [];
 
-    return dataQuizCompleted.map((quiz) => {
-      return {
-        Title: quiz.title,
-        Question: quiz.questions.length,
-        level: quiz.difficulty,
-        Date: quiz.schadule,
-        ...quiz,
-      };
-    });
+    return dataQuizCompleted.map((quiz) => ({
+      _id: quiz._id,
+      Title: quiz.title,
+      Question: quiz.questions.length,
+      level: quiz.difficulty,
+      Date: quiz.schadule,
+    }));
   };
 
   return (
@@ -58,10 +69,7 @@ export default function Dashboard() {
         onClose={() => setOpenModelJoinQuiz(false)}
       />
 
-      <ActionsPanel
-        onClick={() => setOpenModelJoinQuiz(true)}
-        type="student"
-      />
+      <ActionsPanel onClick={() => setOpenModelJoinQuiz(true)} type="student" />
 
       <UpcomingQuizzes />
 

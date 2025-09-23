@@ -14,14 +14,14 @@ import NoData from "../no-data/noData";
 import { useTranslation } from "react-i18next";
 
 interface Column<T> {
-  key: keyof T;
+  key: Extract<keyof T, string>; 
   label: string;
 }
 
 interface Action<T> {
   type: "edit" | "delete" | "view";
   color: string;
-  onClick: (row: T) => void;
+  onClick: (row: T) => void | Promise<void>;
 }
 
 interface GenericTableProps<T extends { _id?: string }> {
@@ -29,7 +29,7 @@ interface GenericTableProps<T extends { _id?: string }> {
   titleItem: string;
   data: T[];
   setDataSingle?: (row: T) => void;
-  actions?: (row: T) => Action<T>[];
+  actions?: (row: T) => Action<T>[]; 
   itemsPerPage?: number;
 }
 
@@ -41,8 +41,10 @@ const GenericTable = <T extends { _id?: string }>({
   setDataSingle,
   itemsPerPage = 5,
 }: GenericTableProps<T>) => {
+  
+
   const [openRow, setOpenRow] = useState<number | null>(null);
-  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dropdownRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [viewMode, setViewMode] = useState<"table" | "card" | "list">("table");
   const { t, i18n } = useTranslation();
 
@@ -192,7 +194,9 @@ const GenericTable = <T extends { _id?: string }>({
                       ))}
                       {actions && (
                         <td
-                          ref={(el) => (dropdownRefs.current[idx] = el)}
+                          ref={(el) => {
+                            dropdownRefs.current[idx] = el;
+                          }}
                           className="px-4 py-3 text-center relative"
                         >
                           <button
@@ -238,7 +242,12 @@ const GenericTable = <T extends { _id?: string }>({
                       {"title" in row ? String((row).title) : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     {actions && (
-                      <div className="relative" ref={(el) => (dropdownRefs.current[idx] = el)}>
+                      <div
+                        className="relative"
+                        ref={(el) => {
+                          dropdownRefs.current[idx] = el;
+                        }}
+                      >
                         <button
                           className="p-2 rounded-full cursor-pointer hover:bg-gray-100"
                           onClick={(e) => {
@@ -297,7 +306,12 @@ const GenericTable = <T extends { _id?: string }>({
                     </p>
                   </div>
                   {actions && (
-                    <div className="relative" ref={(el) => (dropdownRefs.current[idx] = el)}>
+                    <div
+                      className="relative"
+                      ref={(el) => {
+                        dropdownRefs.current[idx] = el;
+                      }}
+                    >
                       <button
                         className="p-2 rounded-full cursor-pointer hover:bg-gray-100"
                         onClick={(e) => {

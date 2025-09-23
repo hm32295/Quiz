@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { UseFormSetValue } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-
+interface GroupForm {
+  name: string;
+  students: string[];
+  _id?: string;
+}
 interface typeData {
   first_name: string;
   last_name: string;
@@ -9,11 +14,11 @@ interface typeData {
 }
 
 interface typeProps {
-  setValue: (field: string, value: string | number | string[]) => void;
+  setValue:  UseFormSetValue<GroupForm>;
   data: typeData[];
   setOpenDropdown: (val: boolean) => void;
   openDropdown: boolean;
-  dataUpdata?: { name?: string; students: string[] };
+  dataUpdata?: { name?: string; students: string[] } | null | undefined;
 }
 
 export default function SelectBoxGroup({

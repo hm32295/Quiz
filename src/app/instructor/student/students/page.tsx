@@ -8,12 +8,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { AppDispatch, RootState } from '@/redux/store';
 
-interface Student {
+
+export interface Student {
   _id: string;
   first_name: string;
+  last_name: string;
   email: string;
   status: string;
   role: string;
+  avg_score: number;
   [key: string]: unknown;
 }
 
@@ -30,7 +33,6 @@ export default function Students() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  // ✅ استخدم التايب
   const { data, isLoading } = useSelector(
     (state: RootState) => state.Student as StudentState
   );
@@ -50,14 +52,16 @@ export default function Students() {
 
   return (
     <div>
-      <GenericTable
+      <GenericTable<Student>
         columns={columns}
         titleItem={t('studentsPage.tableTitle')}
-        data={data}
+        data={data.map(s => ({ ...s, avg_score: s.avg_score ?? 0 }))} 
+       
         setDataSingle={setDataSingle}
         actions={(row: Student) => [
           {
-            type: t('studentsPage.actions.view'),
+            type: 'view',
+            label: t('studentsPage.actions.view'),
             color: 'red',
             onClick: () => setSelectedStudent(row),
           },

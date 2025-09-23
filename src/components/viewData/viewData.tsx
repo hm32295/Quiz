@@ -3,6 +3,9 @@ import { FC, ReactNode } from "react";
 import { IoClose } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 
+
+
+
 interface ViewDataModalProps {
   isOpen: boolean;
   onClose: () => void;
