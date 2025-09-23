@@ -37,13 +37,18 @@ interface Group {
   name: string;
 }
 
-interface QuizResponse {
-  data: {
-    message: string;
-    code: string;
-  };
+interface Quiz {
+  _id: string;
+  title: string;
+  questions: string[];
+  difficulty: string;
+  schadule: string;
 }
-
+interface dataType{
+  value:boolean;
+  isEdit:boolean;
+  data:Quiz | undefined
+}
 // ---------- Component ----------
 export default function AddAndEditQuiz() {
   const { t } = useTranslation();
@@ -51,8 +56,8 @@ export default function AddAndEditQuiz() {
   const { data: dataGroup, isLoading: isLoadingGroup } = useSelector(
     (state: RootState) => state.Group
   );
-  const { value: openAddAndEdit, isEdit: isEdit_, data: dataEdit } = useSelector(
-    (state: RootState) => state.createQuiz
+  const { value: openAddAndEdit, isEdit: isEdit_, data: dataEdit } = useSelector<RootState,dataType>(
+    (state) => state.createQuiz
   );
 
   const dispatch = useDispatch<AppDispatch>();
@@ -109,11 +114,9 @@ export default function AddAndEditQuiz() {
         }
         dispatch(hidden());
       } else {
-        const res = (await dispatch(
-          setQuizAsyncThunk(data)
-        )) as PayloadAction<QuizResponse>;
+        const res = (await dispatch( setQuizAsyncThunk(data) )) ;
 
-        if ("error" in res) toast.error(res.payload as string);
+        if ("error" in res) toast.error(res.payload as unknown as string);
         if (res?.payload?.data) {
           toast.success(
             res.payload.data.message || t("addAndEditQuiz.toast.added")

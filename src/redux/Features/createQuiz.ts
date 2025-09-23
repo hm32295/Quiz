@@ -1,8 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+interface Quiz {
+  _id: string;
+  title: string;
+  questions: string[];
+  difficulty: string;
+  schadule: string;
+}
+interface dataType{
+  value:boolean;
+  isEdit:boolean;
+  data:Quiz | undefined
+}
+const initialState:dataType = {
+  value :false,
+  isEdit:false,
+  data:undefined
+}
 const createQuiz = createSlice({
   name: "createQuiz",
-  initialState: { value: false ,isEdit :false, data:{}},
+  initialState,
   reducers: {
     setData: (state,actions) => {
      
@@ -10,7 +26,7 @@ const createQuiz = createSlice({
     },
     show: (state) => {
       state.value = true;
-      state.data = {};
+      state.data = undefined;
       state.isEdit = false;
     },
     showEdit: (state) => {
@@ -20,7 +36,7 @@ const createQuiz = createSlice({
     hidden: (state) => {
       state.value = false;
       state.isEdit = false;
-      state.data = {};
+      state.data = undefined;
     },
   },
 });
