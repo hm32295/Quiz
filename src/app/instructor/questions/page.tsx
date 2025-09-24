@@ -6,7 +6,7 @@ import GenericTable from "@/components/GenericTableProps/GenericTableProps";
 import TableSkeleton from "@/components/loading/tableSkeletonLoader";
 import ViewDataModal from "@/components/viewData/viewData";
 import { DeleteQuestionAsyncThunk } from "@/redux/Features/deleteQuestion";
-import { QuestionAsyncThunk } from "@/redux/Features/questionApi";
+import { QuestionAsyncThunk, QuestionItem, QuestionState } from "@/redux/Features/questionApi";
 import { FaPlusCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -65,24 +65,18 @@ export interface Question {
   data?: DataType;
 }
 
-interface QuestionState {
-  data: Question[];
-  isLoading: boolean;
-  error?: string | null;
-}
-
 // 🔹 Normalization function
-const mapQuestionToDataType = (q: Question): DataType => ({
-  Title: q.Title || q.title || q.data?.title || "",
-  _id: q._id || q.data?._id,
-  title: q.title || q.data?.title,
-  description: q.Description || q.description || q.data?.description,
-  answer: q.answer || q.data?.answer,
+const mapQuestionToDataType = (q: QuestionItem): DataType => ({
+  Title: q.Title  || q.data?.title || "",
+  _id: q.data?._id,
+  title: q.data?.title,
+  description: q.Description || q.data?.description,
+  answer:  q.data?.answer,
   
-  status: q.status || q.data?.status,
-  difficulty: q.level || q.difficulty || q.data?.difficulty,
-  points: String(q.Points || q.points || q.data?.points || ""),
-  type: q.type || q.data?.type,
+  status:  q.data?.status,
+  difficulty: q.level ||  q.data?.difficulty,
+  points: String(q.Points || q.data?.points || ""),
+  type: q.data?.type,
   data: {
     _id: q.data?._id,
     title: q.data?.title,

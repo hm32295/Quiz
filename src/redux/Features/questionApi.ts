@@ -3,7 +3,6 @@ import { QUESTION_URL } from "@/services/endpoints";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-// نوع الخيارات داخل كل سؤال
 interface OptionType {
   A: string;
   B: string;
@@ -12,8 +11,7 @@ interface OptionType {
   _id: string;
 }
 
-// شكل كل سؤال من الـ API
-interface QuestionAPIResponse {
+export interface QuestionAPIResponse {
   _id: string;
   title: string;
   description: string;
@@ -26,8 +24,7 @@ interface QuestionAPIResponse {
   type: string;
 }
 
-// نوع كل عنصر في الـ state بعد المعالجة
-interface QuestionItem {
+export interface QuestionItem {
   Title: string;
   level: string;
   Description: string;
@@ -35,37 +32,34 @@ interface QuestionItem {
   data: QuestionAPIResponse;
 }
 
-// نوع الـ state
-interface QuestionState {
+export interface QuestionState {
   isLoading: boolean;
   error: string | null;
   data: QuestionItem[];
 }
 
-// initial state
 const initialState: QuestionState = {
   isLoading: false,
   error: null,
   data: []
 };
 
-// النوع اللي هنبعثه عند reject
 interface RejectValue {
   message: string;
 }
 
 // Async thunk
 export const QuestionAsyncThunk = createAsyncThunk<
-  QuestionItem[],       // النوع اللي بيرجع عند fulfilled
-  void,                 // النوع اللي بيستقبل كـ argument
-  { rejectValue: RejectValue } // النوع اللي بيرجع عند rejected
+  QuestionItem[],   
+  void,  
+  { rejectValue: RejectValue }
 >(
   'Question/QuestionAsyncThunk',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get<QuestionAPIResponse[]>(QUESTION_URL.GET_ALL);
       const dataResponse = response.data;
-
+      
       const data: QuestionItem[] = dataResponse.map((q) => ({
         Title: q.title,
         level: q.difficulty,
