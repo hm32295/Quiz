@@ -9,34 +9,39 @@ import { useDispatch } from "react-redux";
 import Spinner from "../loading/spinnerComponent";
 import { useTranslation } from "react-i18next";
 import { AppDispatch } from "@/redux/store";
+import { toast } from "react-toastify";
 
 type JoinQuizModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-interface typeSubmit {
+interface TypeSubmit {
   code: string;
 }
 
 export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
-  const { register, handleSubmit, reset } = useForm<typeSubmit>();
+  const { register, handleSubmit, reset } = useForm<TypeSubmit>();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { t } = useTranslation();
 
-  const submit = async (data: typeSubmit) => {
+  const submit = async (data: TypeSubmit) => {
     setLoading(true);
     try {
       const res = await dispatch(joinQuizAsyncThunk(data)).unwrap();
-     
+
       if (res.data?.quiz) {
         const quizId = res.data.quiz;
         router.push(`/learner/quizzes/${quizId}`);
       }
+      toast.success('Done')
     } catch (err) {
-      console.error("Error joining quiz:", err);
+      
+      toast.error(err || "err")
+      
+      // console.error("Error joining quiz:", err);
     } finally {
       setLoading(false);
       onClose();

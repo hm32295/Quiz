@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useParams } from "next/navigation";
 import Spinner from "@/components/loading/spinnerComponent";
+import { toast } from "react-toastify";
 
 
 type OptionMap = { [key: string]: string };
@@ -146,10 +147,16 @@ export default function QuizPage() {
     setLoading(true)
     if (answers.length) {
       const res = await dispatch(submitQuizAsyncThunk({ id, data: answers }));
+      
+      
       if (res.payload) {
         setResultData(res.payload as unknown as SubmitResult);
         setShowResult(true);
+      }else{
+
+        toast.error(res.payload)
       }
+      
     }
     setSubmitted(false);
     setLoading(false)
@@ -203,24 +210,27 @@ export default function QuizPage() {
           })}
         </div>
 
-        <button
-          onClick={() => {
-            setSubmitted(false);
-            setCurrentIndex(0);
-            setAnswers([]);
-          }}
-          className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
-        >
-          {t("quizTakingPage.retake")}
-        </button>
+      <div className="flex justify-center align-center">
 
-        <button
-          onClick={handelSubmit}
-          className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
-        >
-          {loading ? <Spinner /> :t("quizTakingPage.submit")}
-        
-        </button>
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  setCurrentIndex(0);
+                  setAnswers([]);
+                }}
+                className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
+              >
+                {t("quizTakingPage.retake")}
+              </button>
+
+              <button
+                onClick={handelSubmit}
+                className="mt-8 capitalize mr-1.5 px-6 py-3 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg shadow-md"
+              >
+                {loading ? <Spinner /> :t("quizTakingPage.submit")}
+              
+              </button>
+      </div>
       </div>
     );
   }

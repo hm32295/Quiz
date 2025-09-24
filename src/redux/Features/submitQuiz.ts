@@ -43,7 +43,6 @@ export const submitQuizAsyncThunk = createAsyncThunk<
       });
       return response.data as SubmitQuizResponse;
     }catch (error: unknown) {
-          console.error(error);
             let message = "Something went wrong";
     
             if (error instanceof AxiosError) {

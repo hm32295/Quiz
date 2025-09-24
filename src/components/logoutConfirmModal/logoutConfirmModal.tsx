@@ -10,17 +10,14 @@ export default function LogoutConfirmModal() {
   const logout = useLogout();
   const { t, i18n } = useTranslation();
 
-  // نجيب اتجاه اللغة الحالي
   const direction = i18n.dir();
 
   return (
     <>
-      {/* زر الفتح */}
       <button
         onClick={() => setIsOpen(true)}
         className="flex cursor-pointer justify-between items-center gap-1.5 py-2 rounded-lg bg-transparent text-black hover:opacity-70 transition"
       >
-        {/* أيقونة حسب الاتجاه */}
         <FaSignOutAlt
           className={`w-5 h-5 ${direction === "rtl" ? "rotate-180" : ""}`}
         />
