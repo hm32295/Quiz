@@ -344,9 +344,11 @@
       "selectPlaceholder": "اختر..."
     },
     "options": {
-      "answers": ["A", "B", "C", "D"],
-      "difficulties": ["سهل", "متوسط", "صعب"],
-      "categories": ["واجهة", "خلفية", "DevOps"]
+
+      "answers": [{"key":"A", "value":"A"}, {"key":"B", "value":"B"}, {"key":"C", "value":"C"}, {"key":"D", "value":"D"}],
+      "difficulties": [{"key":"easy", "value":"سهل"}, {"key":"medium", "value":"متوسط"}, {"key":"hard", "value":"صعب"}],
+      "categories": [{"key":"FE", "value":"واجهة"}, {"key":"BE", "value":"خلفية"}, {"key":"DO", "value":"DevOps"}]
+
     },
     "validation": {
       "required": "هذا الحقل مطلوب"

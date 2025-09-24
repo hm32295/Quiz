@@ -1,4 +1,11 @@
-export default function TableSkeleton({ rows = 5, cols = 4 }) {
+"use client";
+
+interface TableSkeletonProps {
+  rows?: number;
+  cols?: number;
+}
+
+export default function TableSkeleton({ rows = 5, cols = 4 }: TableSkeletonProps) {
   return (
     <div className="w-full rounded-lg overflow-hidden">
       <table className="w-full border-collapse">

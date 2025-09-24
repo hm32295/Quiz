@@ -19,6 +19,7 @@ interface OptionType {
 }
 
 interface DataSingleType {
+  
   _id?: string;
   title?: string;
   description?: string;
@@ -144,16 +145,16 @@ export default function AddAndEditQuestion({
 
   const answerOptions =
     (t("questionsPageAddEdit.options.answers", { returnObjects: true }) as
-      | string[]
-      | undefined) || ["A", "B", "C", "D"];
+      | {key:string,value:string}[]
+      | undefined) || [{"key":"A", "value":"A"}, {"key":"B", "value":"B"}, {"key":"C", "value":"C"}, {"key":"D", "value":"D"}];
   const difficultyOptions =
     (t("questionsPageAddEdit.options.difficulties", {
       returnObjects: true,
-    }) as string[] | undefined) || ["easy", "medium", "hard"];
+    }) as {key:string,value:string}[] | undefined) || [{"key":"easy", "value":"easy"}, {"key":"medium", "value":"medium"}, {"key":"hard", "value":"hard"}];
   const categoryOptions =
     (t("questionsPageAddEdit.options.categories", {
       returnObjects: true,
-    }) as string[] | undefined) || ["FE", "BE", "DO"];
+    }) as {key:string,value:string}[] | undefined) || [{"key":"FE", "value":"FE"}, {"key":"BE", "value":"BE"}, {"key":"DO", "value":"DO"}];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-auto">
@@ -219,16 +220,16 @@ export default function AddAndEditQuestion({
 
           {/* Options */}
           <div className="grid grid-cols-2 gap-2">
-            {answerOptions.map((opt) => (
+            {answerOptions.map((opt:{key:string,value:string}) => (
               <div
-                key={opt}
+                key={opt.key}
                 className="flex items-center border rounded-lg overflow-hidden"
               >
                 <label className="p-2 bg-[#FFEDDF] font-semibold">
-                  {t("questionsPageAddEdit.fields.optionLabel", { option: opt })}
+                  {t("questionsPageAddEdit.fields.optionLabel", { option: opt.value })}
                 </label>
                 <input
-                  {...register(opt as keyof DataSingleType, fieldRequired)}
+                  {...register(opt.key as keyof DataSingleType, fieldRequired)}
                   disabled={loading}
                   className="w-full p-1 focus:outline-none"
                 />
@@ -249,9 +250,9 @@ export default function AddAndEditQuestion({
               <option value="">
                 {t("questionsPageAddEdit.fields.selectRightAnswer")}
               </option>
-              {answerOptions.map((ele) => (
-                <option key={ele} value={ele}>
-                  {ele}
+              {answerOptions.map((ele,index) => (
+                <option key={ele.key+index} value={ele.key}>
+                  {ele.value}
                 </option>
               ))}
             </select>
@@ -270,9 +271,9 @@ export default function AddAndEditQuestion({
               <option value="">
                 {t("questionsPageAddEdit.fields.selectDifficulty")}
               </option>
-              {difficultyOptions.map((ele) => (
-                <option key={ele} value={ele}>
-                  {ele}
+              {difficultyOptions.map((ele,index) => (
+                <option key={ele.key+index} value={ele.key}>
+                  {ele.value}
                 </option>
               ))}
             </select>
@@ -291,9 +292,9 @@ export default function AddAndEditQuestion({
               <option value="">
                 {t("questionsPageAddEdit.fields.selectCategory")}
               </option>
-              {categoryOptions.map((ele) => (
-                <option key={ele} value={ele}>
-                  {ele}
+              {categoryOptions.map((ele,index) => (
+                <option key={ele.key+index} value={ele.key}>
+                  {ele.value}
                 </option>
               ))}
             </select>

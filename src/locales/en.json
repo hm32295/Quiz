@@ -342,9 +342,9 @@
       "selectPlaceholder": "Select..."
     },
     "options": {
-      "answers": ["A", "B", "C", "D"],
-      "difficulties": ["easy", "medium", "hard"],
-      "categories": ["FE", "BE", "DO"]
+      "answers": [{"key":"A", "value":"A"}, {"key":"B", "value":"B"}, {"key":"C", "value":"C"}, {"key":"D", "value":"D"}],
+      "difficulties": [{"key":"easy", "value":"easy"}, {"key":"medium", "value":"medium"}, {"key":"hard", "value":"hard"}],
+      "categories": [{"key":"FE", "value":"FE"}, {"key":"BE", "value":"BE"}, {"key":"DO", "value":"DO"}]
     },
     "validation": {
       "required": "This field is required"
