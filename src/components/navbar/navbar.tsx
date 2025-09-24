@@ -133,8 +133,8 @@ const handelCurrentPage = useCallback(
 
           {/* Menu */}
           <div
-            className={`absolute z-50 top-full w-48 py-2 border-t bg-gray-50 space-y-3 rounded-bl-2xl shadow-lg transform transition-transform duration-300
-            ${dir === "rtl" ? "left-0" : "right-0"}
+            className={`absolute z-50 top-full w-48 py-2 border-t bg-gray-50 space-y-3  shadow-lg transform transition-transform duration-300
+            ${dir === "rtl" ? "left-0 rounded-br-2xl" : "right-0 rounded-bl-2xl"}
             ${isOpen ? "translate-x-0" : dir === "rtl" ? "-translate-x-full" : "translate-x-full"}`}
           >
             {/* Language Switcher in mobile */}

@@ -18,86 +18,89 @@ import { MdEmail } from 'react-icons/md'
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import CookieServices from "@/services/cookies/clientCookie";
+
+
+interface LoginResponse {
+  data: {
+    accessToken: string;
+    refreshToken: string;
+    profile: {
+      role: string;
+      [key: string]: unknown;
+    };
+    message?: string;
+  };
+}
+
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
-  const [loading ,setLoading] = useState(false)
-  const rout = useRouter() 
+  const [loading, setLoading] = useState(false);
+  const rout = useRouter();
   const { t } = useTranslation();
 
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<LoginFormInputs>();
 
-  const { register, handleSubmit, formState:{errors},reset } = useForm<LoginFormInputs>();
-    
-const submit = async (formData: LoginFormInputs) => {
-  setLoading(true);
-  try {
-    const response = await dispatch(loginUser(formData));
+  const submit = async (formData: LoginFormInputs) => {
+    setLoading(true);
+    try {
+      const response: LoginResponse = await dispatch(loginUser(formData)).unwrap();
 
-   
+      const { accessToken, refreshToken, profile, message } = response.data;
 
-    if (loginUser.fulfilled.match(response)) {
-      const { accessToken, refreshToken, profile } = response.payload.data;
-      
-      toast.success(response.payload.data?.message || t('loginSuccess') || 'Login Success');
+      toast.success(message || t('loginSuccess') || 'Login Success');
+
       reset();
-      rout.push(profile.role === 'Student' ? '/learner/dashboard' : '/instructor/dashboard');
 
       setCookie("accessToken", accessToken, { path: "/", maxAge: 60 * 60 * 24 * 7 });
       setCookie("refreshToken", refreshToken, { path: "/", maxAge: 60 * 60 * 24 * 30 });
-      setCookie("profile", JSON.stringify(profile), { path: "/", secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 60 * 60 * 24 * 30 });
+      setCookie("profile", JSON.stringify(profile), {
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 30
+      });
+
       CookieServices.set('profile', JSON.stringify(profile));
 
-    } else {
-      toast.error(response.error?.message || 'Email or password invalid');
+      await rout.push(profile.role === 'Student' ? '/learner/dashboard' : '/instructor/dashboard');
+
+    } catch (error: unknown) {
+      console.log(error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Email or password invalid');
+      }
     }
-  } catch (error) {
-    console.log(error);
-  }
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      
       <TitleAuth content={t('tiltLogin')} />
       <IconSAuthentication />
 
+      <Input
+        startWithIcon={<MdEmail color='#fff' size={'30px'} />}
+        type='text'
+        {...register("email", EMAIL_VALIDATION)}
+        error={errors.email?.message}
+        label={t('labelEmailLogin')}
+        placeholder={t('placeholderEmailLogin')}
+      />
 
+      <Input
+        startWithIcon={<MdEmail color='#fff' size={'30px'} />}
+        type='password'
+        {...register("password", { required: 'the field is required' })}
+        error={errors.password?.message}
+        label={t('labelPasswordLogin')}
+        placeholder={t('placeholderPasswordLogin')}
+      />
 
-
-      <Input startWithIcon={<MdEmail color='#fff' 
-              size={'30px'}/>} 
-              type='text' 
-              {...register("email" ,EMAIL_VALIDATION)} 
-              error={errors.email?.message}  
-              label={t('labelEmailLogin')} 
-              placeholder={t('placeholderEmailLogin')} 
-        />
-
-
-      <Input startWithIcon={<MdEmail color='#fff'  size={'30px'}/>} 
-              type='password' 
-              {...register("password" ,{required:'the field is required'})} 
-              error={errors.password?.message}  
-              label={t('labelPasswordLogin')} 
-              placeholder={t('placeholderPasswordLogin')} 
-        />
-
-
-
-      {/* <Input type={'text'} register={register} error={errors} validation={EMAIL_VALIDATION} name='email' label={t('labelEmailLogin')} placeholder={t('placeholderEmailLogin')} >
-        <MdEmail color='#fff' size={'30px'}/>
-      </Input> */}
-
-{/* 
-      <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
-          name='password' type={'password'}  label={t('labelPasswordLogin')} placeholder={t('placeholderPasswordLogin')} >
-        <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input> */}
-     
-      <Button link={'/authentication/forget-password'} title={t('linkTitleLogin')} content={t('buttonLogin')} >
-          {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
+      <Button link={'/authentication/forget-password'} title={t('linkTitleLogin')} content={t('buttonLogin')}>
+        {loading ? <MoonLoaderToButton /> : <IoMdSend />}
       </Button>
-
     </form>
-  )
+  );
 }

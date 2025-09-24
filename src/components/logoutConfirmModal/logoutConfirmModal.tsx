@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { FaSignOutAlt, FaTimes } from "react-icons/fa";
 import useLogout from "@/hooks/useLogout";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,55 @@ export default function LogoutConfirmModal() {
   const { t, i18n } = useTranslation();
 
   const direction = i18n.dir();
+
+  const modalContent = (
+    <div
+      onClick={() => setIsOpen(false)}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-11/12 max-w-md rounded-2xl bg-white p-6 shadow-2xl text-center animate__animated animate__zoomIn"
+      >
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute cursor-pointer top-3 right-3 text-gray-400 hover:text-red-500 transition"
+        >
+          <FaTimes className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFEDDF] text-gray-800 animate__animated animate__pulse animate__infinite">
+          <FaSignOutAlt className="w-8 h-8" />
+        </div>
+
+        <h2 className="text-xl font-bold text-gray-900 mb-2">
+          {t("logoutModal.title")}
+        </h2>
+
+        <p className="text-gray-600 mb-6">
+          {t("logoutModal.message")}
+        </p>
+
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="px-4 py-2 cursor-pointer rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] text-gray-800 font-medium transition"
+          >
+            {t("logoutModal.cancel")}
+          </button>
+          <button
+            onClick={() => {
+              setIsOpen(false);
+              logout();
+            }}
+            className="px-4 py-2 cursor-pointer rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] text-gray-900 font-semibold transition"
+          >
+            {t("logoutModal.confirm")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -24,59 +74,7 @@ export default function LogoutConfirmModal() {
         <span>{t("logoutModal.openButton")}</span>
       </button>
 
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl text-center animate__animated animate__zoomIn"
-          >
-            {/* زرار إغلاق */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute cursor-pointer top-3 right-3 text-gray-400 hover:text-red-500 transition"
-            >
-              <FaTimes className="w-5 h-5" />
-            </button>
-
-            {/* أيقونة */}
-            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-[#FFEDDF] text-gray-800 animate__animated animate__pulse animate__infinite">
-              <FaSignOutAlt className="w-8 h-8" />
-            </div>
-
-            {/* العنوان */}
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              {t("logoutModal.title")}
-            </h2>
-
-            {/* الرسالة */}
-            <p className="text-gray-600 mb-6">
-              {t("logoutModal.message")}
-            </p>
-
-            {/* الأزرار */}
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 cursor-pointer rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] text-gray-800 font-medium transition"
-              >
-                {t("logoutModal.cancel")}
-              </button>
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  logout();
-                }}
-                className="px-4 py-2 cursor-pointer rounded-xl bg-[#FFEDDF] hover:bg-[#ffd6b8] text-gray-900 font-semibold transition"
-              >
-                {t("logoutModal.confirm")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {isOpen && createPortal(modalContent, document.body)}
     </>
   );
 }
