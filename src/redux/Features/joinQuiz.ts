@@ -10,17 +10,20 @@ interface JoinQuizResponse {
   description?: string;
   duration?: number;
   questions_number?: number;
-  // أضف أي خصائص تانية حسب الـ API
+ 
 }
 
 interface JoinQuizState {
   isLoading: boolean;
   error: string | null;
   data: JoinQuizResponse[];
+  
+  
 }
 
 interface TypeSubmit {
   code: string;
+  
 }
 
 const initialState: JoinQuizState = {

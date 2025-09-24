@@ -30,7 +30,8 @@ export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
     setLoading(true);
     try {
       const res = await dispatch(joinQuizAsyncThunk(data)).unwrap();
-      if (res?.data?.quiz) {
+     
+      if (res.data?.quiz) {
         const quizId = res.data.quiz;
         router.push(`/learner/quizzes/${quizId}`);
       }
