@@ -23,6 +23,7 @@ export async function middleware(req: NextRequest) {
         const data = await refreshRes.json();
         accessToken = data.accessToken;
 
+        if(!accessToken) return
         const response = NextResponse.next();
         response.cookies.set("accessToken", accessToken, {
           path: "/",
