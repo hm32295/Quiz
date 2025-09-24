@@ -39,7 +39,7 @@ export default function JoinQuizModal({ isOpen, onClose }: JoinQuizModalProps) {
       toast.success('Done')
     } catch (err) {
       
-      toast.error(err || "err")
+      console.log(err || "err")
       
       // console.error("Error joining quiz:", err);
     } finally {
