@@ -26,7 +26,7 @@ export const studentWithOutGroupAsyncThunk =createAsyncThunk('studentWithOutGrou
 
 const studentWithOutGroup = createSlice({
     name:'studentWithOutGroup',
-    initialState: {isLoading: false,error: null as string | null,data: [] },
+    initialState: {isLoading: false,error: null as string | null | unknown,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(studentWithOutGroupAsyncThunk.pending,(state)=>{

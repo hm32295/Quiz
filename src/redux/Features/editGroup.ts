@@ -33,7 +33,7 @@ export const editGroupAsyncThunk = createAsyncThunk('editGroup/editGroupAsyncThu
 
 const editGroup = createSlice({
     name:'editGroup',
-    initialState: {isLoading: false,error: null as string | null,data: []},
+    initialState: {isLoading: false,error: null as string | null | unknown,data: []},
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(editGroupAsyncThunk.pending,(state)=>{

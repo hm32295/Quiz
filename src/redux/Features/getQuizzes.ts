@@ -23,7 +23,7 @@ export const getQuizAsyncThunk = createAsyncThunk('getQuiz/getQuizAsyncThunk', a
 
 const getQuiz = createSlice({
     name:'getQuiz',
-    initialState: {isLoading: false,error: null as string | null,data: [] },
+    initialState: {isLoading: false,error: null as string | null | unknown,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(getQuizAsyncThunk.pending,(state)=>{

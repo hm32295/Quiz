@@ -35,7 +35,7 @@ export const SetGroupAsyncThunk = createAsyncThunk('setGroup/SetGroupAsyncThunk'
 
 const setGroup = createSlice({
     name:'setGroup',
-    initialState: {isLoading: false,error: null as string | null,data: [] },
+    initialState: {isLoading: false,error: null as string | null | unknown,data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(SetGroupAsyncThunk.pending,(state)=>{

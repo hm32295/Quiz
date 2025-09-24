@@ -45,7 +45,7 @@ export const addQuestionAsyncThunk =createAsyncThunk('addQuestion/addQuestionAsy
 
 const addQuestion = createSlice({
     name:'addQuestion',
-    initialState: {isLoading: false,error: null as string | null,data: [] },
+    initialState: {isLoading: false,error: null as string | unknown | null , data: [] },
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(addQuestionAsyncThunk.pending,(state)=>{

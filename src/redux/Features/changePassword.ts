@@ -8,6 +8,17 @@ interface ChangePasswordResponse {
   message?: string;
   success?: boolean;
 }
+interface ChangePasswordState {
+  isLoading: boolean;
+  error: string | null | unknown;
+  data: ChangePasswordResponse | null;
+}
+
+const initialState: ChangePasswordState = {
+  isLoading: false,
+  error: null,
+  data: null
+}
 
 
 export const changePasswordUser = createAsyncThunk<
@@ -26,13 +37,13 @@ export const changePasswordUser = createAsyncThunk<
             if (error instanceof AxiosError) {
               message = error.response?.data?.message || message;
             }
-          return rejectWithValue(message);
+          return rejectWithValue({message});
         }
 })
 
 const changePassword = createSlice({
     name:'changePassword',
-    initialState: {isLoading: false,error: null as string | null,data: []},
+    initialState,
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(changePasswordUser.pending,(state)=>{
