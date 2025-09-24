@@ -1,7 +1,7 @@
 "use client";
-import { FaCalendarAlt, FaClock, FaEdit } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCalendarAlt, FaClock, FaEdit } from "react-icons/fa";
 import "animate.css";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuizAsyncThunk } from "@/redux/Features/getQuizzes";
@@ -22,10 +22,11 @@ interface typeQuiz{
   type : string;
 }
 export default function QuizCard() {
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const params = useParams();
   const id = params?.id as string;
-
+  const router = useRouter();
+  const direction = i18n.dir()
   const dispatch = useDispatch<AppDispatch>();
   const { data: quizzes, isLoading } = useSelector((state: RootState) => state.getQuiz);
 
@@ -56,15 +57,30 @@ export default function QuizCard() {
       </div>
     );
 
-  const dateString = quiz.schadule;
+const dateString = quiz.schadule;
+let datePart = "No date";
+let timePart = "";
+
+if (dateString) {
   const dateObj = new Date(dateString);
-
-  const datePart = dateObj.toISOString().split("T")[0];
-  const timePart = dateObj.toISOString().split("T")[1].slice(0, 5);
-
+  if (!isNaN(dateObj.getTime())) {
+    datePart = dateObj.toISOString().split("T")[0];
+    timePart = dateObj.toISOString().split("T")[1].slice(0, 5);
+  }
+}
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div className="flex justify-center flex-col items-center min-h-screen bg-gray-100 p-4">
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="flex self-start capitalize cursor-pointer items-center gap-2 mb-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300"
+      >
+        {direction === 'rtl' ? <FaArrowRight /> : <FaArrowLeft />}
+        {t('studentsPage.buttons.back')}
+      </button>
       <div className="w-full max-w-sm bg-white shadow-lg rounded-2xl p-5 animate__animated animate__fadeInUp">
+        
+       
         {/* Title */}
         <h2 className="text-xl font-bold text-gray-800 mb-4 capitalize">
           {quiz.title}

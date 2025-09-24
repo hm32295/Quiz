@@ -14,8 +14,10 @@ interface ViewDataModalProps {
 }
 
 const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data }) => {
-  const { t } = useTranslation();
+  const { t ,i18n} = useTranslation();
 
+
+  const direction = i18n.dir();
   if (!isOpen) return null;
 
   return (
@@ -30,7 +32,7 @@ const ViewDataModal: FC<ViewDataModalProps> = ({ isOpen, onClose, title, data })
       >
         {/* Close button */}
         <button
-          className="absolute top-5 right-5 p-1 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition cursor-pointer"
+          className={`absolute top-5 ${direction === 'rtl' ? "left-5":"right-5"} p-1 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition cursor-pointer`}
           onClick={onClose}
         >
           <IoClose size={26} />

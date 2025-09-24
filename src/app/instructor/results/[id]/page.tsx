@@ -1,10 +1,11 @@
 "use client";
 import GenericTable from '@/components/GenericTableProps/GenericTableProps';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { RootState } from '@/redux/store';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 // Participant type
 interface Participant {
@@ -46,10 +47,11 @@ interface Column {
 }
 
 export default function ResultsDetails() {
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const params = useParams();
   const quizId = params.id as string;
-
+  const router = useRouter()
+  const direction = i18n.dir()
   const { data = [], isLoading } = useSelector(
     (state: RootState) => state.results as { data: ResultItem[]; isLoading: boolean }
   );
@@ -100,6 +102,14 @@ export default function ResultsDetails() {
 
   return (
     <div className="w-full">
+    {/* Back Button */}
+    <button
+      onClick={() => router.back()}
+      className="flex capitalize self-start cursor-pointer items-center gap-2 mb-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300"
+    >
+      {direction === 'rtl' ? <FaArrowRight /> : <FaArrowLeft />}
+      {t('studentsPage.buttons.back')}
+    </button>
       <GenericTable<ResultRow>
         columns={columns}
         titleItem={t("resultsDetails_table_title")}

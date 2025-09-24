@@ -28,7 +28,7 @@ interface Group {
   students: string[];
   max_students: number;
   status: string;
-  instructor?: string; // optional لو ساعات بييجي من الـ API وساعات لأ
+  instructor?: string;
 }
 
 
@@ -59,7 +59,6 @@ export default function StudentsList() {
     }
   };
 
-  // نحدد الاتجاه
   const direction = i18n.dir();
 
   return (
@@ -89,7 +88,7 @@ export default function StudentsList() {
       {/* Students List */}
       <div className="grid md:grid-cols-2 gap-4">
         {studentsGroup?.length ? (
-          studentsGroup.map((student) => (
+          studentsGroup.map((student:Student) => (
             <div
               key={student._id}
               className="flex items-center justify-between rounded-xl border p-3 transition-all duration-300 cursor-pointer hover:shadow-lg hover:scale-[1.02] animate__animated animate__fadeInUp"

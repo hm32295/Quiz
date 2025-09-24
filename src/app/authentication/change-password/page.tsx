@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { useDispatch } from 'react-redux';
@@ -17,8 +18,8 @@ import { toast } from 'react-toastify';
 export default function ChangePassword() {
   const dispatch = useDispatch<AppDispatch>();
  const[ loading ,setLoading] = useState(false)
-  const { t } = useTranslation();
-
+  const { t,i18n } = useTranslation();
+  const direction = i18n.dir()
 
   const { register, handleSubmit, formState:{errors},reset } = useForm<changePasswordTypes>();
   const router = useRouter()
@@ -47,8 +48,15 @@ export default function ChangePassword() {
       
     }
   return (
+    <>
+      <button
+        onClick={() => router.back()}
+        className="flex self-start cursor-pointer items-center gap-2 mb-4 px-4 py-2 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 capitalize transition-all duration-300"
+      >
+        {direction === 'rtl' ? <FaArrowRight /> : <FaArrowLeft />}
+        {t('studentsPage.buttons.back')}
+      </button>
     <form onSubmit={handleSubmit(submit)}>
-      
       <TitleAuth content={t('titleChangePassword')} />
       
      
@@ -68,19 +76,12 @@ export default function ChangePassword() {
           type='password' 
           {...register('password_new',{required:'the failed is required'})}
          />
-      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
-          name='password' type={'password'}  label={t('labelOldPasswordChangePassword')} placeholder={t('placeholderOldPasswordChangePassword')} >
-        <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input> */}
-      {/* <Input error={errors} register={register} validation={{ required: t('messagePasswordLogin') }} 
-          name='password_new' type={'password'}  label={t('labelNewPasswordChangePassword')} placeholder={t('placeholderNewPasswordChangePassword')} >
-        <RiLockPasswordLine color='#fff' size={'30px'}/>
-      </Input> */}
-     
+ 
       <Button  content={t('buttonChange')} >
           {loading ? <MoonLoaderToButton/> : <IoMdSend/>}
       </Button>
 
     </form>
+    </>
   )
 }

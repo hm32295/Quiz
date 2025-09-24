@@ -7,7 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { AppDispatch, RootState } from '@/redux/store';
-
+import { useRouter } from 'next/navigation';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 export interface Student {
   _id: string;
@@ -27,11 +28,12 @@ interface StudentState {
 }
 
 export default function Students() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [, setDataSingle] = useState<Student | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const { data, isLoading } = useSelector(
     (state: RootState) => state.Student as StudentState
@@ -50,13 +52,23 @@ export default function Students() {
 
   if (isLoading) return <TableSkeleton />;
 
+  const direction = i18n.dir();
+
   return (
-    <div>
+    <div className="p-4 bg-white rounded-2xl shadow">
+      {/* Back Button */}
+      <button
+        onClick={() => router.back()}
+        className="flex cursor-pointer items-center gap-2 mb-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-300"
+      >
+        {direction === 'rtl' ? <FaArrowRight /> : <FaArrowLeft />}
+        {t('studentsPage.buttons.back')}
+      </button>
+
       <GenericTable<Student>
         columns={columns}
         titleItem={t('studentsPage.tableTitle')}
-        data={data.map(s => ({ ...s, avg_score: s.avg_score ?? 0 }))} 
-       
+        data={data.map(s => ({ ...s, avg_score: s.avg_score ?? 0 }))}
         setDataSingle={setDataSingle}
         actions={(row: Student) => [
           {

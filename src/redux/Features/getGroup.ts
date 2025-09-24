@@ -35,7 +35,7 @@ export const groupAsyncThunk = createAsyncThunk<
       const response = await axiosInstance.get(GROUP_URL.GET_ALL);
       return response.data as Group[];
     }catch (error: unknown) {
-          console.error(error);
+       
             let message = "Something went wrong";
     
             if (error instanceof AxiosError) {

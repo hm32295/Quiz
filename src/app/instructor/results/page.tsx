@@ -123,7 +123,6 @@ export default function Results() {
               </Link>
             ),
             onClick: () => {
-              console.log("view", row);
               router.push(`/instructor/results/${row.quiz._id}`);
             },
           },

@@ -184,6 +184,10 @@
     "tableTitle": "Student",
     "actions": {
       "view": "View"
+    },
+    "buttons":{
+      
+      "back": "back"
     }
   },
 

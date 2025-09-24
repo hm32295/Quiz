@@ -13,11 +13,10 @@ export const resultsAsyncThunk = createAsyncThunk('results/resultsAsyncThunk', a
         const response= await axiosInstance.get(QUIZ_URL.RESULT)
        
         const dataResponse = response.data
-        console.log(dataResponse);
+        
         
         return dataResponse
     } catch (error: unknown) {
-          console.error(error);
             let message = "Something went wrong";
     
             if (error instanceof AxiosError) {
