@@ -16,7 +16,6 @@ export default function RootLayout({
     { name: t("learnerLayout.menu.results"), icon: <FaChartBar />, link: "/learner/results" },
   ];
  
-  // نجيب اتجاه اللغة
   const direction = i18n.dir(); // "ltr" or "rtl"
 
   return (
@@ -25,7 +24,7 @@ export default function RootLayout({
       <div className="flex mt-16">
         <SidBar menuItems={menuItems} />
         <main
-          className={`pt-[60px] p-4 w-full bg-[#f6f3f4] min-h-screen transition-all duration-300
+          className={`pt-[60px] p-1 sm-p-4 w-full bg-[#f6f3f4] min-h-screen transition-all duration-300
           ${direction === "ltr" ? "md:ml-48" : "md:mr-48"}`}
         >
           {children}

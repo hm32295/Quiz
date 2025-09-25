@@ -60,7 +60,8 @@ export default function ActionsPanel({
   const { t } = useTranslation();
 
   return (
-    <div className="mb-3 flex flex-wrap justify-start gap-4">
+    <div className="mb-3 flex flex-wrap justify-start gap-0 sm-gap-4">
+
       <ActionCard
         title={
           type

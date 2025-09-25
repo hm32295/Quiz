@@ -28,7 +28,8 @@ const QuizCard = ({ title, schadule, image, participants }: QuizCardProps) => {
   return (
     <div
       className="
-        flex items-center gap-4 p-4 rounded-xl border border-gray-200 
+      w-[300px]
+        flex flex-col sm:flex-row items-center px-2.5 gap-4 py-4 rounded-xl border border-gray-200 
         bg-white shadow-sm hover:shadow-md hover:scale-[1.02]
         transition-all duration-300 animate__animated animate__fadeInUp
       "
@@ -72,11 +73,11 @@ export default function UpcomingQuizzes() {
   if (isLoading) return <TableSkeleton cols={1} rows={4} />;
 
   return (
-    <section className="max-w-3xl mx-auto px-4 mt-4 mb-4">
-      <h2 className="capitalize text-lg font-bold mb-4 text-gray-800">
+    <section className="flex flex-1 flex-wrap justify-start max-w-3xl px-1 sm:px-3 mt-4 mb-4">
+      <h2 className="w-full capitalize text-lg font-bold mb-4 text-gray-800">
         {t("upcomingQuizzes_title")}
       </h2>
-      <div className="space-y-4">
+      <div className=" space-y-4 w-auto flex gap-1 justify-between flex-wrap">
         {data.map((quiz: QuizCardProps, index: number) => (
           <QuizCard key={index} {...quiz} />
         ))}

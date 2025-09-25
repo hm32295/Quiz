@@ -14,7 +14,7 @@ import NoData from "../no-data/noData";
 import { useTranslation } from "react-i18next";
 
 interface Column<T> {
-  key: Extract<keyof T, string>; 
+  key: Extract<keyof T, string>;
   label: string;
 }
 
@@ -29,7 +29,7 @@ interface GenericTableProps<T extends { _id?: string }> {
   titleItem: string;
   data: T[];
   setDataSingle?: (row: T) => void;
-  actions?: (row: T) => Action<T>[]; 
+  actions?: (row: T) => Action<T>[];
   itemsPerPage?: number;
 }
 
@@ -41,8 +41,6 @@ const GenericTable = <T extends { _id?: string }>({
   setDataSingle,
   itemsPerPage = 5,
 }: GenericTableProps<T>) => {
-  
-
   const [openRow, setOpenRow] = useState<number | null>(null);
   const dropdownRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [viewMode, setViewMode] = useState<"table" | "card" | "list">("table");
@@ -63,6 +61,18 @@ const GenericTable = <T extends { _id?: string }>({
 
   const dir = i18n.dir();
   const isRTL = dir === "rtl";
+
+  // لما الشاشة تبقى أصغر من md، نمنع عرض الجدول
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        if (viewMode === "table") setViewMode("list");
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [viewMode]);
 
   useEffect(() => {
     setPage(1);
@@ -129,6 +139,7 @@ const GenericTable = <T extends { _id?: string }>({
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Table view button يظهر بس في الشاشات الكبيرة */}
           <button
             onClick={() => setViewMode("table")}
             className={`hidden sm:inline-flex cursor-pointer p-2 rounded-lg shadow ${
@@ -162,13 +173,16 @@ const GenericTable = <T extends { _id?: string }>({
         <>
           {/* Table View */}
           {viewMode === "table" && (
-            <div className="w-full pt-12 pb-8 overflow-x-auto rounded-xl">
+            <div className="hidden sm:block w-full pt-12 pb-8 overflow-x-auto rounded-xl">
               <table className="w-full border-collapse bg-white rounded-lg">
                 <thead>
                   <tr className="bg-gray-100 text-gray-700 uppercase">
                     <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
                     {columns.map((col) => (
-                      <th key={String(col.key)} className="px-4 py-3 text-left text-sm font-semibold">
+                      <th
+                        key={String(col.key)}
+                        className="px-4 py-3 text-left text-sm font-semibold"
+                      >
                         {col.label}
                       </th>
                     ))}
@@ -188,7 +202,10 @@ const GenericTable = <T extends { _id?: string }>({
                         {startIdx + idx + 1}
                       </td>
                       {columns.map((col) => (
-                        <td key={String(col.key)} className="px-4 py-3 text-sm text-gray-800">
+                        <td
+                          key={String(col.key)}
+                          className="px-4 py-3 text-sm text-gray-800"
+                        >
                           {String(row[col.key])}
                         </td>
                       ))}
@@ -239,7 +256,9 @@ const GenericTable = <T extends { _id?: string }>({
                 >
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg font-bold text-gray-800">
-                      {"title" in row ? String((row).title) : `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row
+                        ? String(row.title)
+                        : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     {actions && (
                       <div
@@ -273,7 +292,10 @@ const GenericTable = <T extends { _id?: string }>({
                   </div>
                   <div className="flex flex-col gap-3">
                     {columns.map((col) => (
-                      <div key={String(col.key)} className="flex flex-col bg-gray-50 p-3 rounded-lg">
+                      <div
+                        key={String(col.key)}
+                        className="flex flex-col bg-gray-50 p-3 rounded-lg"
+                      >
                         <span className="text-sm font-semibold text-gray-500">
                           {col.label}
                         </span>
@@ -299,7 +321,9 @@ const GenericTable = <T extends { _id?: string }>({
                 >
                   <div>
                     <h3 className="text-lg font-bold text-gray-800">
-                      {"title" in row ? String((row).title) : `${titleItem} ${startIdx + idx + 1}`}
+                      {"title" in row
+                        ? String(row.title)
+                        : `${titleItem} ${startIdx + idx + 1}`}
                     </h3>
                     <p className="text-sm text-gray-600">
                       {columns.map((col) => `${String(row[col.key])} `).join(" | ")}
